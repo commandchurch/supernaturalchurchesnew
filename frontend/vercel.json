@@ -42,10 +42,5 @@
       ]
     }
   ],
-  "regions": ["syd1"],
-  "env": {
-    "VITE_CLERK_PUBLISHABLE_KEY": "@clerk-publishable-key",
-    "VITE_CONVEX_URL": "@convex-url",
-    "VITE_STRIPE_PUBLISHABLE_KEY": "@stripe-publishable-key"
-  }
+  "regions": ["syd1"]
 }
