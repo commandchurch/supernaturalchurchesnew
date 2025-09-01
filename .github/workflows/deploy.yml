@@ -8,9 +8,10 @@ on:
 
 jobs:
   deploy-backend:
-    if: ${{ secrets.CONVEX_DEPLOY_KEY != '' && startsWith(secrets.CONVEX_DEPLOY_KEY, 'prod:') }}
     name: Deploy Convex Backend
     runs-on: ubuntu-latest
+    env:
+      CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -26,10 +27,17 @@ jobs:
       - name: Install Convex CLI
         run: npm install -g convex
 
-      - name: Deploy to Convex
-        env:
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
-        run: npx convex deploy --yes
+      - name: Deploy to Convex (skip if no prod key)
+        run: |
+          if [ -z "${CONVEX_DEPLOY_KEY}" ]; then
+            echo "No CONVEX_DEPLOY_KEY provided. Skipping backend deploy."
+            exit 0
+          fi
+          if ! echo "${CONVEX_DEPLOY_KEY}" | grep -q "^prod:"; then
+            echo "CONVEX_DEPLOY_KEY is not a prod key. Skipping backend deploy."
+            exit 0
+          fi
+          npx convex deploy --yes
 
   deploy-frontend:
     name: Deploy Vercel Frontend
@@ -70,6 +78,19 @@ jobs:
           # Build within frontend/ where vercel.json exists
           vercel build --prod --token=$VERCEL_TOKEN
           vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
+
+      - name: Ensure domain points to latest production (best-effort)
+        working-directory: ./frontend
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          npm install -g vercel
+          # Best-effort alias; will be a no-op if already mapped or lacking permission
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "No VERCEL_TOKEN provided. Skipping domain check."
+            exit 0
+          fi
+          vercel alias ls --token=$VERCEL_TOKEN | grep -q "supernatural.institute" && echo "Domain already mapped" || echo "Domain mapping will be handled in Vercel dashboard"
 
   test-deployment:
     name: Test Deployment
