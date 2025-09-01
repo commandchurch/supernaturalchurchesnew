@@ -1,13 +1,13 @@
 // The public base URL of your site, used for SEO canonical URLs and Open Graph.
 // If you deploy on a custom domain, set this to that domain (including https://).
-export const siteUrl = "https://supernaturalchurches.org.au";
+export const siteUrl = "https://supernatural.institute";
 
 // The human-readable site name used in titles and Open Graph meta.
 export const siteName = "Supernatural Institute of Ministry";
 
 // A default Open Graph image used when a page doesn't specify a custom one.
 // Ensure this is a hosted image URL you control.
-export const defaultOgImage = "https://supernaturalchurches.org.au/og-image.jpg";
+export const defaultOgImage = "https://supernatural.institute/og-image.jpg";
 
 // A default description used for SEO when a page doesn't specify one explicitly.
 export const defaultDescription =
