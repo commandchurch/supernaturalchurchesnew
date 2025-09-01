@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useBackend } from '../../hooks/useBackend';
 
-import { 
-  Copy, 
-  AlertCircle, 
-  CheckCircle, 
-  ExternalLink, 
-  PlayCircle, 
+import {
+  Copy,
+  AlertCircle,
+  CheckCircle,
+  ExternalLink,
+  PlayCircle,
   Mail,
   MessageSquare,
   Share2,
