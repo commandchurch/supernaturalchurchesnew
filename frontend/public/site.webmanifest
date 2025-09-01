@@ -1,0 +1,16 @@
+{
+  "name": "Supernatural Institute",
+  "short_name": "SI",
+  "description": "The Premier Supernatural Ministry Training Platform",
+  "icons": [
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "display": "standalone",
+  "start_url": "/"
+}

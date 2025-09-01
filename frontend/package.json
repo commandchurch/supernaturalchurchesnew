@@ -1,0 +1,39 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "type": "module",
+  "packageManager": "bun",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@clerk/clerk-react": "^4.30.0",
+    "@stripe/stripe-js": "^4.10.0",
+    "@tanstack/react-query": "^5.81.5",
+    "clsx": "^2.1.1",
+    "convex": "^1.26.2",
+    "lucide-react": "^0.484.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-helmet-async": "^2.0.5",
+    "react-router-dom": "^6.28.0",
+    "tailwind-merge": "^2.5.2",
+    "tailwindcss": "^4.1.11"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.11",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.6.0",
+    "lightningcss": "^1.30.1",
+    "terser": "^5.36.0",
+    "tw-animate-css": "^1.3.4",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5"
+  },
+  "optionalDependencies": {
+    "rollup": "^4.44.1"
+  }
+}

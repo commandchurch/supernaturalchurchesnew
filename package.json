@@ -1,0 +1,25 @@
+{
+  "name": "command-church",
+  "version": "1.0.0",
+  "type": "module",
+  "packageManager": "bun",
+  "workspaces": [
+    "frontend"
+  ],
+  "dependencies": {
+    "convex": "^1.26.2",
+    "stripe": "^18.5.0"
+  },
+  "scripts": {
+    "dev": "npm-run-all --parallel dev:*",
+    "dev:convex": "convex dev",
+    "dev:frontend": "cd frontend && bun run dev",
+    "build": "npm-run-all build:*",
+    "build:convex": "convex deploy",
+    "build:frontend": "cd frontend && bun run build",
+    "seed": "convex run seed:seedDatabase"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  }
+}
