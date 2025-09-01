@@ -1,0 +1,45 @@
+{
+  "version": 2,
+  "framework": "vite",
+  "buildCommand": "cd frontend && bun install && bun run build",
+  "outputDirectory": "frontend/dist",
+  "installCommand": "cd frontend && bun install",
+  "devCommand": "cd frontend && bun run dev",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
+      ]
+    }
+  ],
+  "env": {
+    "VITE_CONVEX_URL": "@convex-url",
+    "VITE_CLERK_PUBLISHABLE_KEY": "@clerk-publishable-key",
+    "VITE_STRIPE_PUBLISHABLE_KEY": "@stripe-publishable-key"
+  },
+  "build": {
+    "env": {
+      "VITE_CONVEX_URL": "@convex-url",
+      "VITE_CLERK_PUBLISHABLE_KEY": "@clerk-publishable-key", 
+      "VITE_STRIPE_PUBLISHABLE_KEY": "@stripe-publishable-key"
+    }
+  }
+}

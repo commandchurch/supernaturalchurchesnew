@@ -44,8 +44,8 @@
   ],
   "regions": ["syd1"],
   "env": {
-    "VITE_CLERK_PUBLISHABLE_KEY": "pk_test_aW1tdW5lLW9wb3NzdW0tNDQuY2xlcmsuYWNjb3VudHMuZGV2JA",
-    "VITE_CONVEX_URL": "https://fearless-spider-22.convex.cloud",
-    "VITE_STRIPE_PUBLISHABLE_KEY": "pk_live_51RrEeWCcmcORuWflu2NiT2ZHMD72OUeZxqakwpJDNALGanxF7DZYVWjVDosOvuJLTEtHIuGiT7UQ3SnSCd3roxDM003nzoOvHM"
+    "VITE_CLERK_PUBLISHABLE_KEY": "@clerk-publishable-key",
+    "VITE_CONVEX_URL": "@convex-url",
+    "VITE_STRIPE_PUBLISHABLE_KEY": "@stripe-publishable-key"
   }
 }
