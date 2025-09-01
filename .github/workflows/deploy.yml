@@ -73,6 +73,11 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "No VERCEL_TOKEN configured. Skipping Vercel deploy from GitHub Actions."
+            echo "If your Vercel project is connected to this repo, it will auto-deploy on push."
+            exit 0
+          fi
           npm install -g vercel
           vercel pull --yes --environment=production --token=$VERCEL_TOKEN
           # Build within frontend/ where vercel.json exists
