@@ -7,7 +7,9 @@
     "build": "encore build"
   },
   "dependencies": {
-    "encore.dev": "^1.49.1"
+    "encore.dev": "^1.49.1",
+    "stripe": "^17.7.0",
+    "jose": "^6.0.11"
   },
   "devDependencies": {
     "typescript": "^5.8.3"

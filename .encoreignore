@@ -1,0 +1,4 @@
+frontend/
+frontend-temp/
+*.gen/
+node_modules/

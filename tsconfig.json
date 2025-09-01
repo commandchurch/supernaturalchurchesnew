@@ -28,5 +28,11 @@
 		/* Advanced Options */
 		"forceConsistentCasingInFileNames": true,
 		"skipLibCheck": true
-	}
+	},
+	"exclude": [
+		"node_modules",
+		"encore.gen",
+		"frontend",
+		"frontend-temp"
+	]
 }
