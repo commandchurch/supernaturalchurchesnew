@@ -1,4 +1,7 @@
 frontend/
 frontend-temp/
 *.gen/
+encore.gen/
 node_modules/
+clerk-react/
+.vercel/

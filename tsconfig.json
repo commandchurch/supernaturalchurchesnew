@@ -5,7 +5,7 @@
 		"lib": ["ES2022"],
 		"target": "ES2022",
 		"module": "ES2022",
-		"types": ["node"],
+		"types": [],
 		"paths": {
 			"~encore/*": ["./encore.gen/*"],
 			"~backend/*": ["./*"]
@@ -33,6 +33,7 @@
 		"node_modules",
 		"encore.gen",
 		"frontend",
-		"frontend-temp"
+		"frontend-temp",
+		"*.gen"
 	]
 }
