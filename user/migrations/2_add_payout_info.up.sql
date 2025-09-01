@@ -1,0 +1,2 @@
+ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS bsb TEXT;
+ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS account_number TEXT;

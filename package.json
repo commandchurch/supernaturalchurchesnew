@@ -1,23 +1,17 @@
 {
-  "name": "command-church",
+  "name": "backend",
   "version": "1.0.0",
   "type": "module",
   "packageManager": "bun",
-  "workspaces": [
-    "frontend"
-  ],
-  "dependencies": {
-    "stripe": "^18.5.0"
-  },
   "scripts": {
-    "stripe:setup": "node stripe-setup.js",
-    "stripe:verify": "node verify-stripe-setup.js",
-    "deploy": "node deploy-all.js",
-    "test-deploy": "node test-deployment.js",
-    "dev": "cd frontend && bun run dev",
-    "build": "cd frontend && bun run build"
+    "build": "cd ../../frontend && bun install && bun run build --outDir=../backend/supernatural-institute-backend/frontend/dist"
+  },
+  "dependencies": {
+    "encore.dev": "^1.49.1",
+    "jose": "^6.0.11",
+    "stripe": "^17.7.0"
   },
   "devDependencies": {
-    "npm-run-all": "^4.1.5"
+    "typescript": "^5.8.3"
   }
 }
