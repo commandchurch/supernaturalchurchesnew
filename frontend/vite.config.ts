@@ -13,6 +13,7 @@ export default defineConfig(({ mode }) => ({
     react(),
   ],
   build: {
+    outDir: 'dist',
     minify: mode === 'production' ? 'terser' : false,
     rollupOptions: {
       output: {

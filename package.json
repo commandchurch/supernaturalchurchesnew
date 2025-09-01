@@ -4,12 +4,10 @@
   "type": "module",
   "packageManager": "bun",
   "scripts": {
-    "build": "cd ../../frontend && bun install && bun run build --outDir=../backend/supernatural-institute-backend/frontend/dist"
+    "build": "encore build"
   },
   "dependencies": {
-    "encore.dev": "^1.49.1",
-    "jose": "^6.0.11",
-    "stripe": "^17.7.0"
+    "encore.dev": "^1.49.1"
   },
   "devDependencies": {
     "typescript": "^5.8.3"
