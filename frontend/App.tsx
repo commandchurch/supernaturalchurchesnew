@@ -4,7 +4,7 @@ import LoadingSpinner from './components/LoadingSpinner';
 import { RealTimeProvider } from './components/RealTimeProvider';
 import ErrorBoundary from './components/ErrorBoundary';
 import { NotificationProvider } from './contexts/NotificationContext';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
 import { HelmetProvider } from 'react-helmet-async';
 import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -39,26 +39,7 @@ const FindChurch = lazy(() => import('./pages/FindChurch'));
 const Merch = lazy(() => import('./pages/Merch'));
 const Connect = lazy(() => import('./pages/Connect'));
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
-      retry: (failureCount, error) => {
-        // Don't retry on 4xx errors (client errors)
-        if (error instanceof Error && error.message.includes('4')) {
-          return false;
-        }
-        return failureCount < 3;
-      },
-      refetchOnWindowFocus: false,
-      refetchOnMount: true,
-    },
-    mutations: {
-      retry: false,
-    },
-  },
-});
+
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -74,9 +55,8 @@ export default function App() {
   return (
     <ErrorBoundary>
       <HelmetProvider>
-        <QueryClientProvider client={queryClient}>
-          <RealTimeProvider>
-            <Router>
+        <RealTimeProvider>
+          <Router>
               <ScrollToTop />
               <Suspense fallback={<LoadingSpinner />}>
                 <Routes>
@@ -113,8 +93,7 @@ export default function App() {
               </Suspense>
             </Router>
           </RealTimeProvider>
-        </QueryClientProvider>
-      </HelmetProvider>
-    </ErrorBoundary>
+        </HelmetProvider>
+      </ErrorBoundary>
   );
 }

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { useMutation } from 'convex/react';
-import { api } from '../../_generated/api';
+
 import { Send, AlertTriangle, Ambulance } from 'lucide-react';
 
 export default function HelpMeFund() {
@@ -18,15 +17,21 @@ export default function HelpMeFund() {
     justification: '',
   });
 
-  const submitFundingRequest = useMutation(api.fund.submitFundingRequest);
+  // TODO: Convert to Encore.dev backend
+  // const submitFundingRequest = useMutation(api.fund.submitFundingRequest);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     try {
-      await submitFundingRequest({
-        ...formData,
-        amountNeeded: parseFloat(formData.amountNeeded)
-      });
+      // TODO: Implement Encore.dev backend call
+      // await client.fund.submitFundingRequest({
+      //   ...formData,
+      //   amountNeeded: parseFloat(formData.amountNeeded)
+      // });
+
       alert('Your request has been submitted and is pending leadership review.');
       setFormData({
         title: '', description: '', amountNeeded: '', category: 'emergency', urgency: 'high',
@@ -34,6 +39,8 @@ export default function HelpMeFund() {
       });
     } catch (error: any) {
       alert(`Submission failed: ${error?.message || 'Unknown error'}`);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -186,9 +193,9 @@ export default function HelpMeFund() {
           <button
             type="submit"
             className="bg-white text-black hover:bg-gray-200 px-4 py-2 font-semibold uppercase tracking-wide text-sm"
-            disabled={submitFundingRequest.isPending}
+            disabled={isSubmitting}
           >
-            {submitFundingRequest.isPending ? 'Submitting...' : 'Submit Request'}
+            {isSubmitting ? 'Submitting...' : 'Submit Request'}
           </button>
         </div>
       </form>

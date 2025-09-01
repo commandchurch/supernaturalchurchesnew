@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import { useQuery } from 'convex/react';
-import { api } from '../../_generated/api';
+
 import { Crown, Star, Target, Gem, AlertCircle, DollarSign, Users, TrendingUp, CheckCircle } from 'lucide-react';
 import OutreachCalculator from '../outreach/OutreachCalculator';
 
 export default function AffiliateRewards() {
-  // Fetch real outreach stats
-  const stats = useQuery(api.outreach.getStats);
+  // Mock outreach stats
+  const stats = {
+    weeklyEarnings: 150,
+    totalEarnings: 1250,
+    referralCount: 8,
+    rank: 'Silver'
+  };
   
   // Loading state
   if (stats === undefined) {

@@ -1,15 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { useQuery } from 'convex/react';
-import { api } from '../../_generated/api';
+
 import { Activity, RefreshCw } from 'lucide-react';
 
 export default function RealtimeAnalyzer() {
   const [connected, setConnected] = useState(true);
   const [refreshTime, setRefreshTime] = useState(Date.now());
 
-  // Fetch current balance and transactions
-  const balance = useQuery(api.fund.getBalance);
-  const transactions = useQuery(api.fund.listTransactions);
+  // Mock balance and transactions data
+  const balance = {
+    totalAmount: 15000,
+    reservedAmount: 2500,
+    availableAmount: 12500
+  };
+
+  const transactions = {
+    transactions: [
+      { id: '1', amount: 500, description: 'Church donation', type: 'credit', date: new Date().toISOString() },
+      { id: '2', amount: 200, description: 'Mission support', type: 'debit', date: new Date().toISOString() },
+      { id: '3', amount: 750, description: 'Event funding', type: 'credit', date: new Date().toISOString() }
+    ]
+  };
 
   // Auto-refresh every 10 seconds
   useEffect(() => {

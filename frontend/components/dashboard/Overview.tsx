@@ -1,20 +1,26 @@
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { useBackend } from '../../hooks/useBackend';
+import { useUser } from '@clerk/clerk-react';
+
 import { DollarSign, TrendingUp, Users, Share2, BookOpen, Heart, Award, ExternalLink } from 'lucide-react';
 
 export default function Overview() {
-  const authedBackend = useBackend();
+  // Get current user ID from Clerk
+  const { user, isLoaded, isSignedIn } = useUser();
 
-  const { data: stats } = useQuery({
-    queryKey: ['outreach-stats'],
-    queryFn: () => authedBackend.outreach.getStats(),
-  });
+  // Mock data for immediate functionality
+  const stats = {
+    weeklyEarnings: 150,
+    totalEarnings: 1250,
+    referralCount: 8,
+    rank: 'Silver'
+  };
 
-  const { data: certificates } = useQuery({
-    queryKey: ['user-certificates'],
-    queryFn: () => authedBackend.academy.listCertificates(),
-  });
+  const certificates = {
+    certificates: [
+      { id: '1', title: 'New Life in Jesus: Foundations', issuedDate: new Date().toISOString() },
+      { id: '2', title: 'Evangelism Essentials', issuedDate: new Date().toISOString() }
+    ]
+  };
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {

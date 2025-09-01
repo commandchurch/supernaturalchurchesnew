@@ -1,13 +1,39 @@
-import React from 'react';
-import { useQuery, useMutation } from 'convex/react';
-import { api } from '../../_generated/api';
+import React, { useEffect, useState } from 'react';
 import { MessageSquare, Video, Check, X, Clock } from 'lucide-react';
+import client from '../../client';
 
 export default function TestimoniesAdmin() {
-  const testimoniesData = useQuery(api.church.listTestimoniesAdmin);
-  const isLoading = testimoniesData === undefined;
+  const [testimoniesData, setTestimoniesData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [reviewingId, setReviewingId] = useState<string | null>(null);
 
-  const reviewMutation = useMutation(api.church.reviewTestimony);
+  useEffect(() => {
+    const fetchTestimonies = async () => {
+      try {
+        const result = await client.church.listTestimoniesAdmin();
+        setTestimoniesData(result);
+      } catch (error) {
+        console.error('Failed to fetch testimonies:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchTestimonies();
+  }, []);
+
+  const handleReview = async (id: string, approve: boolean) => {
+    try {
+      setReviewingId(id);
+      await client.church.reviewTestimony({ id: parseInt(id), approve, reviewerId: 'admin', notes: '' });
+      // Refresh data
+      const result = await client.church.listTestimoniesAdmin();
+      setTestimoniesData(result);
+      setReviewingId(null);
+    } catch (error) {
+      console.error('Review failed:', error);
+      setReviewingId(null);
+    }
+  };
 
   return (
     <div className="bg-gray-800/50 border border-gray-700 p-6">
@@ -57,18 +83,18 @@ export default function TestimoniesAdmin() {
                     {testimony.status === 'pending' ? (
                       <div className="flex space-x-2">
                         <button
-                          onClick={() => reviewMutation.mutate({ id: testimony.id, approve: true })}
+                          onClick={() => handleReview(testimony.id, true)}
                           className="text-green-400 hover:text-green-300"
                           title="Approve"
-                          disabled={reviewMutation.isPending}
+                          disabled={reviewingId === testimony.id}
                         >
                           <Check className="h-5 w-5" />
                         </button>
                         <button
-                          onClick={() => reviewMutation.mutate({ id: testimony.id, approve: false })}
+                          onClick={() => handleReview(testimony.id, false)}
                           className="text-red-400 hover:text-red-300"
                           title="Reject"
-                          disabled={reviewMutation.isPending}
+                          disabled={reviewingId === testimony.id}
                         >
                           <X className="h-5 w-5" />
                         </button>

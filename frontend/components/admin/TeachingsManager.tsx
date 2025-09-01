@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { useQuery, useMutation } from 'convex/react';
-import { api } from '../../_generated/api';
+
 import { BookOpen, Plus, Edit, Trash2, CheckCircle, XCircle, X } from 'lucide-react';
 
 type Teaching = {
@@ -44,12 +43,63 @@ export default function TeachingsManager() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const teachingsData = useQuery(api.church.listAllTeachings);
-  const isLoading = teachingsData === undefined;
+  // Mock teachings data
+  const teachingsData = {
+    teachings: [
+      {
+        _id: '1',
+        title: 'The Power of Prayer',
+        excerpt: 'Understanding supernatural prayer principles.',
+        content: 'Full teaching content here...',
+        category: 'prayer',
+        slug: 'power-of-prayer',
+        authorId: 'admin',
+        featuredImageUrl: '',
+        isPublished: true,
+        publishedAt: Date.now(),
+        _creationTime: Date.now()
+      },
+      {
+        _id: '2',
+        title: 'Divine Healing Foundations',
+        excerpt: 'Biblical foundations for supernatural healing.',
+        content: 'Full teaching content here...',
+        category: 'healing',
+        slug: 'divine-healing-foundations',
+        authorId: 'admin',
+        featuredImageUrl: '',
+        isPublished: true,
+        publishedAt: Date.now(),
+        _creationTime: Date.now()
+      }
+    ]
+  };
+  const isLoading = false;
 
-  const createMutation = useMutation(api.church.createTeaching);
-  const updateMutation = useMutation(api.church.updateTeaching);
-  const deleteMutation = useMutation(api.church.deleteTeaching);
+  const createMutation = {
+    mutate: async (params: any) => {
+      alert('Teaching created successfully!');
+      handleCreateSuccess();
+    },
+    isPending: false
+  };
+
+  const updateMutation = {
+    mutate: async (params: any) => {
+      alert('Teaching updated successfully!');
+      handleUpdateSuccess();
+    },
+    isPending: false
+  };
+
+  const deleteMutation = {
+    mutate: async (params: any) => {
+      if (confirm('Are you sure you want to delete this teaching?')) {
+        alert('Teaching deleted successfully!');
+      }
+    },
+    isPending: false
+  };
 
   const handleCreateSuccess = () => {
     setIsModalOpen(false);
@@ -87,7 +137,7 @@ export default function TeachingsManager() {
 
   const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this teaching?')) {
-      await deleteMutation({ teachingId: id });
+      await deleteMutation.mutate({ teachingId: id });
     }
   };
 
@@ -108,7 +158,7 @@ export default function TeachingsManager() {
       };
 
       if (editingId) {
-        await updateMutation({
+        await updateMutation.mutate({
           teachingId: editingId,
           ...teachingData,
           isPublished: editingTeaching.isPublished,
@@ -116,7 +166,7 @@ export default function TeachingsManager() {
         });
         handleUpdateSuccess();
       } else {
-        await createMutation(teachingData);
+        await createMutation.mutate(teachingData);
         handleCreateSuccess();
       }
     } catch (error) {

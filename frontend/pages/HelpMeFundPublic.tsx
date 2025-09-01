@@ -1,12 +1,39 @@
 import React from 'react';
-import { useQuery } from 'convex/react';
-import { api } from '../_generated/api';
+
 import { AlertTriangle } from 'lucide-react';
 import SEO from '../components/SEO';
 import { siteUrl } from '../config';
 
 export default function HelpMeFundPublic() {
-  const needsData = useQuery(api.fund.listNeeds);
+  // Mock funding needs data
+  const needsData = {
+    needs: [
+      {
+        id: '1',
+        title: 'Church Building Fund',
+        description: 'Help us build a new sanctuary for our growing congregation.',
+        amount: 100000,
+        raised: 65000,
+        status: 'approved'
+      },
+      {
+        id: '2',
+        title: 'Mission Trip to Africa',
+        description: 'Support our mission team in spreading the Gospel across Africa.',
+        amount: 25000,
+        raised: 15000,
+        status: 'approved'
+      },
+      {
+        id: '3',
+        title: 'Food Ministry Expansion',
+        description: 'Expand our community food ministry to reach more families in need.',
+        amount: 15000,
+        raised: 8500,
+        status: 'approved'
+      }
+    ]
+  };
 
   const approvedNeeds = (needsData?.needs || []).filter(n => n.status === 'approved');
 

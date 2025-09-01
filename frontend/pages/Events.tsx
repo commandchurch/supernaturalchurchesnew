@@ -1,12 +1,28 @@
-import React from 'react';
-import { useQuery } from 'convex/react';
-import { api } from '../_generated/api';
+import React, { useState, useEffect } from 'react';
+import client from '../client';
 import { Calendar, Users, Play } from 'lucide-react';
 import SEO from '../components/SEO';
 import { siteUrl } from '../config';
 
 export default function Events() {
-  const eventsData = useQuery(api.church.listEvents);
+  const [eventsData, setEventsData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const result = await client.church.listEvents();
+        setEventsData(result);
+      } catch (error) {
+        console.error('Failed to fetch events:', error);
+        // Set empty events if fetch fails
+        setEventsData({ events: [] });
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchEvents();
+  }, []);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -46,7 +62,12 @@ export default function Events() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-        {eventsData?.events.map((event) => (
+        {loading ? (
+          <div className="col-span-full text-center text-gray-400">Loading events...</div>
+        ) : (eventsData?.events || []).length === 0 ? (
+          <div className="col-span-full text-center text-gray-400">No events scheduled at this time.</div>
+        ) : (
+          (eventsData?.events || []).map((event: any) => (
           <div key={event.id} className="bg-white/5 border border-white/10 backdrop-blur-sm p-5 sm:p-6">
             <div className="flex items-start justify-between mb-3 sm:mb-4">
               <div className={`px-3 py-1 text-xs font-semibold border ${
@@ -91,7 +112,8 @@ export default function Events() {
               RSVP
             </button>
           </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );

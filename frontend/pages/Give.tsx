@@ -1,8 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Check, Heart, Gift, Calendar } from 'lucide-react';
-import { useQuery } from 'convex/react';
 import { useUser } from '@clerk/clerk-react';
-import { api } from '../_generated/api';
+
 import SEO from '../components/SEO';
 import { siteUrl } from '../config';
 import { Link, useNavigate } from 'react-router-dom';
@@ -15,9 +14,22 @@ export default function Give() {
   // Mock membership data
   const membership = null;
 
-  // Get membership plans and funding needs from Convex
-  const plansData = useQuery(api.membership.listPlans);
-  const needsData = useQuery(api.fund.listNeeds);
+  // Mock membership plans and funding needs
+  const plansData = {
+    plans: [
+      { id: 'bronze', name: 'Bronze Membership', price: 19, description: 'Basic membership' },
+      { id: 'silver', name: 'Silver Membership', price: 33, description: 'Standard membership' },
+      { id: 'gold', name: 'Gold Membership', price: 149, description: 'Premium membership' }
+    ]
+  };
+
+  const needsData = {
+    needs: [
+      { id: '1', title: 'Church Building Fund', description: 'Help build a new sanctuary', amount: 50000, raised: 25000 },
+      { id: '2', title: 'Mission Trip Support', description: 'Support our mission work', amount: 10000, raised: 7500 },
+      { id: '3', title: 'Food Ministry', description: 'Feed the hungry in our community', amount: 20000, raised: 12000 }
+    ]
+  };
 
   const [donationAmount, setDonationAmount] = useState<number | ''>('');
   const [donorName, setDonorName] = useState('');

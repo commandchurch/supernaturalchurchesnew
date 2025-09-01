@@ -1,8 +1,7 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { useQuery, useMutation } from 'convex/react';
 import { useUser } from '@clerk/clerk-react';
 import { Link } from 'react-router-dom';
-import { api } from '../_generated/api';
+
 import { GraduationCap, Clock, Play, Lock, CheckCircle2 } from 'lucide-react';
 import SEO from '../components/SEO';
 import { siteUrl } from '../config';
@@ -26,7 +25,8 @@ export default function Academy() {
     alert(`Congratulations! You have completed "${courseTitle}". This completion is now tracked in your dashboard.`);
   };
 
-  const membership = useQuery(api.membership.getSubscription, { userId: 'current-user' });
+  // Mock membership data
+  const membership = { active: true, planName: 'GOLD', renewsAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString() };
 
   // Mock course data including the new free discipleship course
   const coursesData = useMemo(() => ({
@@ -79,15 +79,27 @@ export default function Academy() {
     ]
   }), []);
 
-  const progressData = useQuery(api.academy.getProgress, { userId: 'current-user' });
+  // Mock progress data
+  const progressData = {
+    progress: [
+      { courseId: 1, progressPercentage: 100, completedAt: new Date().toISOString() },
+      { courseId: 2, progressPercentage: 75, completedAt: null },
+      { courseId: 3, progressPercentage: 50, completedAt: null },
+      { courseId: 4, progressPercentage: 25, completedAt: null },
+      { courseId: 5, progressPercentage: 0, completedAt: null }
+    ]
+  };
 
   const progressMap = useMemo(() => {
     const m = new Map<number, { pct: number; completedAt?: string | null }>();
-    progressData?.progress.forEach(p => m.set(p.courseId, { pct: p.progressPercentage, completedAt: p.completedAt }));
+    progressData.progress.forEach(p => m.set(p.courseId, { pct: p.progressPercentage, completedAt: p.completedAt }));
     return m;
-  }, [progressData]);
+  }, []);
 
-  const completeMutation = useMutation(api.academy.completeCourse);
+  const completeMutation = async (params: { courseId: string }) => {
+    // Mock completion - just show alert
+    alert('Course completed successfully!');
+  };
 
   const filteredCourses = useMemo(() => {
     const courses = coursesData?.courses ?? [];

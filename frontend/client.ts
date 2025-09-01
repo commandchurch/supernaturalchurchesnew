@@ -1846,4 +1846,9 @@ export enum ErrCode {
 
 // Create client only if backend URL is available, otherwise use a dummy URL for development
 const backendUrl = import.meta.env.VITE_CLIENT_TARGET || "http://localhost:4000/api";
-export default new Client(backendUrl, { requestInit: { credentials: "include" } });
+export default new Client(backendUrl, {
+  requestInit: {
+    credentials: "include",
+    mode: "cors"
+  }
+});

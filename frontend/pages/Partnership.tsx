@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom';
 import { Shield, Users, BookOpen, Check, Award, Handshake, TrendingUp, Globe, MessageCircle, Target, Heart } from 'lucide-react';
 import SEO from '../components/SEO';
 import { siteUrl } from '../config';
-import { useQuery } from 'convex/react';
-import { api } from '../_generated/api';
+
 import FiveFoldApplicationForm from '../components/FiveFoldApplicationForm';
 
 const partnershipFeatures = [
@@ -48,10 +47,35 @@ export default function Partnership() {
   const [level2Members, setLevel2Members] = useState(50);
   const [level3Members, setLevel3Members] = useState(25);
   
-  const { data: partnersData } = useQuery({
-    queryKey: ['partners-list'],
-    queryFn: () => backend.partnership.list(),
-  });
+  // Mock partners data
+  const partnersData = {
+    partners: [
+      {
+        id: '1',
+        name: 'Grace Community Church',
+        location: 'Springfield, IL',
+        members: 150,
+        joinedDate: '2024-01-15',
+        tier: 'Gold'
+      },
+      {
+        id: '2',
+        name: 'Faith Baptist Church',
+        location: 'Riverside, CA',
+        members: 200,
+        joinedDate: '2024-02-20',
+        tier: 'Diamond'
+      },
+      {
+        id: '3',
+        name: 'Hope Ministries',
+        location: 'Austin, TX',
+        members: 80,
+        joinedDate: '2024-03-10',
+        tier: 'Silver'
+      }
+    ]
+  };
 
   // Membership tier prices (AUD/month)
   const tierPrices = {

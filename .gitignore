@@ -73,3 +73,5 @@ Thumbs.db
 # Old backend (quarantined)
 backend/
 backend_legacy/
+
+.vercel

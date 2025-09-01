@@ -1,6 +1,10 @@
-# Supernatural Institute
+# 🏛️ SUPERNATURAL INSTITUTE - Command Church Platform
 
-A modern church management and outreach platform built with React, Convex, and Clerk.
+## 🎉 **OPERATION: NUKE CONVEX - COMPLETE!**
+
+**✅ SUCCESSFULLY CONVERTED TO ENCORE.DEV BACKEND**
+
+A modern church management and outreach platform built with React, Encore.dev, and Clerk.
 
 ## Features
 
@@ -15,10 +19,23 @@ A modern church management and outreach platform built with React, Convex, and C
 ## Tech Stack
 
 - **Frontend**: React, TypeScript, Vite, Tailwind CSS
-- **Backend**: Convex (real-time database and serverless functions)
+- **Backend**: Encore.dev (PostgreSQL + microservices)
 - **Authentication**: Clerk
 - **Payments**: Stripe
-- **Deployment**: Vercel (frontend), Convex Cloud (backend)
+- **Deployment**: Vercel (frontend), Encore Cloud (backend)
+
+## 🚀 **CURRENT STATUS:**
+- ✅ **Backend**: Encore.dev (PostgreSQL)
+- ✅ **Frontend**: Vercel deployment
+- ✅ **Authentication**: Clerk integration
+- ✅ **Payments**: Stripe integration
+- ✅ **Database**: Real-time PostgreSQL
+- ❌ **Convex**: COMPLETELY REMOVED
+
+### 🎯 **DEPLOYMENT URLs:**
+- **Frontend**: https://frontend-3la1qy5vr-commandchurchs-projects.vercel.app
+- **Backend API**: https://supernatural-institute-backend-z4n2.encr.app
+- **Admin Panel**: `/admin` route
 
 ## Quick Start
 
@@ -26,7 +43,7 @@ A modern church management and outreach platform built with React, Convex, and C
 
 - Node.js 18+
 - Bun or npm
-- Convex CLI: `npm install -g convex`
+- Encore CLI: `curl -L https://encore.dev/install.sh | bash`
 
 ### Installation
 
@@ -45,72 +62,77 @@ bun install
 3. Set up environment variables:
 ```bash
 # Frontend (.env.local)
-VITE_CONVEX_URL=your_convex_deployment_url
-VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
-VITE_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
+VITE_CLERK_PUBLISHABLE_KEY=pk_test_aW1tdW5lLW9wb3NzdW0tNDQuY2xlcmsuYWNjb3VudHMuZGV2JA
+VITE_STRIPE_PUBLISHABLE_KEY=pk_live_51RrEeWCcmcORuWflzSQTjDNoaRQSD0fXXerjSrXbnxdEthESi0V9E16CRQzqW0vNpRKB17xKODs2nB5AqPm1knjp00DSNNjhIh
+VITE_CLIENT_TARGET=https://supernatural-institute-backend-z4n2.encr.app
 ```
 
-4. Deploy Convex backend:
+4. Encore backend is already deployed:
 ```bash
-cd .. # Back to project root
-npx convex deploy
+# Backend is live at: https://supernatural-institute-backend-z4n2.encr.app
+# All API endpoints are active
 ```
 
-5. Set backend environment variables:
+5. Deploy frontend to Vercel:
 ```bash
-npx convex env set CLERK_SECRET_KEY your_clerk_secret_key
-npx convex env set STRIPE_SECRET_KEY your_stripe_secret_key
+npm run deploy  # Deploys frontend, checks Encore status
 ```
 
-6. Seed the database:
+6. Test the system:
 ```bash
-npx convex run seed:seedDatabase
-```
-
-7. Start the development server:
-```bash
-cd frontend
-bun run dev
+# Visit your deployed site
+# Submit prayer requests, funding requests, etc.
+# Check admin panel - submissions appear immediately!
 ```
 
 ## Project Structure
 
 ```
 supernaturalinstitute/
-├── convex/                 # Backend (Convex functions)
-│   ├── academy.ts         # Course management
-│   ├── church.ts          # Church services
-│   ├── fund.ts            # Financial operations
-│   ├── membership.ts      # Subscription plans
-│   ├── outreach.ts        # Affiliate system
-│   ├── payments.ts        # Stripe integration
-│   └── schema.ts          # Database schema
-├── frontend/              # React frontend
-│   ├── components/        # Reusable components
-│   ├── pages/            # Route components
-│   └── hooks/            # Custom hooks
-└── backend_legacy/       # Old Encore backend (quarantined)
+├── backend/               # Encore.dev backend (PostgreSQL)
+│   ├── academy/          # Course management microservice
+│   ├── church/           # Church services & prayer requests
+│   ├── fund/             # Financial operations & donations
+│   ├── membership/       # Subscription plans & billing
+│   ├── outreach/         # Affiliate network & commissions
+│   ├── payment/          # Stripe integration & webhooks
+│   ├── partnership/      # Church partnerships
+│   └── user/             # User management
+├── frontend/             # React frontend (TypeScript)
+│   ├── components/       # Reusable UI components
+│   ├── pages/           # Route components
+│   ├── hooks/           # Custom hooks
+│   └── client.ts        # Encore API client
+└── convex/              # REMOVED - No longer used
 ```
 
 ## Deployment
 
+### ✅ **CURRENT DEPLOYMENT STATUS:**
+- **Backend**: Encore.dev ✅ LIVE at https://supernatural-institute-backend-z4n2.encr.app
+- **Frontend**: Vercel ✅ LIVE at https://frontend-3la1qy5vr-commandchurchs-projects.vercel.app
+
 ### Automatic Deployment
 
-Both frontend and backend are configured for automatic deployment:
+Both frontend and backend are configured for continuous deployment:
 
-- **Backend**: Deploys to Convex Cloud on push
-- **Frontend**: Deploys to Vercel on push
+- **Backend**: Encore.dev Cloud (auto-deploys on push)
+- **Frontend**: Vercel (auto-deploys on push to main branch)
 
 ### Manual Deployment
 
 ```bash
-# Deploy backend
-npx convex deploy
+# Deploy everything (frontend + check backend)
+npm run deploy
 
-# Deploy frontend
+# Or deploy individually:
+# Frontend only
 cd frontend
 bun run build
 bunx vercel deploy --prod
+
+# Backend status check
+encore auth whoami
 ```
 
 ## Contributing

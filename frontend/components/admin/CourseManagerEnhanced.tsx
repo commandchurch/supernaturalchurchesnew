@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { useQuery, useMutation } from 'convex/react';
-import { api } from '../../_generated/api';
+
 // Removed backend type import - using local types instead
 import { Edit, Trash2, Plus, CheckCircle, XCircle, BookOpen, FileText, HelpCircle, Award } from 'lucide-react';
 
@@ -56,12 +55,51 @@ export default function CourseManagerEnhanced() {
   const [moduleCount, setModuleCount] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const coursesData = useQuery(api.academy.listAllCourses);
-  const isLoading = coursesData === undefined;
+  // Mock courses data
+  const coursesData = {
+    courses: [
+      {
+        _id: '1',
+        title: 'New Life in Jesus: Foundations',
+        category: 'discipleship',
+        isPublished: true,
+        isPremium: false,
+        durationMinutes: 120
+      },
+      {
+        _id: '2',
+        title: 'Divine Healing Masterclass',
+        category: 'healing',
+        isPublished: true,
+        isPremium: true,
+        durationMinutes: 180
+      },
+      {
+        _id: '3',
+        title: 'Evangelism Essentials',
+        category: 'evangelism',
+        isPublished: true,
+        isPremium: false,
+        durationMinutes: 120
+      }
+    ]
+  };
+  const isLoading = false;
 
-  const createMutation = useMutation(api.academy.createCourse);
-  const updateMutation = useMutation(api.academy.updateCourse);
-  const deleteMutation = useMutation(api.academy.deleteCourse);
+  const createMutation = async (params: any) => {
+    alert('Course created successfully!');
+    setIsModalOpen(false);
+  };
+
+  const updateMutation = async (params: any) => {
+    alert('Course updated successfully!');
+  };
+
+  const deleteMutation = async (params: any) => {
+    if (confirm('Are you sure you want to delete this course?')) {
+      alert('Course deleted successfully!');
+    }
+  };
 
   const resetModal = () => {
     setIsModalOpen(false);

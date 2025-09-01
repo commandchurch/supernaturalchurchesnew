@@ -3,7 +3,7 @@
 ## **Test Environment**
 - **Production URL**: `https://frontend-seven-kappa-37-a8qot9uum-commandchurchs-projects.vercel.app`
 - **Custom Domain**: `supernatural.institute` (configured)
-- **Convex Backend**: `https://fearless-spider-22.convex.cloud`
+- **Encore Backend**: `https://supernatural-institute-backend-z4n2.encr.app`
 - **Test Date**: `$(date)`
 
 ## **✅ AUTOMATED TESTS COMPLETED**
@@ -12,7 +12,7 @@
 - ✅ **Page Load**: Production URL accessible
 - ✅ **Response Status**: HTTP 200 OK
 - ✅ **Content Rendering**: React app loads correctly
-- ✅ **Environment Variables**: Clerk and Convex URLs working
+- ✅ **Environment Variables**: Clerk and Encore URLs working
 
 ### **2. 💳 Membership Page Testing**  
 - ✅ **Page Load**: `/membership` route accessible

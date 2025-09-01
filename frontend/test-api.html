@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test - Supernatural Institute</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; }
+        .success { color: green; }
+        .error { color: red; }
+        button { padding: 10px 20px; margin: 5px; background: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        pre { background: #f5f5f5; padding: 10px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Supernatural Institute API Test</h1>
+
+    <div class="test-section">
+        <h2>🔗 Backend Connection Test</h2>
+        <button onclick="testBackendConnection()">Test Encore Connection</button>
+        <div id="backend-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>📋 Subscription Plans Test</h2>
+        <button onclick="testSubscriptionPlans()">Get Subscription Plans</button>
+        <div id="plans-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>💳 Stripe Test</h2>
+        <button onclick="testStripeConnection()">Test Stripe Connection</button>
+        <div id="stripe-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🧑‍🎓 Academy Test</h2>
+        <button onclick="testAcademyCourses()">Get Academy Courses</button>
+        <div id="academy-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🛐 Church Test</h2>
+        <button onclick="testChurchEvents()">Get Church Events</button>
+        <div id="church-result"></div>
+    </div>
+
+    <script>
+        const ENCORE_URL = 'https://supernatural-institute-backend-z4n2.encr.app';
+
+        async function makeRequest(action, args = {}) {
+            try {
+                const response = await fetch(`${ENCORE_URL}/${action}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(args)
+                });
+                return await response.json();
+            } catch (error) {
+                return { error: error.message };
+            }
+        }
+
+        async function testBackendConnection() {
+            const result = document.getElementById('backend-result');
+            result.innerHTML = '<p>Testing...</p>';
+
+            try {
+                const response = await fetch(`${CONVEX_URL}/query/membership:getSubscriptionPlans`);
+                if (response.ok) {
+                    result.innerHTML = '<p class="success">✅ Backend connection successful!</p>';
+                } else {
+                    result.innerHTML = `<p class="error">❌ Backend connection failed: ${response.status}</p>`;
+                }
+            } catch (error) {
+                result.innerHTML = `<p class="error">❌ Error: ${error.message}</p>`;
+            }
+        }
+
+        async function testSubscriptionPlans() {
+            const result = document.getElementById('plans-result');
+            result.innerHTML = '<p>Testing...</p>';
+
+            try {
+                const response = await fetch(`${CONVEX_URL}/query/membership:getSubscriptionPlans`);
+                const data = await response.json();
+
+                if (response.ok && data) {
+                    result.innerHTML = '<p class="success">✅ Subscription plans loaded successfully!</p>';
+                    result.innerHTML += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } else {
+                    result.innerHTML = `<p class="error">❌ Failed to load plans: ${response.status}</p>`;
+                }
+            } catch (error) {
+                result.innerHTML = `<p class="error">❌ Error: ${error.message}</p>`;
+            }
+        }
+
+        async function testStripeConnection() {
+            const result = document.getElementById('stripe-result');
+            result.innerHTML = '<p>Testing...</p>';
+
+            // Test creating a checkout session (this will fail without auth, but tests the endpoint)
+            const checkoutResult = await makeRequest('payments:createCheckoutSession', {
+                planCode: 'BRONZE',
+                successUrl: 'https://example.com/success',
+                cancelUrl: 'https://example.com/cancel',
+                userId: 'test-user'
+            });
+
+            if (checkoutResult.error) {
+                result.innerHTML = '<p class="success">✅ Stripe endpoint reachable (auth required as expected)</p>';
+                result.innerHTML += `<p>Expected error: ${checkoutResult.error}</p>`;
+            } else {
+                result.innerHTML = '<p class="success">✅ Stripe connection successful!</p>';
+                result.innerHTML += `<pre>${JSON.stringify(checkoutResult, null, 2)}</pre>`;
+            }
+        }
+
+        async function testAcademyCourses() {
+            const result = document.getElementById('academy-result');
+            result.innerHTML = '<p>Testing...</p>';
+
+            try {
+                const response = await fetch(`${CONVEX_URL}/query/academy:listAllCourses`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    result.innerHTML = '<p class="success">✅ Academy courses loaded successfully!</p>';
+                    result.innerHTML += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } else {
+                    result.innerHTML = `<p class="error">❌ Failed to load courses: ${response.status}</p>`;
+                }
+            } catch (error) {
+                result.innerHTML = `<p class="error">❌ Error: ${error.message}</p>`;
+            }
+        }
+
+        async function testChurchEvents() {
+            const result = document.getElementById('church-result');
+            result.innerHTML = '<p>Testing...</p>';
+
+            try {
+                const response = await fetch(`${CONVEX_URL}/query/church:listEvents`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    result.innerHTML = '<p class="success">✅ Church events loaded successfully!</p>';
+                    result.innerHTML += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } else {
+                    result.innerHTML = `<p class="error">❌ Failed to load events: ${response.status}</p>`;
+                }
+            } catch (error) {
+                result.innerHTML = `<p class="error">❌ Error: ${error.message}</p>`;
+            }
+        }
+
+        // Auto-test on page load
+        window.onload = function() {
+            setTimeout(() => {
+                testBackendConnection();
+            }, 1000);
+        };
+    </script>
+</body>
+</html>

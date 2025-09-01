@@ -1,7 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { useQuery } from 'convex/react';
-import { api } from '../_generated/api';
+
 import { FileText } from 'lucide-react';
 import SEO from '../components/SEO';
 import { siteUrl } from '../config';
@@ -9,8 +8,11 @@ import { siteUrl } from '../config';
 export default function Terms() {
   const { documentType } = useParams<{ documentType: string }>();
 
-  const data = useQuery(api.admin.getTerms, { documentType: documentType || '' });
-  const isLoading = data === undefined;
+  // Mock terms data
+  const data = {
+    content: `# ${title}\n\nThis is the content for ${title}. This document outlines the terms and conditions for using our services.\n\n## Section 1\n\nThis is section 1 content.\n\n## Section 2\n\nThis is section 2 content.`
+  };
+  const isLoading = false;
 
   const title = documentType?.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') || 'Legal Document';
 

@@ -1,16 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MessageSquare, Heart, Headphones, Church, Search, Filter, Eye, Reply, CheckCircle, Clock, AlertTriangle, User, Mail } from 'lucide-react';
-import { useQuery, useMutation } from 'convex/react';
-import { api } from '../../_generated/api';
+import client from '../../client';
 
 export default function MessagesAdmin() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
 
-  // Fetch real data from Convex
-  const prayerRequests = useQuery(api.church.listPrayerRequests);
-  const testimonies = useQuery(api.church.listTestimoniesAdmin);
+  const [prayerRequests, setPrayerRequests] = useState<any>(null);
+  const [testimonies, setTestimonies] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [prayerRes, testimoniesRes] = await Promise.all([
+          client.church.listPrayerRequests(),
+          client.church.listTestimoniesAdmin()
+        ]);
+        setPrayerRequests(prayerRes);
+        setTestimonies(testimoniesRes);
+      } catch (error) {
+        console.error('Failed to fetch admin data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   // Mock support tickets data - EXAMPLE ONLY
   const mockSupportTickets = [
@@ -90,7 +107,7 @@ export default function MessagesAdmin() {
   });
 
   // Reply mutations
-  const replyPrayerMutation = useMutation(api.church.replyPrayerRequest);
+
 
   const getTypeIcon = (type: string) => {
     switch (type) {

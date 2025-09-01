@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useBackend } from '../../hooks/useBackend';
+import { useUser } from '@clerk/clerk-react';
+
 import { 
   CreditCard, 
   Wallet, 
@@ -20,8 +20,9 @@ import {
 } from 'lucide-react';
 
 export default function BillingSettings() {
-  const authedBackend = useBackend();
-  const queryClient = useQueryClient();
+  const { user } = useUser();
+  const [isCancelling, setIsCancelling] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [walletAddress, setWalletAddress] = useState('');
   const [bsb, setBsb] = useState('');
   const [accountNumber, setAccountNumber] = useState('');
@@ -33,61 +34,74 @@ export default function BillingSettings() {
   const [is2FAEnabled, setIs2FAEnabled] = useState(false);
   const [lastSaved, setLastSaved] = useState('');
 
-  const { data: membership, refetch: refreshMembership } = useQuery({
-    queryKey: ['membership'],
-    queryFn: () => authedBackend.membership.getSubscription(),
-  });
+  // TODO: Convert to Encore.dev backend
+  // const membership = useQuery(api.membership.getUserSubscription, { userId: user?.id || '' });
+  // const profile = useQuery(api.users.getCurrentUserInfo);
+  // const updateProfile = useMutation(api.users.updateUserProfile);
+  // const cancelSubscription = useMutation(api.membership.cancelSubscription);
 
-  const { data: profile, isLoading: isProfileLoading } = useQuery({
-    queryKey: ['user-profile'],
-    queryFn: () => authedBackend.user.getMe(),
+  // Temporary mock data
+  const [membership] = useState({
+    status: 'active',
+    planCode: 'SILVER',
+    active: true,
+    planName: 'SILVER',
+    renewsAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days from now
+  });
+  const [profile] = useState({
+    name: user?.fullName || '',
+    email: user?.emailAddresses?.[0]?.emailAddress || '',
+    profile: {
+      usdtWalletAddress: '',
+      bsb: '',
+      accountNumber: '',
+      firstName: user?.firstName || '',
+      lastName: user?.lastName || '',
+      phone: '',
+      address: '',
+      lastUpdated: new Date().toISOString()
+    }
   });
 
   useEffect(() => {
     if (profile) {
-      setWalletAddress(profile.usdtWalletAddress || '');
-      setBsb(profile.bsb || '');
-      setAccountNumber(profile.accountNumber || '');
-      setFirstName(profile.firstName || '');
-      setLastName(profile.lastName || '');
+      setWalletAddress(profile.profile?.usdtWalletAddress || '');
+      setBsb(profile.profile?.bsb || '');
+      setAccountNumber(profile.profile?.accountNumber || '');
+      setFirstName(profile.profile?.firstName || '');
+      setLastName(profile.profile?.lastName || '');
       setEmail(profile.email || '');
-      setPhone(profile.phone || '');
-      setAddress(profile.address || '');
-      setIs2FAEnabled(profile.is2FAEnabled || false);
-      setLastSaved(profile.lastUpdated || '');
+      setPhone(profile.profile?.phone || '');
+      setAddress(profile.profile?.address || '');
+      setIs2FAEnabled(false); // Mock for now
+      setLastSaved(profile.profile?.lastUpdated || '');
     }
   }, [profile]);
 
-  const updateProfileMutation = useMutation({
-    mutationFn: (params: any) => authedBackend.user.updateProfile(params),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['user-profile'] });
+  const handleSavePayoutInfo = async () => {
+    if (!user?.id) return;
+
+    try {
+      setIsSaving(true);
+      // TODO: Implement Encore.dev backend call
+      // await client.user.updateProfile({
+      //   userId: user.id,
+      //   usdtWalletAddress: walletAddress,
+      //   bsb,
+      //   accountNumber,
+      //   firstName,
+      //   lastName,
+      //   phone,
+      //   address,
+      // });
       setLastSaved(new Date().toISOString());
-      alert('Information saved successfully.');
-    },
-  });
-
-  const cancelSubscriptionMutation = useMutation({
-    mutationFn: () => authedBackend.membership.cancelSubscription(),
-    onSuccess: async () => {
-      await refreshMembership();
-      alert('Your subscription has been set to cancel at the end of the current period.');
-    },
-  });
-
-  const handleSavePayoutInfo = () => {
-    updateProfileMutation.mutate({ 
-      usdtWalletAddress: walletAddress, 
-      bsb, 
-      accountNumber,
-      firstName,
-      lastName,
-      email,
-      phone,
-      address,
-      is2FAEnabled,
-      lastUpdated: new Date().toISOString()
-    });
+      alert('Information saved successfully (mock implementation).');
+    } catch (error) {
+      console.error('Failed to save profile:', error);
+      alert('Failed to save information. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const toggle2FA = () => {
@@ -154,9 +168,21 @@ export default function BillingSettings() {
     }
   ];
 
-  const handleCancelSubscription = () => {
+  const handleCancelSubscription = async () => {
+    if (!user?.id) return;
+
     if (window.confirm('Are you sure you want to cancel your membership? This action cannot be undone.')) {
-      cancelSubscriptionMutation.mutate();
+      try {
+        setIsCancelling(true);
+        // TODO: Implement Encore.dev backend call
+        // await client.membership.cancelSubscription({ userId: user.id });
+        alert('Your subscription has been set to cancel at the end of the current period (mock implementation).');
+      } catch (error) {
+        console.error('Failed to cancel subscription:', error);
+        alert('Failed to cancel subscription. Please try again.');
+      } finally {
+        setIsCancelling(false);
+      }
     }
   };
 
@@ -172,34 +198,34 @@ export default function BillingSettings() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-white font-semibold mb-2 text-sm">First Name</label>
-            <input 
-              type="text" 
-              value={firstName} 
-              onChange={(e) => setFirstName(e.target.value)} 
-              className="w-full bg-gray-700 border border-gray-600 text-white px-4 py-2" 
-              disabled={isProfileLoading} 
+            <input
+              type="text"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              className="w-full bg-gray-700 border border-gray-600 text-white px-4 py-2"
+              disabled={profile === undefined}
             />
           </div>
           <div>
             <label className="block text-white font-semibold mb-2 text-sm">Last Name</label>
-            <input 
-              type="text" 
-              value={lastName} 
-              onChange={(e) => setLastName(e.target.value)} 
-              className="w-full bg-gray-700 border border-gray-600 text-white px-4 py-2" 
-              disabled={isProfileLoading} 
+            <input
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              className="w-full bg-gray-700 border border-gray-600 text-white px-4 py-2"
+              disabled={profile === undefined}
             />
           </div>
           <div>
             <label className="block text-white font-semibold mb-2 text-sm">Email</label>
             <div className="flex items-center gap-2">
               <Mail className="w-4 h-4 text-gray-400" />
-              <input 
-                type="email" 
-                value={email} 
-                onChange={(e) => setEmail(e.target.value)} 
-                className="flex-1 bg-gray-700 border border-gray-600 text-white px-4 py-2" 
-                disabled={isProfileLoading} 
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="flex-1 bg-gray-700 border border-gray-600 text-white px-4 py-2"
+                disabled={profile === undefined}
               />
             </div>
           </div>
@@ -207,12 +233,12 @@ export default function BillingSettings() {
             <label className="block text-white font-semibold mb-2 text-sm">Phone</label>
             <div className="flex items-center gap-2">
               <Phone className="w-4 h-4 text-gray-400" />
-              <input 
-                type="tel" 
-                value={phone} 
-                onChange={(e) => setPhone(e.target.value)} 
-                className="flex-1 bg-gray-700 border border-gray-600 text-white px-4 py-2" 
-                disabled={isProfileLoading} 
+              <input
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="flex-1 bg-gray-700 border border-gray-600 text-white px-4 py-2"
+                disabled={profile === undefined}
                 placeholder="+61 xxx xxx xxx"
               />
             </div>
@@ -221,12 +247,12 @@ export default function BillingSettings() {
             <label className="block text-white font-semibold mb-2 text-sm">Address</label>
             <div className="flex items-center gap-2">
               <MapPin className="w-4 h-4 text-gray-400" />
-              <input 
-                type="text" 
-                value={address} 
-                onChange={(e) => setAddress(e.target.value)} 
-                className="flex-1 bg-gray-700 border border-gray-600 text-white px-4 py-2" 
-                disabled={isProfileLoading} 
+              <input
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                className="flex-1 bg-gray-700 border border-gray-600 text-white px-4 py-2"
+                disabled={profile === undefined}
                 placeholder="Street, City, State, Postcode"
               />
             </div>
@@ -293,9 +319,9 @@ export default function BillingSettings() {
             <button
               onClick={handleCancelSubscription}
               className="mt-4 bg-red-600 text-white hover:bg-red-700 px-4 py-2 font-semibold uppercase tracking-wide text-sm"
-              disabled={cancelSubscriptionMutation.isPending}
+              disabled={isCancelling}
             >
-              {cancelSubscriptionMutation.isPending ? 'Cancelling...' : 'Cancel Subscription'}
+              {isCancelling ? 'Cancelling...' : 'Cancel Subscription'}
             </button>
           </div>
         ) : (
@@ -375,11 +401,11 @@ export default function BillingSettings() {
             <div className="space-y-4">
               <div>
                 <label className="block text-white font-semibold mb-2 text-sm">BSB</label>
-                <input type="text" value={bsb} onChange={(e) => setBsb(e.target.value)} placeholder="000-000" className="w-full bg-gray-700 border border-gray-600 text-white px-4 py-2" disabled={isProfileLoading} />
+                <input type="text" value={bsb} onChange={(e) => setBsb(e.target.value)} placeholder="000-000" className="w-full bg-gray-700 border border-gray-600 text-white px-4 py-2" disabled={profile === undefined} />
               </div>
               <div>
                 <label className="block text-white font-semibold mb-2 text-sm">Account Number</label>
-                <input type="text" value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} placeholder="000000000" className="w-full bg-gray-700 border border-gray-600 text-white px-4 py-2" disabled={isProfileLoading} />
+                <input type="text" value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} placeholder="000000000" className="w-full bg-gray-700 border border-gray-600 text-white px-4 py-2" disabled={profile === undefined} />
               </div>
             </div>
           </div>
@@ -390,7 +416,7 @@ export default function BillingSettings() {
             <h3 className="text-lg font-semibold text-white mb-3">International Payouts</h3>
             <div>
               <label className="block text-white font-semibold mb-2 text-sm">USDT (TRC20) Wallet Address</label>
-              <input type="text" value={walletAddress} onChange={(e) => setWalletAddress(e.target.value)} placeholder="Enter your TRC20 wallet address" className="w-full bg-gray-700 border border-gray-600 text-white px-4 py-2" disabled={isProfileLoading} />
+              <input type="text" value={walletAddress} onChange={(e) => setWalletAddress(e.target.value)} placeholder="Enter your TRC20 wallet address" className="w-full bg-gray-700 border border-gray-600 text-white px-4 py-2" disabled={profile === undefined} />
               <div className="bg-yellow-500/20 text-yellow-300 border border-yellow-500/30 p-3 mt-2 flex items-center gap-2 text-sm">
                 <AlertCircle className="h-5 w-5" />
                 <div><strong>Important:</strong> Incorrect wallet addresses may result in permanent loss of funds. Double-check your address.</div>
@@ -412,10 +438,10 @@ export default function BillingSettings() {
         <button
           onClick={handleSavePayoutInfo}
           className="mt-8 bg-orange-500 text-white hover:bg-orange-600 px-6 py-3 font-semibold uppercase tracking-wide inline-flex items-center"
-          disabled={updateProfileMutation.isPending}
+          disabled={isSaving}
         >
           <Save className="mr-2 h-4 w-4" />
-          {updateProfileMutation.isPending ? 'Saving All Details...' : 'Save All Details'}
+          {isSaving ? 'Saving All Details...' : 'Save All Details'}
         </button>
       </div>
     </div>

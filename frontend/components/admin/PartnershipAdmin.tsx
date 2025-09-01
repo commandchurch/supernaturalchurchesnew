@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { useMutation } from 'convex/react';
-import { api } from '../../_generated/api';
+
 import { Handshake, Check, X, Edit, Clock, CheckCircle2 } from 'lucide-react';
 
 type Applications = Array<{

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
-import { Church, Mail, Phone, MapPin, Users, BookOpen, CheckCircle, X } from 'lucide-react';
+import { Church, Mail, Phone, MapPin, Users, BookOpen, CheckCircle, X, Loader2 } from 'lucide-react';
 
 interface FormData {
   churchName: string;
@@ -31,27 +30,56 @@ export default function FiveFoldApplicationForm({ isOpen, onClose }: FiveFoldApp
     congregationSize: '',
     currentChallenges: '',
     goals: '',
-    hearAboutUs: ''
+    hearAboutUs: '',
   });
 
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const submitMutation = useMutation({
-    mutationFn: async (data: FormData) => {
-      // Mock API call - replace with actual backend call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('Five Fold Application Submitted:', data);
-      return { success: true };
-    },
-    onSuccess: () => {
-      setIsSubmitted(true);
-    }
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    submitMutation.mutate(formData);
+    setIsSubmitting(true);
+
+    try {
+      // Submit Five-Fold application via direct API call
+      const response = await fetch('/api/fivefold/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(formData),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to submit application');
+      }
+      
+      // Email confirmation handled by backend
+
+      setIsSubmitted(true);
+      // Reset form after successful submission
+      setFormData({
+        churchName: '',
+        pastorName: '',
+        email: '',
+        phone: '',
+        location: '',
+        denomination: '',
+        congregationSize: '',
+        currentChallenges: '',
+        goals: '',
+        hearAboutUs: '',
+      });
+    } catch (error) {
+      console.error('Submission failed:', error);
+      alert('Failed to submit application. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData(prev => ({
@@ -307,10 +335,17 @@ export default function FiveFoldApplicationForm({ isOpen, onClose }: FiveFoldApp
                 </button>
                 <button
                   type="submit"
-                  disabled={submitMutation.isPending}
-                  className="flex-1 bg-orange-500 text-white hover:bg-orange-600 px-6 py-3 font-semibold uppercase tracking-wide text-sm disabled:bg-gray-600"
+                  disabled={isSubmitting}
+                  className="flex-1 bg-orange-500 text-white hover:bg-orange-600 px-6 py-3 font-semibold uppercase tracking-wide text-sm disabled:bg-gray-600 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
-                  {submitMutation.isPending ? 'Submitting...' : 'Submit Application'}
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Submitting...
+                    </>
+                  ) : (
+                    'Submit Application'
+                  )}
                 </button>
               </div>
             </form>

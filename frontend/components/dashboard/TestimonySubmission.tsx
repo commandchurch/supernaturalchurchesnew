@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { useMutation } from 'convex/react';
 import { useUser } from '@clerk/clerk-react';
-import { api } from '../../_generated/api';
 import { Video, UploadCloud, CheckSquare, Send } from 'lucide-react';
+import client from '../../client';
 
 export default function TestimonySubmission() {
   const { user } = useUser();
@@ -13,15 +12,36 @@ export default function TestimonySubmission() {
   const [consent, setConsent] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   
-  const submitTestimony = useMutation(api.church.submitTestimony);
+
 
   async function handleUpload() {
     if (!file || !user) return;
     try {
       setUploading(true);
-      // For now, just simulate upload success
-      // In production, implement proper file upload to cloud storage
-      setUploadedObject({ objectName: 'demo-video', publicUrl: 'demo-url' });
+      
+      // Get upload URL from Encore.dev backend
+      const fileExtension = file.name.split('.').pop() || 'mp4';
+      const uploadData = await client.church.getTestimonyUploadUrl({
+        fileExtension: fileExtension
+      });
+      
+      // Upload file to the signed URL
+      const uploadResponse = await fetch(uploadData.url, {
+        method: 'PUT',
+        body: file,
+        headers: {
+          'Content-Type': file.type,
+        },
+      });
+      
+      if (!uploadResponse.ok) {
+        throw new Error('Upload failed');
+      }
+      
+      setUploadedObject({
+        objectName: uploadData.objectName,
+        publicUrl: uploadData.publicUrl
+      });
       setMessage('Video uploaded successfully.');
     } catch (err: any) {
       console.error('upload error', err);
@@ -47,7 +67,7 @@ export default function TestimonySubmission() {
       return;
     }
     try {
-      await submitTestimony({
+      await client.church.submitTestimony({
         contentText: contentText || undefined,
         videoObjectName: uploadedObject?.objectName,
         consentPublic: true,

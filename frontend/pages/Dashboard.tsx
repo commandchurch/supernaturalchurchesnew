@@ -12,6 +12,7 @@ import PartnershipApplication from '../components/dashboard/PartnershipApplicati
 import AffiliateRewards from '../components/dashboard/AffiliateRewards';
 import Messages from '../components/dashboard/Messages';
 import EnhancedMessages from '../components/EnhancedMessages';
+import UserMessagesInbox from '../components/dashboard/UserMessagesInbox';
 
 type TabKey = 'overview' | 'fund' | 'outreach' | 'prayer' | 'testimony' | 'billing' | 'support' | 'affiliate-rewards' | 'messages' | 'partnership';
 
@@ -105,121 +106,7 @@ export default function Dashboard() {
         {tab === 'partnership' && <PartnershipApplication />}
         {tab === 'billing' && <BillingSettings />}
         {tab === 'support' && <Support />}
-        {tab === 'messages' && <div className="bg-gray-900 text-white min-h-[400px] p-6">
-          <div className="max-w-4xl mx-auto">
-            {/* Simple header */}
-            <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center gap-3">
-                <MessageCircle className="w-7 h-7 text-blue-400" />
-                <div>
-                  <h1 className="text-2xl font-bold text-white">Messages</h1>
-                  <p className="text-gray-400 text-sm">Stay updated with your notifications</p>
-                </div>
-              </div>
-              
-              {/* Simple toggle */}
-              <div className="flex items-center gap-2">
-                <button 
-                  className="px-4 py-2 bg-gray-800 text-white border border-gray-600 text-sm font-medium hover:bg-gray-700 transition-colors"
-                  onClick={() => {/* Toggle between active/actioned */}}
-                >
-                  View Actioned
-                </button>
-              </div>
-            </div>
-
-            {/* Simple message list */}
-            <div className="space-y-4">
-              {/* New Message */}
-              <div className="bg-gray-800 border border-gray-700 p-5">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="bg-orange-500 text-white text-xs font-semibold px-2 py-1 uppercase tracking-wide">
-                        NEW
-                      </span>
-                      <h3 className="text-white font-semibold">Welcome to Supernatural Institute</h3>
-                    </div>
-                    <p className="text-gray-300 text-sm leading-relaxed mb-3">
-                      Welcome to our community! Your account has been successfully created. You can now access all training materials and community features.
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-500 text-xs">Today at 2:30 PM</span>
-                      <div className="flex items-center gap-3">
-                        <button className="px-4 py-2 bg-green-600 text-white text-sm font-semibold hover:bg-green-700 transition-colors">
-                          MARK ACTIONED
-                        </button>
-                        <button className="px-4 py-2 bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors">
-                          REPLY
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Another New Message */}
-              <div className="bg-gray-800 border border-gray-700 p-5">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="bg-orange-500 text-white text-xs font-semibold px-2 py-1 uppercase tracking-wide">
-                        NEW
-                      </span>
-                      <h3 className="text-white font-semibold">Payment Confirmation - Gold Membership</h3>
-                    </div>
-                    <p className="text-gray-300 text-sm leading-relaxed mb-3">
-                      Your payment for Gold membership has been successfully processed. Thank you for upgrading! You now have access to all premium features.
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-500 text-xs">2 hours ago</span>
-                      <div className="flex items-center gap-3">
-                        <button className="px-4 py-2 bg-green-600 text-white text-sm font-semibold hover:bg-green-700 transition-colors">
-                          MARK ACTIONED
-                        </button>
-                        <button className="px-4 py-2 bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors">
-                          REPLY
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Example of Actioned Message */}
-              <div className="bg-gray-800/50 border border-gray-600/50 p-5 opacity-75">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="bg-green-600 text-white text-xs font-semibold px-2 py-1 uppercase tracking-wide">
-                        ACTIONED
-                      </span>
-                      <h3 className="text-gray-300 font-semibold">Course Completion Certificate Available</h3>
-                    </div>
-                    <p className="text-gray-400 text-sm leading-relaxed mb-3">
-                      Congratulations! Your certificate for "Supernatural Ministry Foundations" is now ready for download.
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-500 text-xs">Yesterday at 4:15 PM • Actioned</span>
-                      <div className="flex items-center gap-3">
-                        <button className="px-4 py-2 bg-gray-600 text-gray-300 text-sm font-semibold cursor-not-allowed" disabled>
-                          ACTIONED
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Simple empty state when no messages */}
-            <div className="text-center py-12 hidden">
-              <MessageCircle className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-              <h3 className="text-gray-400 text-lg font-semibold mb-2">No messages yet</h3>
-              <p className="text-gray-500 text-sm">When you receive notifications, they'll appear here</p>
-            </div>
-          </div>
-        </div>}
+        {tab === 'messages' && <UserMessagesInbox />}
       </div>
     </div>
   );

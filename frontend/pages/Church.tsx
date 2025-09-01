@@ -1,12 +1,33 @@
 import React from 'react';
-import { useQuery } from 'convex/react';
-import { api } from '../_generated/api';
+
 import { Calendar, MapPin, Play } from 'lucide-react';
 import SEO from '../components/SEO';
 import { siteUrl } from '../config';
 
 export default function Church() {
-  const eventsData = useQuery(api.church.listEvents);
+  // Mock events data
+  const eventsData = {
+    events: [
+      {
+        id: '1',
+        title: 'Sunday Worship Service',
+        description: 'Join us for our weekly worship service with powerful preaching and supernatural manifestations.',
+        eventType: 'service',
+        startDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
+        locationName: 'Online',
+        virtualLink: 'https://youtube.com/@commandchurch'
+      },
+      {
+        id: '2',
+        title: 'Supernatural Prayer Conference 2024',
+        description: 'A 3-day intensive prayer and fasting event focused on breakthrough and supernatural manifestation.',
+        eventType: 'conference',
+        startDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        locationName: 'Online',
+        virtualLink: 'https://youtube.com/@commandchurch'
+      }
+    ]
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleString('en-US', {

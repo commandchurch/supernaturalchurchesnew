@@ -1,7 +1,6 @@
 import React, { Suspense, lazy, useMemo, useState } from 'react';
-import { useQuery, useMutation } from 'convex/react';
-import { api } from '../_generated/api';
-import { DollarSign, Users, TrendingUp, AlertTriangle, Heart, Send, Network, BookOpen, Calculator, Calendar, MessageSquare, UserCheck, Headphones, Church, Gift, Activity, Shield } from 'lucide-react';
+
+import { DollarSign, Users, TrendingUp, AlertTriangle, Heart, Send, Network, BookOpen, Calculator, Calendar, MessageSquare, UserCheck, Headphones, Church, Gift, Activity, Shield, Handshake } from 'lucide-react';
 import LoadingSpinner from '../components/LoadingSpinner';
 import SimpleAdminMessages from '../components/SimpleAdminMessages';
 
@@ -21,35 +20,21 @@ const AffiliateNetworkAdmin = lazy(() => import('../components/admin/AffiliateNe
 const ChurchesAdmin = lazy(() => import('../components/admin/ChurchesAdmin'));
 const SystemStatusAdmin = lazy(() => import('../components/admin/SystemStatusAdmin'));
 const BlacklistAdmin = lazy(() => import('../components/admin/BlacklistAdmin'));
+const PrayerRequestsAdminNew = lazy(() => import('../components/admin/PrayerRequestsAdminNew'));
+const PartnershipApplicationsAdmin = lazy(() => import('../components/admin/PartnershipApplicationsAdmin'));
+const FiveFoldApplicationsAdmin = lazy(() => import('../components/admin/FiveFoldApplicationsAdmin'));
 
-type TabKey = 'overview' | 'system-status' | 'testimonies' | 'support' | 'messages' | 'affiliate-network' | 'churches' | 'blacklist' | 'content' | 'events' | 'staff';
+type TabKey = 'overview' | 'system-status' | 'testimonies' | 'support' | 'messages' | 'affiliate-network' | 'churches' | 'blacklist' | 'content' | 'events' | 'staff' | 'prayer-requests' | 'partnerships' | 'fivefold';
 
 export default function Admin() {
   const [tab, setTab] = useState<TabKey>('overview');
 
-  // Fund data
-  const balance = useQuery(api.fund.getBalance);
-  const needs = useQuery(api.fund.listNeeds);
-  const transactions = useQuery(api.fund.listTransactions);
-
-  // Outreach data
-  const profiles = useQuery(api.outreach.listProfiles);
-  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-  const leaderboard = useQuery(api.outreach.listLeaderboard);
-  const withdrawals = useQuery(api.outreach.listWithdrawals);
-
-  // Prayer requests data
-  const prayerRequests = useQuery(api.church.listPrayerRequests);
-
-  // Testimonies data
-  const testimonies = useQuery(api.church.listTestimoniesAdmin);
-
-  const seedMutation = useMutation(api.outreach.seedNetwork);
-  const approveWithdrawalMutation = useMutation(api.outreach.approveWithdrawal);
-  const approveNeedMutation = useMutation(api.fund.approveNeed);
-  const rejectNeedMutation = useMutation(api.fund.rejectNeed);
-
-  const replyPrayerMutation = useMutation(api.church.replyPrayerRequest);
+  // Mock data for dashboard stats since we're now using Encore.dev
+  const [dashboardData, setDashboardData] = useState({
+    prayerRequests: { requests: [] },
+    testimonies: { testimonies: [] },
+    profiles: { profiles: [] }
+  });
 
   const formatCurrency = (amount: number) =>
     new Intl.NumberFormat('en-US', {
@@ -60,19 +45,22 @@ export default function Admin() {
     }).format(amount);
 
   const dashboardStats = useMemo(() => ({
-    urgentTasks: 3, // From system status
-    totalMessages: (prayerRequests?.requests?.length || 0) + (testimonies?.testimonies?.length || 0) + 1, // +1 for support ticket example
-    totalAffiliates: profiles?.profiles?.length || 3, // Show 3 as example
-    activeChurches: 1, // Updated to match churches data
-    pendingTestimonies: testimonies?.testimonies.filter((t: any) => t.status === 'pending').length || 0,
-    supportTickets: 1, // Single example ticket
-    systemHealth: 'Good', // Overall system status
-  }), [profiles, prayerRequests, testimonies]);
+    urgentTasks: 3,
+    totalMessages: 1, // Example data
+    totalAffiliates: 3,
+    activeChurches: 1,
+    pendingTestimonies: 0,
+    supportTickets: 1,
+    systemHealth: 'Good',
+  }), []);
 
   const tabs: { key: TabKey; label: string; icon: React.ElementType }[] = [
     { key: 'overview', label: 'Overview', icon: TrendingUp },
     { key: 'system-status', label: 'System Status', icon: Activity },
     { key: 'testimonies', label: 'Testimony', icon: MessageSquare },
+    { key: 'prayer-requests', label: 'Prayer Requests', icon: Heart },
+    { key: 'partnerships', label: 'Partnerships', icon: Handshake },
+    { key: 'fivefold', label: 'Five-Fold Apps', icon: Users },
     { key: 'support', label: 'Support', icon: Headphones },
     { key: 'messages', label: 'Messages', icon: MessageSquare },
     { key: 'affiliate-network', label: 'Affiliate Network', icon: Users },
@@ -130,6 +118,12 @@ export default function Admin() {
         {tab === 'system-status' && <SystemStatusAdmin />}
 
         {tab === 'testimonies' && <TestimoniesAdmin />}
+
+        {tab === 'prayer-requests' && <PrayerRequestsAdminNew />}
+
+        {tab === 'partnerships' && <PartnershipApplicationsAdmin />}
+
+        {tab === 'fivefold' && <FiveFoldApplicationsAdmin />}
 
         {tab === 'support' && <SupportAdmin />}
 

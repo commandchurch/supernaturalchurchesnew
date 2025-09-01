@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useQuery } from 'convex/react';
-import { api } from '../_generated/api';
+
 import { ArrowRight, Play, Users, GraduationCap, Info, Heart, Calendar, MapPin } from 'lucide-react';
 import SEO from '../components/SEO';
 import ChurchPartnershipCTA from '../components/ChurchPartnershipCTA';
@@ -34,8 +33,25 @@ const ministryTiles = [
 ];
 
 export default function Home() {
-  const eventsData = useQuery(api.church.listEvents);
-  const upcomingEvents = eventsData?.events.slice(0, 2) || [];
+  // Mock upcoming events data
+  const upcomingEvents = [
+    {
+      id: '1',
+      title: 'Supernatural Prayer Conference',
+      description: 'Join us for a powerful time of corporate prayer and supernatural manifestation.',
+      eventType: 'conference',
+      startDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+      locationName: 'Online'
+    },
+    {
+      id: '2',
+      title: 'Kingdom Discipleship Training',
+      description: 'Advanced training session for those walking in supernatural ministry.',
+      eventType: 'service',
+      startDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
+      locationName: 'Online'
+    }
+  ];
 
   useEffect(() => {
     window.scrollTo(0, 0);

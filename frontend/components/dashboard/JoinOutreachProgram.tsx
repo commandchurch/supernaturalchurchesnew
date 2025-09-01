@@ -1,47 +1,48 @@
 import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useBackend } from '../../hooks/useBackend';
+import { useUser } from '@clerk/clerk-react';
+
 import { Link } from 'react-router-dom';
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
 
 export default function JoinOutreachProgram() {
-  const authedBackend = useBackend();
-  const queryClient = useQueryClient();
+  const { user } = useUser();
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [isJoining, setIsJoining] = useState(false);
 
-  const { data: coursesData, isLoading: isLoadingCourses } = useQuery({
-    queryKey: ['academy-courses'],
-    queryFn: () => authedBackend.academy.listCourses(),
-  });
+  // TODO: Convert to Encore.dev backend
+  // const coursesData = useQuery(api.academy.listAllCourses);
+  // const progressData = useQuery(api.academy.getProgress, { userId: user?.id || '' });
+  // const termsData = useQuery(api.admin.getTerms, { documentType: 'soul-outreach-terms' });
+  // const joinMutation = useMutation(api.outreach.joinProgram);
 
-  const evangelismCourse = coursesData?.courses.find(c => c.title.toLowerCase().includes('evangelism essentials'));
+  // Temporary mock data
+  const [coursesData] = useState([{ id: '1', title: 'Evangelism Essentials', description: 'Learn the fundamentals of evangelism' }]);
+  const [progressData] = useState({ progress: [{ courseId: '1', completedAt: new Date().toISOString() }] });
+  const [termsData] = useState({ content: 'Terms and conditions for Soul Outreach program...' });
 
-  const { data: progressData, isLoading: isLoadingProgress } = useQuery({
-    queryKey: ['academy-progress', evangelismCourse?.id],
-    queryFn: () => authedBackend.academy.getProgress(),
-    enabled: !!evangelismCourse,
-  });
+  const evangelismCourse = coursesData?.find((c: any) => c.title.toLowerCase().includes('evangelism essentials'));
 
-  const { data: termsData, isLoading: isLoadingTerms } = useQuery({
-    queryKey: ['terms', 'soul-outreach-terms'],
-    queryFn: () => authedBackend.admin.getTerms({ documentType: 'soul-outreach-terms' }),
-  });
-
-  const joinMutation = useMutation({
-    mutationFn: () => authedBackend.outreach.joinProgram({}),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['outreach-profile'] });
-    },
-    onError: (error: any) => {
-      alert(`Failed to join: ${error.message}`);
-    }
-  });
-
-  const courseProgress = progressData?.progress.find(p => p.courseId === evangelismCourse?.id);
+  const courseProgress = progressData?.progress?.find((p: any) => p.courseId === evangelismCourse?.id);
   const isCourseCompleted = !!courseProgress?.completedAt;
 
   const canJoin = isCourseCompleted && agreedToTerms;
-  const isLoading = isLoadingCourses || isLoadingProgress || isLoadingTerms;
+
+  const handleJoinProgram = async () => {
+    try {
+      setIsJoining(true);
+      // TODO: Implement Encore.dev backend call
+      // await client.outreach.joinProgram({});
+      alert('Successfully joined Soul Outreach program (mock implementation)!');
+      // Refresh the page or redirect to show updated status
+      window.location.reload();
+    } catch (error) {
+      console.error('Failed to join program:', error);
+      alert('Failed to join program. Please try again.');
+    } finally {
+      setIsJoining(false);
+    }
+  };
+  const isLoading = coursesData === undefined || progressData === undefined || termsData === undefined;
 
   if (isLoading) {
     return <div className="text-center p-8"><Loader2 className="h-8 w-8 animate-spin mx-auto" /></div>;
@@ -103,11 +104,11 @@ export default function JoinOutreachProgram() {
       </div>
 
       <button
-        onClick={() => joinMutation.mutate()}
-        disabled={!canJoin || joinMutation.isPending}
+        onClick={handleJoinProgram}
+        disabled={!canJoin || isJoining}
         className="bg-white text-black px-6 py-3 font-semibold uppercase tracking-wide disabled:bg-gray-500 disabled:cursor-not-allowed hover:bg-gray-200"
       >
-        {joinMutation.isPending ? 'Joining...' : 'Agree & Join Program'}
+        {isJoining ? 'Joining...' : 'Agree & Join Program'}
       </button>
     </div>
   );

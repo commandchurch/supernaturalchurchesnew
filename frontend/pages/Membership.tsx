@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useQuery, useMutation } from 'convex/react';
 import { useUser } from '@clerk/clerk-react';
-import { api } from '../_generated/api';
+
 import {
   EnhancedCard,
   EnhancedCardContent,
@@ -49,9 +48,19 @@ const Membership: React.FC = () => {
   const [isPartnershipFormOpen, setIsPartnershipFormOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   
-  // Fetch subscription plans from Convex
-  const subscriptionPlans = useQuery(api.membership.getSubscriptionPlans);
-  const createCheckoutSession = useMutation(api.payments.createCheckoutSession);
+  // Mock subscription plans
+  const subscriptionPlans = [
+    { code: 'FREE', name: 'Free Membership', price: 0, description: 'Basic access' },
+    { code: 'BRONZE', name: 'Bronze Membership', price: 19, description: 'Standard membership' },
+    { code: 'SILVER', name: 'Silver Membership', price: 33, description: 'Premium membership' },
+    { code: 'GOLD', name: 'Gold Membership', price: 149, description: 'Ultimate membership' }
+  ];
+
+  const createCheckoutSession = async (params: any) => {
+    // Mock checkout session creation
+    alert('Redirecting to Stripe checkout...');
+    // In real implementation, this would redirect to Stripe
+  };
   
   // Handle JOIN NOW button click
   const handleJoinNow = async (planCode: string) => {
@@ -87,19 +96,19 @@ const Membership: React.FC = () => {
     
     if (!subscriptionPlans) return baseTiers;
     
-    // Map Convex plans to tier display data
+    // Map Encore plans to tier display data
     return baseTiers.map(tier => {
-      const convexPlan = subscriptionPlans.find(p => 
-        tier.name.toUpperCase().includes(p.code) || 
+      const encorePlan = subscriptionPlans.find(p =>
+        tier.name.toUpperCase().includes(p.code) ||
         p.name.toUpperCase().includes(tier.name.toUpperCase())
       );
-      
-      if (convexPlan) {
+
+      if (encorePlan) {
         return {
           ...tier,
-          price: convexPlan.priceMonthly,
-          features: convexPlan.features,
-          planCode: convexPlan.code
+          price: encorePlan.price,
+          features: encorePlan.description ? [encorePlan.description] : tier.features,
+          planCode: encorePlan.code
         };
       }
       

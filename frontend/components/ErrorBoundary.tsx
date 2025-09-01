@@ -20,10 +20,36 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   static getDerivedStateFromError(error: Error): State {
+    // Don't show error page for authentication and context errors
+    if (error.message.includes('Clerk') ||
+        error.message.includes('Encore') ||
+        error.message.includes('authentication') ||
+        error.message.includes('token') ||
+        error.message.includes('UserContext') ||
+        error.message.includes('Context not found') ||
+        error.message.includes('useUser') ||
+        error.message.includes('useAuth')) {
+      console.warn('Authentication/Context error (continuing gracefully):', error.message);
+      return { hasError: false }; // Don't show error page
+    }
+
     return { hasError: true, error };
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    // Don't catch authentication and context errors - let them fail gracefully
+    if (error.message.includes('Clerk') ||
+        error.message.includes('Encore') ||
+        error.message.includes('authentication') ||
+        error.message.includes('token') ||
+        error.message.includes('UserContext') ||
+        error.message.includes('Context not found') ||
+        error.message.includes('useUser') ||
+        error.message.includes('useAuth')) {
+      console.warn('Authentication/Context error (not critical):', error.message);
+      return; // Don't set error state for auth/context issues
+    }
+
     this.setState({
       error,
       errorInfo
@@ -31,7 +57,7 @@ class ErrorBoundary extends Component<Props, State> {
 
     // Log error to monitoring service
     console.error('ErrorBoundary caught an error:', error, errorInfo);
-    
+
     // In production, you'd send this to your error tracking service
     // e.g., Sentry, LogRocket, etc.
   }

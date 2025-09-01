@@ -1,22 +1,23 @@
 # 🚀 GitHub Deployment Setup Guide
 
-This guide will help you set up automated deployment from GitHub to Convex and Vercel.
+This guide will help you set up automated deployment from GitHub to Encore.dev and Vercel.
 
 ## 📋 **Prerequisites**
 
 1. **GitHub Repository**: ✅ Already created at https://github.com/commandchurch/supernaturalinstitute
-2. **Convex Account**: ✅ Already configured
+2. **Encore.dev Account**: ✅ Already configured
 3. **Vercel Account**: ✅ Already configured
 
-## 🔧 **Step 1: Get Convex Deploy Key**
+## 🔧 **Step 1: Configure Encore Authentication**
 
 ```bash
 # Run this in your project directory
-npx convex dev --once
-npx convex deploy-key
+encore auth login
 
-# This will output a deploy key like: 
-# prod:1234567890abcdef1234567890abcdef|1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef
+# Verify authentication
+encore auth whoami
+
+# Backend will auto-deploy to Encore Cloud when you push to main
 ```
 
 ## 🔧 **Step 2: Get Vercel Tokens**

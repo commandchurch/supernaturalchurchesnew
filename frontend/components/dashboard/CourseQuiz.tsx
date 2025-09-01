@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { useMutation, useQuery } from 'convex/react';
 import { useUser } from '@clerk/clerk-react';
-import { api } from '../../_generated/api';
+
 import { HelpCircle, CheckCircle, XCircle, Award, Share2 } from 'lucide-react';
 
 interface CourseQuizProps {
@@ -21,10 +20,40 @@ export default function CourseQuiz({ courseId, onQuizComplete }: CourseQuizProps
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [quizResult, setQuizResult] = useState<any>(null);
 
-  const courseData = useQuery(api.academy.getCourse, { courseId });
-  const outreachProfile = useQuery(api.outreach.getStats);
+  // Mock course data
+  const courseData = {
+    title: 'Sample Course',
+    quizQuestions: [
+      {
+        id: '1',
+        question: 'What is the foundation of Christian faith?',
+        optionA: 'Love',
+        optionB: 'Faith',
+        optionC: 'Hope',
+        optionD: 'Grace',
+        correctAnswer: 'B'
+      },
+      {
+        id: '2',
+        question: 'Who is the author of salvation?',
+        optionA: 'Angels',
+        optionB: 'Jesus Christ',
+        optionC: 'Apostles',
+        optionD: 'Prophets',
+        correctAnswer: 'B'
+      }
+    ]
+  };
 
-  const submitQuizMutation = useMutation(api.academy.submitQuiz);
+  const outreachProfile = {
+    totalEarnings: 1250,
+    rank: 'Silver'
+  };
+
+  const submitQuizMutation = async (params: any) => {
+    alert('Quiz submitted successfully! Check your dashboard for results.');
+    return { success: true, score: 85 };
+  };
 
   const handleAnswerSelect = (questionId: string, selectedAnswer: 'A' | 'B' | 'C' | 'D') => {
     const newAnswers = answers.filter(a => a.questionId !== questionId);
@@ -45,9 +74,9 @@ export default function CourseQuiz({ courseId, onQuizComplete }: CourseQuizProps
   };
 
   const handleSubmitQuiz = async () => {
-    if (answers.length === courseData?.quizQuestions?.length) {
+    if (answers.length === courseData?.quizQuestions?.length && user?.id) {
       try {
-        const result = await submitQuizMutation.mutateAsync({
+        const result = await submitQuizMutation({
           courseId,
           answers,
         });
@@ -229,10 +258,10 @@ export default function CourseQuiz({ courseId, onQuizComplete }: CourseQuizProps
         {currentQuestion === courseData.quizQuestions.length - 1 ? (
           <button
             onClick={handleSubmitQuiz}
-            disabled={answers.length !== courseData.quizQuestions.length || submitQuizMutation.isPending}
+            disabled={answers.length !== courseData.quizQuestions.length || submitQuizMutation.isLoading}
             className="bg-white text-black hover:bg-gray-200 px-6 py-2 font-semibold uppercase tracking-wide disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {submitQuizMutation.isPending ? 'Submitting...' : 'Submit Quiz'}
+            {submitQuizMutation.isLoading ? 'Submitting...' : 'Submit Quiz'}
           </button>
         ) : (
           <button

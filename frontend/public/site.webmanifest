@@ -1,16 +1,16 @@
 {
-  "name": "Supernatural Institute",
-  "short_name": "SI",
-  "description": "The Premier Supernatural Ministry Training Platform",
+  "name": "Supernatural Institute of Ministry",
+  "short_name": "Supernatural Institute",
+  "description": "God's supernatural ministry training believers to be fully equipped for Kingdom advancement",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1a1a1a",
   "icons": [
     {
-      "src": "/favicon-32x32.png",
-      "sizes": "32x32",
-      "type": "image/png"
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
     }
-  ],
-  "theme_color": "#000000",
-  "background_color": "#000000",
-  "display": "standalone",
-  "start_url": "/"
+  ]
 }

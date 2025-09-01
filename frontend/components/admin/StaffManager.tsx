@@ -1,6 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { useQuery, useMutation } from 'convex/react';
-import { api } from '../../_generated/api';
+import React, { useMemo, useState, useEffect } from 'react';
+import client from '../../client';
 import { Users, Plus, UploadCloud, Send, Shield, ClipboardCheck, BadgeCheck, Baby, HandHeart } from 'lucide-react';
 
 type Staff = {
@@ -24,29 +23,47 @@ const empty = {
 };
 
 export default function StaffManager() {
-  const data = useQuery(api.staff.listStaff);
-  const isLoading = data === undefined;
+  const [data, setData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStaff = async () => {
+      try {
+        const result = await client.staff.listStaff();
+        setData(result);
+      } catch (error) {
+        console.error('Failed to fetch staff:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchStaff();
+  }, []);
 
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<typeof empty>(empty);
 
-  const create = useMutation(api.staff.createStaff);
-  const update = useMutation(api.staff.updateStaff);
-  const sendForms = useMutation(api.staff.updateStaff); // Using updateStaff as placeholder
 
-  const handleCreateStaff = () => {
-    create({
-      fullName: form.fullName,
-      email: form.email || undefined,
-      mobile: form.mobile || undefined,
-      paid: form.paid,
-      wantsChildrenWork: form.wantsChildrenWork,
-      wantsMinistryTeam: form.wantsMinistryTeam,
-      userId: form.userId || undefined,
-    }).then(() => {
+
+  const handleCreateStaff = async () => {
+    try {
+      await client.staff.createStaff({
+        fullName: form.fullName,
+        email: form.email || undefined,
+        mobile: form.mobile || undefined,
+        paid: form.paid,
+        wantsChildrenWork: form.wantsChildrenWork,
+        wantsMinistryTeam: form.wantsMinistryTeam,
+        userId: form.userId || undefined,
+      });
       setOpen(false);
       setForm(empty);
-    });
+      // Refresh data
+      const result = await client.staff.listStaff();
+      setData(result);
+    } catch (error) {
+      console.error('Failed to create staff:', error);
+    }
   };
 
   const handleSendForms = (id: string) => {
@@ -55,7 +72,7 @@ export default function StaffManager() {
   };
 
   const uploadDL = async (staffId: string, file: File) => {
-    // Simulate file upload - in real implementation would use Convex file storage
+    // Simulate file upload - in real implementation would use Encore file storage
     alert('Driver\'s license upload simulated. Feature requires file storage implementation.');
   };
 
@@ -123,16 +140,48 @@ export default function StaffManager() {
                   <div className="text-gray-500 text-[11px] md:text-xs">{s.mobile || '—'}</div>
                 </td>
                 <td className="px-2 py-3">
-                  <Toggle checked={s.paid} onChange={(v) => update({ id: s.id, paid: v })} />
+                  <Toggle checked={s.paid} onChange={async (v) => {
+                    try {
+                      await client.staff.updateStaff({ id: s.id, paid: v });
+                      const result = await client.staff.listStaff();
+                      setData(result);
+                    } catch (error) {
+                      console.error('Failed to update staff:', error);
+                    }
+                  }} />
                 </td>
                 <td className="px-2 py-3 hidden sm:table-cell">
-                  <Toggle checked={s.wantsChildrenWork} onChange={(v) => update({ id: s.id, wantsChildrenWork: v })} />
+                  <Toggle checked={s.wantsChildrenWork} onChange={async (v) => {
+                    try {
+                      await client.staff.updateStaff({ id: s.id, wantsChildrenWork: v });
+                      const result = await client.staff.listStaff();
+                      setData(result);
+                    } catch (error) {
+                      console.error('Failed to update staff:', error);
+                    }
+                  }} />
                 </td>
                 <td className="px-2 py-3 hidden sm:table-cell">
-                  <Toggle checked={s.wantsMinistryTeam} onChange={(v) => update({ id: s.id, wantsMinistryTeam: v })} />
+                  <Toggle checked={s.wantsMinistryTeam} onChange={async (v) => {
+                    try {
+                      await client.staff.updateStaff({ id: s.id, wantsMinistryTeam: v });
+                      const result = await client.staff.listStaff();
+                      setData(result);
+                    } catch (error) {
+                      console.error('Failed to update staff:', error);
+                    }
+                  }} />
                 </td>
                 <td className="px-2 py-3">
-                  <ComplianceBadges s={s} onUpdate={(p) => update({ id: s.id, ...p })} onUploadDL={uploadDL} />
+                  <ComplianceBadges s={s} onUpdate={async (p) => {
+                    try {
+                      await client.staff.updateStaff({ id: s.id, ...p });
+                      const result = await client.staff.listStaff();
+                      setData(result);
+                    } catch (error) {
+                      console.error('Failed to update staff:', error);
+                    }
+                  }} onUploadDL={uploadDL} />
                 </td>
                 <td className="px-2 py-3">
                   <div className="flex flex-col gap-2 w-[160px]">
@@ -145,7 +194,17 @@ export default function StaffManager() {
                     <button
                       onClick={() => {
                         const uid = prompt("Set/Update UserID (for training tracking):", s.userId || "");
-                        if (uid !== null) update({ id: s.id, userId: uid || null });
+                        if (uid !== null) {
+                          (async () => {
+                            try {
+                              await client.staff.updateStaff({ id: s.id, userId: uid || null });
+                              const result = await client.staff.listStaff();
+                              setData(result);
+                            } catch (error) {
+                              console.error('Failed to update staff:', error);
+                            }
+                          })();
+                        }
                       }}
                       className="text-white bg-gray-700 hover:bg-gray-600 px-2 py-1 text-[11px] md:text-xs"
                     >

@@ -28,6 +28,7 @@ interface ComplianceAdminProps {
   updateComplianceMutation: any;
   createCategoryMutation: any;
   createItemMutation: any;
+  onUpdateCompliance?: (data: any) => void;
   updateItemDetailsMutation: any;
 }
 
@@ -93,7 +94,7 @@ export default function ComplianceAdmin({
   };
 
   const handleToggleCompliance = async (itemId: number, currentStatus: boolean) => {
-    await updateComplianceMutation.mutateAsync({
+    await updateComplianceMutation({
       id: itemId,
       isCompleted: !currentStatus,
       completedBy: !currentStatus ? 'Admin User' : undefined,
@@ -108,7 +109,7 @@ export default function ComplianceAdmin({
 
   const handleSaveNotes = async (itemId: number, currentStatus: boolean) => {
     if (editingItem?.id === itemId) {
-      await updateComplianceMutation.mutateAsync({
+      await updateComplianceMutation({
         id: itemId,
         isCompleted: currentStatus,
         completedBy: currentStatus ? 'Admin User' : undefined,
@@ -216,7 +217,7 @@ export default function ComplianceAdmin({
                                 ? 'bg-green-500 border-green-500' 
                                 : 'border-gray-500 hover:border-gray-400'
                             }`}
-                            disabled={updateComplianceMutation.isPending}
+                            disabled={updateComplianceMutation.isLoading}
                           >
                             {item.isCompleted && <CheckCircle2 className="h-3 w-3 text-white" />}
                           </button>
