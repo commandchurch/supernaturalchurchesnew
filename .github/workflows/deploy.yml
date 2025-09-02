@@ -3,15 +3,11 @@ name: Deploy to Production
 on:
   push:
     branches: [master, main]
-  pull_request:
-    branches: [master, main]
 
 jobs:
   deploy-backend:
-    name: Deploy Convex Backend
+    name: Deploy Encore Backend
     runs-on: ubuntu-latest
-    env:
-      CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -21,29 +17,35 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Install Encore CLI
+        run: |
+          curl -L https://encore.dev/install.sh | bash
+          echo "$HOME/.encore/bin" >> $GITHUB_PATH
+
       - name: Install dependencies
         run: npm install
 
-      - name: Install Convex CLI
-        run: npm install -g convex
+      - name: Build Encore backend
+        run: encore build
 
-      - name: Deploy to Convex (skip if no prod key)
+      - name: Deploy to Encore Cloud
+        env:
+          ENCORE_TOKEN: ${{ secrets.ENCORE_TOKEN }}
         run: |
-          if [ -z "${CONVEX_DEPLOY_KEY}" ]; then
-            echo "No CONVEX_DEPLOY_KEY provided. Skipping backend deploy."
+          if [ -z "$ENCORE_TOKEN" ]; then
+            echo "No ENCORE_TOKEN provided. Skipping backend deploy."
             exit 0
           fi
-          if ! echo "${CONVEX_DEPLOY_KEY}" | grep -q "^prod:"; then
-            echo "CONVEX_DEPLOY_KEY is not a prod key. Skipping backend deploy."
-            exit 0
-          fi
-          npx convex deploy --yes
+          encore auth login --token=$ENCORE_TOKEN
+          git remote add encore encore://supernaturalins-tmi2 || echo "Remote already exists"
+          git add -A .
+          git commit -m "Deploy to Encore Cloud" || echo "No changes to commit"
+          git push encore
 
   deploy-frontend:
     name: Deploy Vercel Frontend
     runs-on: ubuntu-latest
-    # Frontend can deploy independently of backend
-    if: always()
+    needs: deploy-backend
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -73,38 +75,7 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
-          if [ -z "$VERCEL_TOKEN" ]; then
-            echo "No VERCEL_TOKEN configured. Skipping Vercel deploy from GitHub Actions."
-            echo "If your Vercel project is connected to this repo, it will auto-deploy on push."
-            exit 0
-          fi
           npm install -g vercel
           vercel pull --yes --environment=production --token=$VERCEL_TOKEN
-          # Build within frontend/ where vercel.json exists
           vercel build --prod --token=$VERCEL_TOKEN
-          vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
-
-      - name: Ensure domain points to latest production (best-effort)
-        working-directory: ./frontend
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: |
-          npm install -g vercel
-          # Best-effort alias; will be a no-op if already mapped or lacking permission
-          if [ -z "$VERCEL_TOKEN" ]; then
-            echo "No VERCEL_TOKEN provided. Skipping domain check."
-            exit 0
-          fi
-          vercel alias ls --token=$VERCEL_TOKEN | grep -q "supernatural.institute" && echo "Domain already mapped" || echo "Domain mapping will be handled in Vercel dashboard"
-
-  test-deployment:
-    name: Test Deployment
-    runs-on: ubuntu-latest
-    needs: [deploy-frontend]
-    if: github.event_name == 'push' && always()
-    steps:
-      - name: Health Check
-        run: |
-          echo "✅ Backend deployed to Convex"
-          echo "✅ Frontend deployed to Vercel"
-          echo "🚀 Deployment pipeline completed successfully!"
+          vercel deploy --prod --token=$VERCEL_TOKEN
