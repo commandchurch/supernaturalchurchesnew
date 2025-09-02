@@ -40,8 +40,7 @@ Go to https://github.com/commandchurch/supernaturalinstitute/settings/secrets/ac
 Add these secrets:
 
 ### **Required Secrets:**
-- `CONVEX_DEPLOY_KEY` = Your Convex deploy key (from Step 1)
-- `CONVEX_PREVIEW_DEPLOY_KEY` = Your Convex preview deploy key 
+- `ENCORE_TOKEN` = Your Encore deploy token (from Step 1)
 - `VERCEL_TOKEN` = Your Vercel token (from Step 2)
 - `VERCEL_ORG_ID` = Your Vercel organization ID
 - `VERCEL_PROJECT_ID` = Your Vercel project ID
@@ -50,9 +49,9 @@ Add these secrets:
 Go to https://vercel.com/commandchurch/your-project-name/settings/environment-variables
 
 Add these:
-- `CONVEX_URL` = https://fearless-spider-22.convex.cloud
-- `CLERK_PUBLISHABLE_KEY` = Your Clerk publishable key
-- `STRIPE_PUBLISHABLE_KEY` = Your Stripe publishable key
+- `VITE_CLIENT_TARGET` = https://supernatural-institute-backend-z4n2.encr.app
+- `VITE_CLERK_PUBLISHABLE_KEY` = Your Clerk publishable key
+- `VITE_STRIPE_PUBLISHABLE_KEY` = Your Stripe publishable key
 
 ## 🚀 **Step 4: Test the Pipeline**
 
@@ -69,12 +68,12 @@ git push origin master
 ## 🔄 **How It Works**
 
 **When you push to `master`:**
-1. 🔧 Deploys backend to Convex automatically
+1. 🔧 Deploys backend to Encore Cloud automatically
 2. 🌐 Builds and deploys frontend to Vercel automatically  
 3. ✅ Runs health checks
 
 **When you create a Pull Request:**
-1. 🔧 Creates preview deployment on Convex
+1. 🔧 Creates preview deployment on Encore Cloud
 2. 🌐 Creates preview deployment on Vercel
 3. 💬 Comments preview URLs on the PR
 
@@ -84,12 +83,16 @@ If GitHub Actions fails, you can still deploy manually:
 
 ```bash
 # Deploy backend
-npx convex deploy -y
+encore auth login --token=$ENCORE_TOKEN
+git remote add encore encore://command-church-platform-3762
+git add -A .
+git commit -m "Deploy to Encore Cloud"
+git push encore
 
 # Deploy frontend  
 cd frontend
-bun run build
-bunx vercel deploy --prod
+npm run build  # or bun run build if bun is available
+npx vercel deploy --prod
 ```
 
 ## 🎯 **Next Steps**

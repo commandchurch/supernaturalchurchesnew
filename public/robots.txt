@@ -1,2 +1,21 @@
 User-agent: *
 Allow: /
+
+# Block access to admin areas
+Disallow: /admin
+Disallow: /api/admin
+
+# Block access to user-specific areas
+Disallow: /dashboard
+Disallow: /profile
+
+# Allow crawling of public content
+Allow: /academy
+Allow: /events
+Allow: /church
+Allow: /give
+Allow: /about
+Allow: /contact
+
+# Sitemap
+Sitemap: https://supernatural.institute/sitemap.xml

@@ -7,21 +7,22 @@ const MAX_LEVELS = 7;
 
 // Defines commission rates for each level for standard members.
 const COMMISSION_RATES = [
-  0.20, // Level 1
+  0.30, // Level 1 - 30% for all tiers
   0.10, // Level 2
   0.05, // Level 3
-  0.02, // Level 4
-  0.01, // Level 5
+  0.03, // Level 4
+  0.02, // Level 5
   0.01, // Level 6
   0.01, // Level 7
 ];
 
 // Defines max payout level for each membership tier.
 const TIER_MAX_LEVEL: Record<string, number> = {
-  RECRUIT: 4,
-  PRIVATE: 4,
-  CAPTAIN: 5,
-  COMMANDO: 7,
+  FREE: 1, // Free members can earn Level 1 after signing up 2 Bronze
+  BRONZE: 1, // Bronze members earn Level 1
+  SILVER: 2, // Silver members earn Levels 1-2
+  GOLD: 5, // Gold members earn Levels 1-5
+  DIAMOND: 7, // Diamond members earn Levels 1-7
   PARTNER: 3, // Church partners have a 3-tier structure
 };
 
@@ -59,32 +60,57 @@ new Subscription(paymentTopic, "calculate-commissions", {
         const sponsorSub = await membershipDB.queryRow<{ plan_code: string }>`
           SELECT plan_code FROM subscriptions WHERE user_id = ${sponsorId} AND status = 'active'
         `;
-        const sponsorTier = sponsorSub?.plan_code || 'RECRUIT';
-        const sponsorMaxLevel = TIER_MAX_LEVEL[sponsorTier] || 4;
+        const sponsorTier = sponsorSub?.plan_code || 'FREE';
+
+        // Special logic for FREE tier: check if they have signed up 2+ Bronze members
+        let effectiveTier = sponsorTier;
+        let sponsorMaxLevel = TIER_MAX_LEVEL[sponsorTier] || 1;
+
+        if (sponsorTier === 'FREE') {
+          // Check if FREE member has signed up 2+ Bronze members to earn Level 1 commissions
+          const bronzeSignups = await tx.queryRow<{ count: string }>`
+            SELECT COUNT(*) as count FROM affiliate_profiles ap
+            JOIN subscriptions s ON ap.user_id = s.user_id
+            WHERE ap.sponsor_id = ${sponsorId} AND s.plan_code = 'BRONZE' AND s.status = 'active'
+          `;
+          const bronzeCount = parseInt(bronzeSignups?.count || '0');
+          if (bronzeCount >= 2) {
+            effectiveTier = 'BRONZE'; // They earn Level 1 commissions like Bronze
+            sponsorMaxLevel = 1;
+          }
+        } else {
+          sponsorMaxLevel = TIER_MAX_LEVEL[sponsorTier] || 1;
+        }
+
         const isPartner = sponsorTier === 'PARTNER';
-        const isCommando = sponsorTier === 'COMMANDO';
+        const isDiamond = sponsorTier === 'DIAMOND';
 
         if (currentLevel <= sponsorMaxLevel) {
           const commissionRate = isPartner
             ? (PARTNER_COMMISSION_RATES[currentLevel - 1] || 0)
             : (COMMISSION_RATES[currentLevel - 1] || 0);
-          
-          if (commissionRate > 0) {
-            let commissionAmount = amountInDollars * commissionRate;
 
-            // Check for monthly cap for Commando and Partner tiers
-            if (isCommando || isPartner) {
+          // For FREE tier earning Level 1, use Bronze commission rate
+          const effectiveCommissionRate = (effectiveTier === 'BRONZE' && currentLevel === 1)
+            ? COMMISSION_RATES[0] // 30% for Level 1
+            : commissionRate;
+          
+          if (effectiveCommissionRate > 0) {
+            let commissionAmount = amountInDollars * effectiveCommissionRate;
+
+            // Check for monthly cap for Diamond and Partner tiers
+            if (isDiamond || isPartner) {
                 const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
                 const monthlyEarnings = await tx.queryRow<{ total: string }>`
                     SELECT SUM(amount) as total FROM commissions
                     WHERE affiliate_id = ${sponsorId} AND created_at >= ${startOfMonth}
                 `;
                 const currentMonthlyTotal = parseFloat(monthlyEarnings?.total || '0');
-                
-                if (currentMonthlyTotal >= 10000) {
+
+                if (currentMonthlyTotal >= 28000) {
                     commissionAmount = 0; // Cap reached, no more commission this month
-                } else if (currentMonthlyTotal + commissionAmount > 10000) {
-                    commissionAmount = 10000 - currentMonthlyTotal; // Cap the commission to not exceed 10k
+                } else if (currentMonthlyTotal + commissionAmount > 28000) {
+                    commissionAmount = 28000 - currentMonthlyTotal; // Cap the commission to not exceed 28k
                 }
             }
 

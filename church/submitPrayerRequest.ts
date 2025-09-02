@@ -8,6 +8,7 @@ interface SubmitPrayerRequestParams {
   request: string;
   isUrgent: boolean;
   isPrivate: boolean;
+  userId?: string;
 }
 
 interface SubmitPrayerRequestResponse {
@@ -18,10 +19,10 @@ interface SubmitPrayerRequestResponse {
 // Submits a prayer request to the church
 export const submitPrayerRequest = api<SubmitPrayerRequestParams, SubmitPrayerRequestResponse>(
   { expose: true, method: "POST", path: "/church/prayer-requests" },
-  async ({ name, email, phone, request, isUrgent, isPrivate }) => {
+  async ({ name, email, phone, request, isUrgent, isPrivate, userId }) => {
     const result = await churchDB.queryRow<{ id: number }>`
-      INSERT INTO prayer_requests (name, email, phone, request, is_urgent, is_private)
-      VALUES (${name}, ${email || null}, ${phone || null}, ${request}, ${isUrgent}, ${isPrivate})
+      INSERT INTO prayer_requests (name, email, phone, request, is_urgent, is_private, user_id)
+      VALUES (${name}, ${email || null}, ${phone || null}, ${request}, ${isUrgent}, ${isPrivate}, ${userId || null})
       RETURNING id
     `;
 

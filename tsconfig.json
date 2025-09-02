@@ -32,7 +32,7 @@
 	"exclude": [
 		"node_modules",
 		"encore.gen",
-		"frontend",
+		"frontend/node_modules",
 		"frontend-temp",
 		"*.gen"
 	]

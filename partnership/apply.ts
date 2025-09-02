@@ -9,6 +9,12 @@ interface ApplyParams {
   logoUrl?: string;
   contactName: string;
   contactEmail: string;
+  ministryType: string;  // Five-Fold ministry type: apostle, prophet, evangelist, pastor, teacher
+  denomination?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  description?: string;
 }
 
 interface ApplyResponse {
@@ -19,7 +25,7 @@ interface ApplyResponse {
 // Allows a user with an active PARTNER subscription to apply for official partnership recognition.
 export const apply = api<ApplyParams, ApplyResponse>(
   { auth: true, expose: true, method: "POST", path: "/partnership/apply" },
-  async ({ churchName, websiteUrl, logoUrl, contactName, contactEmail }) => {
+  async ({ churchName, websiteUrl, logoUrl, contactName, contactEmail, ministryType, denomination, city, state, country, description }) => {
     const auth = getAuthData()!;
     
     // Verify user has the PARTNER subscription
@@ -36,8 +42,14 @@ export const apply = api<ApplyParams, ApplyResponse>(
     }
 
     const result = await partnershipDB.queryRow<{ id: number }>`
-      INSERT INTO church_partners (name, website_url, logo_url, contact_name, contact_email, user_id, status)
-      VALUES (${churchName}, ${websiteUrl}, ${logoUrl}, ${contactName}, ${contactEmail}, ${auth.userID}, 'pending')
+      INSERT INTO church_partners (
+        name, website_url, logo_url, contact_name, contact_email,
+        user_id, status, ministry_type, denomination, city, state, country, description
+      )
+      VALUES (
+        ${churchName}, ${websiteUrl}, ${logoUrl}, ${contactName}, ${contactEmail},
+        ${auth.userID}, 'pending', ${ministryType}, ${denomination}, ${city}, ${state}, ${country}, ${description}
+      )
       RETURNING id
     `;
 

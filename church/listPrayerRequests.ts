@@ -11,6 +11,7 @@ export interface PrayerRequest {
   isPrivate: boolean;
   status: string;
   createdAt: string;
+  userId?: string;
 }
 
 interface ListPrayerRequestsResponse {
@@ -31,8 +32,9 @@ export const listPrayerRequests = api<void, ListPrayerRequestsResponse>(
       is_private: boolean;
       status: string;
       created_at: string;
+      user_id?: string;
     }>`
-      SELECT id, name, email, phone, request, is_urgent, is_private, status, created_at
+      SELECT id, name, email, phone, request, is_urgent, is_private, status, created_at, user_id
       FROM prayer_requests
       ORDER BY is_urgent DESC, created_at DESC
     `;
@@ -48,6 +50,7 @@ export const listPrayerRequests = api<void, ListPrayerRequestsResponse>(
         isPrivate: req.is_private,
         status: req.status,
         createdAt: req.created_at,
+        userId: req.user_id,
       }))
     };
   }

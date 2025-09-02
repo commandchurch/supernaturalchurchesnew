@@ -5,14 +5,14 @@ import { requireAdmin } from "../auth/admin";
 
 interface UpdateTeachingParams {
   id: number;
-  title: string;
+  title?: string;
   slug?: string;
-  content: string;
+  content?: string;
   excerpt?: string;
-  category: string;
+  category?: string;
   featuredImageUrl?: string;
   authorId?: string;
-  isPublished: boolean;
+  isPublished?: boolean;
   publishedAt?: string | null;
 }
 
@@ -21,25 +21,71 @@ export const updateTeaching = api<UpdateTeachingParams, TeachingType>(
   { auth: true, expose: true, method: "PUT", path: "/admin/church/teachings/:id" },
   async (p) => {
     requireAdmin();
-    const existing = await churchDB.queryRow<{ id: number; slug: string }>`
-      SELECT id, slug FROM teachings WHERE id = ${p.id}
-    `;
+
+    // Check if teaching exists
+    const existing = await churchDB.queryRow`SELECT id FROM teachings WHERE id = ${p.id}`;
     if (!existing) {
       throw APIError.notFound("teaching not found");
     }
 
-    const slug = (p.slug || p.title)
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)+/g, "");
-
-    // Ensure slug is unique if changed
-    if (slug !== existing.slug) {
-      const taken = await churchDB.queryRow`SELECT id FROM teachings WHERE slug = ${slug}`;
-      if (taken) {
+    // Handle slug uniqueness if slug is being updated
+    if (p.slug) {
+      const slug = p.slug.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)+/g, "");
+      const existingSlug = await churchDB.queryRow`SELECT id FROM teachings WHERE slug = ${slug} AND id != ${p.id}`;
+      if (existingSlug) {
         throw APIError.alreadyExists("slug already exists");
       }
+
+      // Update slug in params
+      p.slug = slug;
     }
+
+    // Build the update query with conditional field updates
+    let updateFields = [];
+    let hasUpdates = false;
+
+    if (p.title !== undefined) {
+      updateFields.push(`title = ${p.title}`);
+      hasUpdates = true;
+    }
+    if (p.slug !== undefined) {
+      updateFields.push(`slug = ${p.slug}`);
+      hasUpdates = true;
+    }
+    if (p.content !== undefined) {
+      updateFields.push(`content = ${p.content}`);
+      hasUpdates = true;
+    }
+    if (p.excerpt !== undefined) {
+      updateFields.push(`excerpt = ${p.excerpt}`);
+      hasUpdates = true;
+    }
+    if (p.category !== undefined) {
+      updateFields.push(`category = ${p.category}`);
+      hasUpdates = true;
+    }
+    if (p.featuredImageUrl !== undefined) {
+      updateFields.push(`featured_image_url = ${p.featuredImageUrl}`);
+      hasUpdates = true;
+    }
+    if (p.authorId !== undefined) {
+      updateFields.push(`author_id = ${p.authorId}`);
+      hasUpdates = true;
+    }
+    if (p.isPublished !== undefined) {
+      updateFields.push(`is_published = ${p.isPublished}`);
+      hasUpdates = true;
+    }
+    if (p.publishedAt !== undefined) {
+      updateFields.push(`published_at = ${p.publishedAt}`);
+      hasUpdates = true;
+    }
+
+    if (!hasUpdates) {
+      throw APIError.invalidArgument("no fields to update");
+    }
+
+    updateFields.push(`updated_at = NOW()`);
 
     const row = await churchDB.queryRow<{
       id: number;
@@ -55,17 +101,7 @@ export const updateTeaching = api<UpdateTeachingParams, TeachingType>(
       created_at: string;
     }>`
       UPDATE teachings
-      SET
-        title = ${p.title},
-        slug = ${slug},
-        content = ${p.content},
-        excerpt = ${p.excerpt || null},
-        category = ${p.category},
-        featured_image_url = ${p.featuredImageUrl || null},
-        author_id = ${p.authorId || "admin"},
-        is_published = ${p.isPublished},
-        published_at = ${p.isPublished ? (p.publishedAt || new Date().toISOString()) : null},
-        updated_at = NOW()
+      SET ${updateFields.join(', ')}
       WHERE id = ${p.id}
       RETURNING id, title, slug, content, excerpt, category, featured_image_url, author_id, is_published, published_at, created_at
     `;
