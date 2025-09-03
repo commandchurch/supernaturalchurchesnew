@@ -8,13 +8,21 @@ const MAX_LEVELS = 7;
 // Defines commission rates for each level for standard members.
 const COMMISSION_RATES = [
   0.30, // Level 1 - 30% for all tiers
-  0.10, // Level 2
-  0.05, // Level 3
-  0.03, // Level 4
-  0.02, // Level 5
-  0.01, // Level 6
-  0.01, // Level 7
+  0.30, // Level 2 - 30% for all tiers
+  0.30, // Level 3 - 30% for all tiers
+  0.30, // Level 4 - 30% for all tiers
+  0.30, // Level 5 - 30% for all tiers
+  0.30, // Level 6 - 30% for all tiers
+  0.30, // Level 7 - 30% for all tiers
 ];
+
+// Updated membership prices for commission calculations
+const MEMBERSHIP_PRICES = {
+  'BRONZE': 20,
+  'SILVER': 50,
+  'GOLD': 100,
+  'DIAMOND': 250
+};
 
 // Defines max payout level for each membership tier.
 const TIER_MAX_LEVEL: Record<string, number> = {
@@ -83,7 +91,6 @@ new Subscription(paymentTopic, "calculate-commissions", {
         }
 
         const isPartner = sponsorTier === 'PARTNER';
-        const isDiamond = sponsorTier === 'DIAMOND';
 
         if (currentLevel <= sponsorMaxLevel) {
           const commissionRate = isPartner
@@ -98,8 +105,8 @@ new Subscription(paymentTopic, "calculate-commissions", {
           if (effectiveCommissionRate > 0) {
             let commissionAmount = amountInDollars * effectiveCommissionRate;
 
-            // Check for monthly cap for Diamond and Partner tiers
-            if (isDiamond || isPartner) {
+            // Check for monthly cap for Partner tiers (removed Diamond cap since all tiers now get 30%)
+            if (isPartner) {
                 const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
                 const monthlyEarnings = await tx.queryRow<{ total: string }>`
                     SELECT SUM(amount) as total FROM commissions

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import { ArrowRight, Play, Users, GraduationCap, Info, Heart, Calendar, MapPin } from 'lucide-react';
+import { ArrowRight, Play, Users, GraduationCap, Info, Heart, Calendar, MapPin, Shield } from 'lucide-react';
 import SEO from '../components/SEO';
 import ChurchPartnershipCTA from '../components/ChurchPartnershipCTA';
 
@@ -81,9 +81,7 @@ export default function Home() {
         <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
 
           <h1 className="text-3xl sm:text-5xl lg:text-7xl font-black text-white mb-4 sm:mb-6 heading-font tracking-tight leading-tight drop-shadow-2xl">
-            <span className="bg-gradient-to-r from-white via-orange-100 to-white bg-clip-text text-transparent">
-              TRAIN. EQUIP. TRANSFORM.
-            </span>
+            TRAIN. EQUIP. TRANSFORM.
           </h1>
           <p className="text-base sm:text-xl md:text-2xl text-gray-300 mb-8 sm:mb-10 max-w-4xl mx-auto leading-relaxed font-light">
             The World's Premier Supernatural Ministry Training Institute. Heaven's truth revealed through accurate biblical teaching. We believe these signs shall follow those who believe in the name of Jesus - equipping believers to walk in Christ's authority, demonstrate supernatural power, and transform nations through authentic ministry.
@@ -92,33 +90,19 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
               to="/academy"
-              className="w-full sm:w-auto bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-8 sm:px-10 py-4 sm:py-5 text-base sm:text-lg shadow-2xl hover:shadow-orange-500/25 transition-all duration-300 hover:scale-105 font-bold uppercase tracking-wider inline-flex items-center justify-center rounded-xl border border-orange-400/20"
+              className="w-full sm:w-auto bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-8 sm:px-10 py-4 sm:py-5 text-base sm:text-lg shadow-2xl hover:shadow-orange-500/25 transition-all duration-300 hover:scale-105 font-bold uppercase tracking-wider inline-flex items-center justify-center border border-orange-400/20"
             >
               START TRAINING
               <ArrowRight className="ml-3 h-5 w-5 sm:h-6 sm:w-6" />
             </Link>
             <Link
               to="/membership"
-              className="w-full sm:w-auto bg-white/10 hover:bg-white/20 border border-white/30 text-white px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base font-semibold uppercase tracking-wide inline-flex items-center justify-center rounded-xl backdrop-blur-sm transition-all duration-300 hover:shadow-lg hover:shadow-white/10"
+              className="w-full sm:w-auto bg-white/10 hover:bg-white/20 border border-white/30 text-white px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base font-semibold uppercase tracking-wide inline-flex items-center justify-center backdrop-blur-sm transition-all duration-300 hover:shadow-lg hover:shadow-white/10"
             >
               VIEW MEMBERSHIP PLANS
             </Link>
           </div>
 
-          <div className="mt-16 flex flex-wrap justify-center gap-6 sm:gap-8">
-            <div className="flex items-center gap-3 bg-white/5 border border-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
-              <div className="w-3 h-3 bg-green-400 rounded-full shadow-lg shadow-green-400/30"></div>
-              <span className="text-white font-medium text-sm">100% Online</span>
-            </div>
-            <div className="flex items-center gap-3 bg-white/5 border border-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
-              <div className="w-3 h-3 bg-blue-400 rounded-full shadow-lg shadow-blue-400/30"></div>
-              <span className="text-white font-medium text-sm">Self-Paced Learning</span>
-            </div>
-            <div className="flex items-center gap-3 bg-white/5 border border-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
-              <div className="w-3 h-3 bg-emerald-400 rounded-full shadow-lg shadow-emerald-400/30"></div>
-              <span className="text-white font-medium text-sm">Heaven's Truth • Signs & Wonders</span>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -209,7 +193,7 @@ export default function Home() {
           <div className="text-center mt-16">
             <Link
               to="/church"
-              className="inline-flex items-center justify-center bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold uppercase tracking-wide px-8 py-4 text-base shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 rounded-lg"
+              className="inline-flex items-center justify-center bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold uppercase tracking-wide px-8 py-4 text-base shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
             >
               View All Events
               <ArrowRight className="ml-3 h-5 w-5" />
@@ -291,19 +275,19 @@ export default function Home() {
                 Ready to Begin Your Journey?
               </h3>
               <p className="text-gray-300 text-lg mb-6 max-w-2xl mx-auto">
-                Join thousands of believers worldwide who believe these signs shall follow those who believe in the name of Jesus.
+                Join believers worldwide who believe these signs shall follow those who believe in the name of Jesus.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
                   to="/academy"
-                  className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 font-semibold uppercase tracking-wide transition-all duration-300 hover:scale-105 rounded-xl inline-flex items-center justify-center"
+                  className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 font-semibold uppercase tracking-wide transition-all duration-300 hover:scale-105 inline-flex items-center justify-center"
                 >
                   Start Training Now
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
                 <Link
                   to="/membership"
-                  className="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-8 py-4 font-semibold uppercase tracking-wide transition-all duration-300 rounded-xl inline-flex items-center justify-center backdrop-blur-sm"
+                  className="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-8 py-4 font-semibold uppercase tracking-wide transition-all duration-300 inline-flex items-center justify-center backdrop-blur-sm"
                 >
                   View All Plans
                 </Link>

@@ -2,20 +2,7 @@ import { api, APIError } from "encore.dev/api";
 import { academyDB } from "./db";
 import { membership } from "~encore/clients";
 import { getAuthData } from "~encore/auth";
-
-export interface Course {
-  id: number;
-  title: string;
-  description: string;
-  category: string;
-  thumbnailUrl?: string;
-  videoUrl?: string;
-  pdfUrl?: string;
-  durationMinutes?: number;
-  isPublished: boolean;
-  isPremium: boolean;
-  createdAt: string;
-}
+import { Course } from "./listCourses";
 
 interface GetCourseParams {
   id: number;

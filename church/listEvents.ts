@@ -13,14 +13,44 @@ export interface Event {
   isPublished: boolean;
 }
 
-interface ListEventsResponse {
-  events: Event[];
+export interface PaginationParams {
+  page?: number;
+  limit?: number;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
 }
 
-// Lists all published events
-export const listEvents = api<void, ListEventsResponse>(
+export interface PaginatedResponse<T> {
+  data: T[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
+interface ListEventsResponse extends PaginatedResponse<Event> {}
+
+// Lists all published events with pagination
+export const listEvents = api<PaginationParams, ListEventsResponse>(
   { expose: true, method: "GET", path: "/church/events" },
-  async () => {
+  async (params) => {
+    const page = Math.max(1, params.page || 1);
+    const limit = Math.min(100, Math.max(1, params.limit || 20)); // Max 100 items per page
+    const offset = (page - 1) * limit;
+
+    // Get total count for pagination
+    const totalResult = await churchDB.queryRow<{ count: number }>`
+      SELECT COUNT(*) as count
+      FROM events
+      WHERE is_published = true AND start_date >= NOW()
+    `;
+
+    const total = totalResult?.count || 0;
+    const totalPages = Math.ceil(total / limit);
+
+    // Get paginated events
     const events = await churchDB.queryAll<{
       id: number;
       title: string;
@@ -34,10 +64,11 @@ export const listEvents = api<void, ListEventsResponse>(
     }>`SELECT id, title, description, event_type, start_date, end_date, location_name, virtual_link, is_published
        FROM events
        WHERE is_published = true AND start_date >= NOW()
-       ORDER BY start_date ASC`;
+       ORDER BY start_date ASC
+       LIMIT ${limit} OFFSET ${offset}`;
 
     return {
-      events: events.map(event => ({
+      data: events.map(event => ({
         id: event.id,
         title: event.title,
         description: event.description,
@@ -47,7 +78,13 @@ export const listEvents = api<void, ListEventsResponse>(
         locationName: event.location_name,
         virtualLink: event.virtual_link,
         isPublished: event.is_published,
-      }))
+      })),
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages
+      }
     };
   }
 );

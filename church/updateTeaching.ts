@@ -1,6 +1,6 @@
 import { api, APIError } from "encore.dev/api";
 import { churchDB } from "./db";
-import type { Teaching as TeachingType } from "./listTeachings";
+import type { Teaching } from "./getTeaching";
 import { requireAdmin } from "../auth/admin";
 
 interface UpdateTeachingParams {
@@ -17,7 +17,7 @@ interface UpdateTeachingParams {
 }
 
 // Updates an existing teaching (admin).
-export const updateTeaching = api<UpdateTeachingParams, TeachingType>(
+export const updateTeaching = api<UpdateTeachingParams, Teaching>(
   { auth: true, expose: true, method: "PUT", path: "/admin/church/teachings/:id" },
   async (p) => {
     requireAdmin();
@@ -40,71 +40,54 @@ export const updateTeaching = api<UpdateTeachingParams, TeachingType>(
       p.slug = slug;
     }
 
-    // Build the update query with conditional field updates
-    let updateFields = [];
-    let hasUpdates = false;
+    // Use individual UPDATE statements for each field to avoid SQL injection
+
+    // Use conditional updates for each field
+    let updated = false;
 
     if (p.title !== undefined) {
-      updateFields.push(`title = ${p.title}`);
-      hasUpdates = true;
+      await churchDB.exec`UPDATE teachings SET title = ${p.title}, updated_at = NOW() WHERE id = ${p.id}`;
+      updated = true;
     }
     if (p.slug !== undefined) {
-      updateFields.push(`slug = ${p.slug}`);
-      hasUpdates = true;
+      await churchDB.exec`UPDATE teachings SET slug = ${p.slug}, updated_at = NOW() WHERE id = ${p.id}`;
+      updated = true;
     }
     if (p.content !== undefined) {
-      updateFields.push(`content = ${p.content}`);
-      hasUpdates = true;
+      await churchDB.exec`UPDATE teachings SET content = ${p.content}, updated_at = NOW() WHERE id = ${p.id}`;
+      updated = true;
     }
     if (p.excerpt !== undefined) {
-      updateFields.push(`excerpt = ${p.excerpt}`);
-      hasUpdates = true;
+      await churchDB.exec`UPDATE teachings SET excerpt = ${p.excerpt}, updated_at = NOW() WHERE id = ${p.id}`;
+      updated = true;
     }
     if (p.category !== undefined) {
-      updateFields.push(`category = ${p.category}`);
-      hasUpdates = true;
+      await churchDB.exec`UPDATE teachings SET category = ${p.category}, updated_at = NOW() WHERE id = ${p.id}`;
+      updated = true;
     }
     if (p.featuredImageUrl !== undefined) {
-      updateFields.push(`featured_image_url = ${p.featuredImageUrl}`);
-      hasUpdates = true;
+      await churchDB.exec`UPDATE teachings SET featured_image_url = ${p.featuredImageUrl}, updated_at = NOW() WHERE id = ${p.id}`;
+      updated = true;
     }
     if (p.authorId !== undefined) {
-      updateFields.push(`author_id = ${p.authorId}`);
-      hasUpdates = true;
+      await churchDB.exec`UPDATE teachings SET author_id = ${p.authorId}, updated_at = NOW() WHERE id = ${p.id}`;
+      updated = true;
     }
     if (p.isPublished !== undefined) {
-      updateFields.push(`is_published = ${p.isPublished}`);
-      hasUpdates = true;
+      await churchDB.exec`UPDATE teachings SET is_published = ${p.isPublished}, updated_at = NOW() WHERE id = ${p.id}`;
+      updated = true;
     }
     if (p.publishedAt !== undefined) {
-      updateFields.push(`published_at = ${p.publishedAt}`);
-      hasUpdates = true;
+      await churchDB.exec`UPDATE teachings SET published_at = ${p.publishedAt}, updated_at = NOW() WHERE id = ${p.id}`;
+      updated = true;
     }
 
-    if (!hasUpdates) {
+    if (!updated) {
       throw APIError.invalidArgument("no fields to update");
     }
 
-    updateFields.push(`updated_at = NOW()`);
-
-    const row = await churchDB.queryRow<{
-      id: number;
-      title: string;
-      slug: string;
-      content: string;
-      excerpt?: string;
-      category: string;
-      featured_image_url?: string;
-      author_id: string;
-      is_published: boolean;
-      published_at?: string | null;
-      created_at: string;
-    }>`
-      UPDATE teachings
-      SET ${updateFields.join(', ')}
-      WHERE id = ${p.id}
-      RETURNING id, title, slug, content, excerpt, category, featured_image_url, author_id, is_published, published_at, created_at
-    `;
+    // Get the updated teaching
+    const row = await churchDB.queryRow`SELECT id, title, slug, content, excerpt, category, featured_image_url, author_id, is_published, published_at, created_at FROM teachings WHERE id = ${p.id}`;
 
     if (!row) {
       throw APIError.internal("failed to update teaching");

@@ -7,7 +7,7 @@ interface EnhancedButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEleme
   children: React.ReactNode;
 }
 
-export const EnhancedButton = React.forwardRef<HTMLButtonElement, EnhancedButtonProps>(
+const EnhancedButtonComponent = React.forwardRef<HTMLButtonElement, EnhancedButtonProps>(
   ({ className, variant = 'default', size = 'default', children, ...props }, ref) => {
     const baseClasses = "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
 
@@ -21,8 +21,8 @@ export const EnhancedButton = React.forwardRef<HTMLButtonElement, EnhancedButton
       default: "bg-primary text-primary-foreground hover:bg-primary/90",
       primary: "bg-blue-600 text-white hover:bg-blue-700 shadow-lg",
       accent: "bg-purple-600 text-white hover:bg-purple-700 shadow-lg",
-      supernatural: "bg-gradient-to-r from-supernatural-accent-purple to-supernatural-accent-blue text-white hover:from-supernatural-accent-purple/90 hover:to-supernatural-accent-blue/90 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105",
-      glow: "bg-gradient-to-r from-supernatural-accent-purple to-supernatural-accent-blue text-white shadow-lg shadow-supernatural-accent-purple/25 animate-pulse",
+      supernatural: "bg-supernatural-gradient text-white hover:opacity-90 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105",
+      glow: "bg-supernatural-gradient text-white shadow-lg shadow-supernatural-glow animate-pulse",
       outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground"
     };
 
@@ -37,6 +37,10 @@ export const EnhancedButton = React.forwardRef<HTMLButtonElement, EnhancedButton
     );
   }
 );
+
+EnhancedButtonComponent.displayName = "EnhancedButton";
+
+export const EnhancedButton = React.memo(EnhancedButtonComponent);
 EnhancedButton.displayName = "EnhancedButton";
 
 // Real-time Counter Component
@@ -102,10 +106,10 @@ export const RealTimeBadge: React.FC<RealTimeBadgeProps> = ({
   className = ''
 }) => {
   const variantClasses = {
-    green: 'bg-green-500/20 text-green-400 border-green-500/30',
-    pink: 'bg-pink-500/20 text-pink-400 border-pink-500/30',
-    blue: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-    purple: 'bg-purple-500/20 text-purple-400 border-purple-500/30'
+    green: 'bg-green-100 text-green-800 border-green-300',
+    pink: 'bg-pink-100 text-pink-800 border-pink-300',
+    blue: 'bg-blue-100 text-blue-800 border-blue-300',
+    purple: 'bg-purple-100 text-purple-800 border-purple-300'
   };
 
   return (

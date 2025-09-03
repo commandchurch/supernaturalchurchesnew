@@ -2,10 +2,17 @@ import { api, APIError } from "encore.dev/api";
 import { membershipDB } from "./db";
 import { payment } from "~encore/clients";
 
+interface ActivateSubscriptionParams {
+  userId: string;
+  planCode: string;
+  stripeSubscriptionId: string;
+  stripeCustomerId: string;
+}
+
 // Activates a user's subscription. Called internally by the payment webhook.
-export const activateSubscription = api(
+export const activateSubscription = api<ActivateSubscriptionParams, void>(
   { expose: false, method: "POST", path: "/membership/activate-subscription" },
-  async ({ userId, planCode, stripeSubscriptionId, stripeCustomerId }: ActivateSubscriptionParams) => {
+  async ({ userId, planCode, stripeSubscriptionId, stripeCustomerId }) => {
     const plan = await membershipDB.queryRow<{ code: string }>`
       SELECT code FROM subscription_plans WHERE code = ${planCode}
     `;
@@ -38,10 +45,3 @@ export const activateSubscription = api(
     await payment.linkStripeCustomer({ userId, stripeCustomerId });
   },
 );
-
-interface ActivateSubscriptionParams {
-  userId: string;
-  planCode: string;
-  stripeSubscriptionId: string;
-  stripeCustomerId: string;
-}

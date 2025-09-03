@@ -1,6 +1,7 @@
 import { api, APIError, Query } from "encore.dev/api";
 import { churchDB } from "./db";
 
+// Shared PrayerReply interface for prayer reply operations
 export interface PrayerReply {
   id: number;
   requestId: number;

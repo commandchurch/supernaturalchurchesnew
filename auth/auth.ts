@@ -60,7 +60,7 @@ const auth = authHandler<AuthParams, AuthData>(
         imageUrl,
       };
     } catch (err: any) {
-      throw APIError.unauthenticated("invalid token", { detail: err.message });
+      throw APIError.unauthenticated("invalid token");
     }
   }
 );

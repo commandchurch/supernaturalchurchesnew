@@ -1,5 +1,6 @@
 import { api } from "encore.dev/api";
 import { academyDB } from "./db";
+import { getAuthData } from "~encore/auth";
 
 export interface Certificate {
   id: number;
@@ -18,27 +19,31 @@ interface ListUserCertificatesResponse {
 export const listUserCertificates = api<void, ListUserCertificatesResponse>(
   { auth: true, expose: true, method: "GET", path: "/academy/certificates/user" },
   async () => {
-    // For now, return mock data that matches the frontend expectations
-    // In a real implementation, this would query the certificates table
+    const auth = getAuthData()!;
+    const rows = await academyDB.queryAll<{
+      id: number;
+      course_title: string;
+      issued_at: string;
+      certificate_code: string;
+      certificate_url?: string | null;
+      full_name?: string | null;
+    }>`
+      SELECT cert.id, c.title as course_title, cert.issued_at, cert.certificate_code, cert.certificate_url, cert.full_name
+      FROM certificates cert
+      JOIN courses c ON c.id = cert.course_id
+      WHERE cert.user_id = ${auth.userID}
+      ORDER BY cert.issued_at DESC
+    `;
+
     return {
-      certificates: [
-        {
-          id: 1,
-          courseTitle: 'New Life in Jesus: Foundations',
-          issuedAt: new Date().toISOString(),
-          recipientName: 'John Smith',
-          certificateCode: 'CERT-001',
-          certificateUrl: undefined,
-        },
-        {
-          id: 2,
-          courseTitle: 'Evangelism Essentials',
-          issuedAt: new Date().toISOString(),
-          recipientName: 'John Smith',
-          certificateCode: 'CERT-002',
-          certificateUrl: undefined,
-        }
-      ]
+      certificates: rows.map(r => ({
+        id: r.id,
+        courseTitle: r.course_title,
+        issuedAt: r.issued_at,
+        recipientName: r.full_name ?? undefined,
+        certificateCode: r.certificate_code,
+        certificateUrl: r.certificate_url ?? undefined,
+      })),
     };
   }
 );

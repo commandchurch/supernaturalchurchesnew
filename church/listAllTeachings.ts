@@ -1,6 +1,6 @@
 import { api } from "encore.dev/api";
 import { churchDB } from "./db";
-import type { Teaching } from "./listTeachings";
+import type { Teaching } from "./getTeaching";
 import { requireAdmin } from "../auth/admin";
 
 interface ListAllTeachingsResponse {

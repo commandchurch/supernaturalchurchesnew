@@ -56,15 +56,15 @@ export default function CommissionCalculator() {
   // Social sharing state
   const [shareModal, setShareModal] = useState<{name: string, icon: string, description: string} | null>(null);
 
-  // Commission rates for each level (1-7): 20%, 10%, 5%, 3%, 2%, 1%, 1%
-  const commissionRates = [0.20, 0.10, 0.05, 0.03, 0.02, 0.01, 0.01];
+  // Commission rates for each level (1-7): 30%, 10%, 5%, 3%, 2%, 1%, 1%
+  const commissionRates = [0.30, 0.10, 0.05, 0.03, 0.02, 0.01, 0.01];
 
-  // Membership prices
+  // Membership prices - CORRECT PRICING
   const membershipPrices = {
-    'BRONZE': 20,
-    'SILVER': 35,
-    'GOLD': 150,
-    'DIAMOND': 500
+    'BRONZE': 10,
+    'SILVER': 20,
+    'GOLD': 50,
+    'DIAMOND': 100
   };
 
   // Points per signup for each tier
@@ -90,8 +90,8 @@ export default function CommissionCalculator() {
     const pointsPerSignup = tierPoints[inputs.membershipTier];
     const membershipPrice = membershipPrices[inputs.membershipTier];
 
-    // Diamond gets 35% on level 1, others get 20%
-    const level1Rate = inputs.membershipTier === 'DIAMOND' ? 0.35 : 0.20;
+    // ALL tiers get 30% on level 1
+    const level1Rate = 0.30;
 
     const directCommission = inputs.directReferrals * membershipPrice * level1Rate;
     const level2Commission = inputs.level2Referrals * membershipPrice * commissionRates[0];
@@ -109,16 +109,20 @@ export default function CommissionCalculator() {
                         inputs.level7Referrals) * pointsPerSignup;
 
     let nextBonus = '';
-    if (totalPoints >= 200) {
-      nextBonus = '$5,000 bonus (200 points)';
+    if (totalPoints >= 1000) {
+      nextBonus = '$3,000 bonus (1000 points)';
+    } else if (totalPoints >= 500) {
+      nextBonus = '$1,500 bonus (500 points)';
+    } else if (totalPoints >= 200) {
+      nextBonus = '$750 bonus (200 points)';
     } else if (totalPoints >= 100) {
-      nextBonus = '$2,500 bonus (100 points)';
+      nextBonus = '$300 bonus (100 points)';
     } else if (totalPoints >= 50) {
-      nextBonus = '$500 bonus (50 points)';
+      nextBonus = '$125 bonus (50 points)';
     } else if (totalPoints >= 25) {
-      nextBonus = '$200 bonus (25 points)';
+      nextBonus = '$50 bonus (25 points)';
     } else {
-      nextBonus = '$200 bonus (25 points needed)';
+      nextBonus = '$50 bonus (25 points needed)';
     }
 
     // Calculate potential earnings with upgrades
@@ -266,10 +270,10 @@ export default function CommissionCalculator() {
         {/* Tier Selection */}
         <div className="flex flex-wrap gap-2 mb-6">
           {[
-            { tier: 'BRONZE', color: 'blue', price: 20 },
-            { tier: 'SILVER', color: 'purple', price: 35 },
-            { tier: 'GOLD', color: 'pink', price: 150 },
-            { tier: 'DIAMOND', color: 'cyan', price: 500 }
+            { tier: 'BRONZE', color: 'blue', price: 10 },
+            { tier: 'SILVER', color: 'purple', price: 20 },
+            { tier: 'GOLD', color: 'pink', price: 50 },
+            { tier: 'DIAMOND', color: 'cyan', price: 100 }
           ].map(({ tier, color, price }) => (
             <button
               key={tier}
@@ -290,13 +294,30 @@ export default function CommissionCalculator() {
           {[
             {
               tier: 'BRONZE',
-              price: 20,
+              price: 10,
               color: 'blue',
               bgColor: 'bg-blue-500/10',
               borderColor: 'border-blue-500/30',
               textColor: 'text-blue-400',
               levels: [
-                { level: 1, rate: 0.20, earnings: '$4.00' },
+                { level: 1, rate: 0.30, earnings: '$3.00' },
+                { level: 2, rate: 0.10, earnings: '$1.00' },
+                { level: 3, rate: 0.05, earnings: '$0.50' },
+                { level: 4, rate: 0.03, earnings: '$0.30' },
+                { level: 5, rate: 0.02, earnings: '$0.20' },
+                { level: 6, rate: 0.01, earnings: '$0.10' },
+                { level: 7, rate: 0.01, earnings: '$0.10' }
+              ]
+            },
+            {
+              tier: 'SILVER',
+              price: 20,
+              color: 'purple',
+              bgColor: 'bg-purple-500/10',
+              borderColor: 'border-purple-500/30',
+              textColor: 'text-purple-400',
+              levels: [
+                { level: 1, rate: 0.30, earnings: '$6.00' },
                 { level: 2, rate: 0.10, earnings: '$2.00' },
                 { level: 3, rate: 0.05, earnings: '$1.00' },
                 { level: 4, rate: 0.03, earnings: '$0.60' },
@@ -306,54 +327,37 @@ export default function CommissionCalculator() {
               ]
             },
             {
-              tier: 'SILVER',
-              price: 35,
-              color: 'purple',
-              bgColor: 'bg-purple-500/10',
-              borderColor: 'border-purple-500/30',
-              textColor: 'text-purple-400',
-              levels: [
-                { level: 1, rate: 0.20, earnings: '$7.00' },
-                { level: 2, rate: 0.10, earnings: '$3.50' },
-                { level: 3, rate: 0.05, earnings: '$1.75' },
-                { level: 4, rate: 0.03, earnings: '$1.05' },
-                { level: 5, rate: 0.02, earnings: '$0.70' },
-                { level: 6, rate: 0.01, earnings: '$0.35' },
-                { level: 7, rate: 0.01, earnings: '$0.35' }
-              ]
-            },
-            {
               tier: 'GOLD',
-              price: 150,
+              price: 50,
               color: 'pink',
               bgColor: 'bg-pink-500/10',
               borderColor: 'border-pink-500/30',
               textColor: 'text-pink-400',
               levels: [
-                { level: 1, rate: 0.20, earnings: '$30.00' },
-                { level: 2, rate: 0.10, earnings: '$15.00' },
-                { level: 3, rate: 0.05, earnings: '$7.50' },
-                { level: 4, rate: 0.03, earnings: '$4.50' },
-                { level: 5, rate: 0.02, earnings: '$3.00' },
-                { level: 6, rate: 0.01, earnings: '$1.50' },
-                { level: 7, rate: 0.01, earnings: '$1.50' }
+                { level: 1, rate: 0.30, earnings: '$15.00' },
+                { level: 2, rate: 0.10, earnings: '$5.00' },
+                { level: 3, rate: 0.05, earnings: '$2.50' },
+                { level: 4, rate: 0.03, earnings: '$1.50' },
+                { level: 5, rate: 0.02, earnings: '$1.00' },
+                { level: 6, rate: 0.01, earnings: '$0.50' },
+                { level: 7, rate: 0.01, earnings: '$0.50' }
               ]
             },
             {
               tier: 'DIAMOND',
-              price: 500,
+              price: 100,
               color: 'cyan',
               bgColor: 'bg-cyan-500/10',
               borderColor: 'border-cyan-500/30',
               textColor: 'text-cyan-400',
               levels: [
-                { level: 1, rate: 0.35, earnings: '$175.00' },
-                { level: 2, rate: 0.10, earnings: '$50.00' },
-                { level: 3, rate: 0.05, earnings: '$25.00' },
-                { level: 4, rate: 0.03, earnings: '$15.00' },
-                { level: 5, rate: 0.02, earnings: '$10.00' },
-                { level: 6, rate: 0.01, earnings: '$5.00' },
-                { level: 7, rate: 0.01, earnings: '$5.00' }
+                { level: 1, rate: 0.30, earnings: '$30.00' },
+                { level: 2, rate: 0.10, earnings: '$10.00' },
+                { level: 3, rate: 0.05, earnings: '$5.00' },
+                { level: 4, rate: 0.03, earnings: '$3.00' },
+                { level: 5, rate: 0.02, earnings: '$2.00' },
+                { level: 6, rate: 0.01, earnings: '$1.00' },
+                { level: 7, rate: 0.01, earnings: '$1.00' }
               ]
             }
           ].map(({ tier, price, color, bgColor, borderColor, textColor, levels }) => (
@@ -376,11 +380,14 @@ export default function CommissionCalculator() {
 
               <div className="mt-3 pt-3 border-t border-gray-600">
                 <div className="flex justify-between items-center">
-                  <span className="text-white font-semibold">Total (1 per level):</span>
+                  <span className="text-white font-semibold">Max Potential (1 referral per level):</span>
                   <span className="text-green-400 font-bold text-lg">
                     ${levels.reduce((sum, level) => sum + parseFloat(level.earnings.replace('$', '')), 0).toFixed(2)}
                   </span>
                 </div>
+                <p className="text-xs text-gray-400 mt-1">
+                  This shows your maximum monthly earnings with 1 referral at each level
+                </p>
               </div>
             </div>
           ))}
@@ -428,12 +435,12 @@ export default function CommissionCalculator() {
 
         <div className="space-y-4">
           {[
-            { name: '$200 Bonus', points: 25, color: 'from-green-500 to-blue-500', earned: currentEarnings.totalPoints >= 25 },
-            { name: '$500 Bonus', points: 50, color: 'from-purple-500 to-pink-500', earned: currentEarnings.totalPoints >= 50 },
-            { name: '$2,500 Bonus', points: 100, color: 'from-orange-500 to-red-500', earned: currentEarnings.totalPoints >= 100 },
-            { name: '$5,000 Bonus', points: 200, color: 'from-cyan-500 to-blue-500', earned: currentEarnings.totalPoints >= 200 },
-            { name: '$10,000 Bonus', points: 500, color: 'from-yellow-500 to-orange-500', earned: currentEarnings.totalPoints >= 500 },
-            { name: '$25,000 Bonus', points: 1000, color: 'from-pink-500 to-purple-500', earned: currentEarnings.totalPoints >= 1000 }
+            { name: '$50 Bonus', points: 25, color: 'from-green-500 to-blue-500', earned: currentEarnings.totalPoints >= 25 },
+            { name: '$125 Bonus', points: 50, color: 'from-purple-500 to-pink-500', earned: currentEarnings.totalPoints >= 50 },
+            { name: '$300 Bonus', points: 100, color: 'from-orange-500 to-red-500', earned: currentEarnings.totalPoints >= 100 },
+            { name: '$750 Bonus', points: 200, color: 'from-cyan-500 to-blue-500', earned: currentEarnings.totalPoints >= 200 },
+            { name: '$1,500 Bonus', points: 500, color: 'from-yellow-500 to-orange-500', earned: currentEarnings.totalPoints >= 500 },
+            { name: '$3,000 Bonus', points: 1000, color: 'from-pink-500 to-purple-500', earned: currentEarnings.totalPoints >= 1000 }
           ].map((bonus) => (
             <div key={bonus.name} className={`p-3 border rounded-lg ${bonus.earned ? 'border-green-500/50 bg-green-500/10' : 'border-gray-600 bg-gray-700/30'}`}>
               <div className="flex justify-between items-center mb-2">
@@ -477,92 +484,6 @@ export default function CommissionCalculator() {
         </div>
       </div>
 
-      {/* UPGRADE OPPORTUNITIES - Show what they're missing */}
-      {inputs.membershipTier !== 'DIAMOND' && (
-        <div className="bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-purple-500/30 p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <Eye className="h-6 w-6 text-purple-400" />
-            <div>
-              <h3 className="text-xl font-bold text-white heading-font">Upgrade Opportunities</h3>
-              <p className="text-gray-400 text-sm">See what you're missing out on with higher tiers</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {inputs.membershipTier === 'BRONZE' && (
-              <>
-                <div className="bg-gray-700/50 p-4 border border-gray-600">
-                  <h4 className="text-white font-semibold mb-2">Silver Upgrade</h4>
-                  <p className="text-gray-300 text-sm mb-2">Unlock Levels 2-7</p>
-                  <p className="text-green-400 font-bold text-lg">${results.potentialEarnings.silverUpgrade.toFixed(2)}</p>
-                  <p className="text-gray-400 text-xs">vs ${results.totalCommission.toFixed(2)} now</p>
-                  <p className="text-green-400 text-sm font-semibold">+${(results.potentialEarnings.silverUpgrade - results.totalCommission).toFixed(2)} more!</p>
-                </div>
-                <div className="bg-gray-700/50 p-4 border border-gray-600">
-                  <h4 className="text-white font-semibold mb-2">Gold Upgrade</h4>
-                  <p className="text-gray-300 text-sm mb-2">Unlock Levels 3-7 + Coaching</p>
-                  <p className="text-green-400 font-bold text-lg">${results.potentialEarnings.goldUpgrade.toFixed(2)}</p>
-                  <p className="text-gray-400 text-xs">vs ${results.totalCommission.toFixed(2)} now</p>
-                  <p className="text-green-400 text-sm font-semibold">+${(results.potentialEarnings.goldUpgrade - results.totalCommission).toFixed(2)} more!</p>
-                </div>
-                <div className="bg-gray-700/50 p-4 border border-gray-600">
-                  <h4 className="text-white font-semibold mb-2">Diamond Upgrade</h4>
-                  <p className="text-gray-300 text-sm mb-2">35% Level 1 + All Levels</p>
-                  <p className="text-green-400 font-bold text-lg">${results.potentialEarnings.diamondUpgrade.toFixed(2)}</p>
-                  <p className="text-gray-400 text-xs">vs ${results.totalCommission.toFixed(2)} now</p>
-                  <p className="text-green-400 text-sm font-semibold">+${(results.potentialEarnings.diamondUpgrade - results.totalCommission).toFixed(2)} more!</p>
-                </div>
-              </>
-            )}
-
-            {inputs.membershipTier === 'SILVER' && (
-              <>
-                <div className="bg-gray-700/50 p-4 border border-gray-600">
-                  <h4 className="text-white font-semibold mb-2">Gold Upgrade</h4>
-                  <p className="text-gray-300 text-sm mb-2">Unlock Levels 3-7 + Coaching</p>
-                  <p className="text-green-400 font-bold text-lg">${results.potentialEarnings.goldUpgrade.toFixed(2)}</p>
-                  <p className="text-gray-400 text-xs">vs ${results.totalCommission.toFixed(2)} now</p>
-                  <p className="text-green-400 text-sm font-semibold">+${(results.potentialEarnings.goldUpgrade - results.totalCommission).toFixed(2)} more!</p>
-                </div>
-                <div className="bg-gray-700/50 p-4 border border-gray-600">
-                  <h4 className="text-white font-semibold mb-2">Diamond Upgrade</h4>
-                  <p className="text-gray-300 text-sm mb-2">35% Level 1 + All Levels</p>
-                  <p className="text-green-400 font-bold text-lg">${results.potentialEarnings.diamondUpgrade.toFixed(2)}</p>
-                  <p className="text-gray-400 text-xs">vs ${results.totalCommission.toFixed(2)} now</p>
-                  <p className="text-green-400 text-sm font-semibold">+${(results.potentialEarnings.diamondUpgrade - results.totalCommission).toFixed(2)} more!</p>
-                </div>
-                <div className="bg-gray-700/50 p-4 border border-gray-600 text-center">
-                  <h4 className="text-white font-semibold mb-2">Current Earnings</h4>
-                  <p className="text-blue-400 font-bold text-lg">${results.totalCommission.toFixed(2)}</p>
-                  <p className="text-gray-400 text-sm">Your current potential</p>
-                </div>
-              </>
-            )}
-
-            {inputs.membershipTier === 'GOLD' && (
-              <>
-                <div className="bg-gray-700/50 p-4 border border-gray-600">
-                  <h4 className="text-white font-semibold mb-2">Diamond Upgrade</h4>
-                  <p className="text-gray-300 text-sm mb-2">35% Level 1 + All Levels</p>
-                  <p className="text-green-400 font-bold text-lg">${results.potentialEarnings.diamondUpgrade.toFixed(2)}</p>
-                  <p className="text-gray-400 text-xs">vs ${results.totalCommission.toFixed(2)} now</p>
-                  <p className="text-green-400 text-sm font-semibold">+${(results.potentialEarnings.diamondUpgrade - results.totalCommission).toFixed(2)} more!</p>
-                </div>
-                <div className="bg-gray-700/50 p-4 border border-gray-600 text-center">
-                  <h4 className="text-white font-semibold mb-2">Current Earnings</h4>
-                  <p className="text-blue-400 font-bold text-lg">${results.totalCommission.toFixed(2)}</p>
-                  <p className="text-gray-400 text-sm">Your current potential</p>
-                </div>
-                <div className="bg-gray-700/50 p-4 border border-gray-600 text-center">
-                  <Link to="/membership" className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-semibold text-sm transition-colors inline-block">
-                    Upgrade to Diamond
-                  </Link>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      )}
 
 
       {/* LIVE EARNINGS CALCULATOR */}
@@ -719,10 +640,10 @@ export default function CommissionCalculator() {
             { name: '5 Referrals', earned: true, icon: '⭐', description: 'Building momentum!' },
             { name: '25 Referrals', earned: false, icon: '🏆', description: 'Team leader!' },
             { name: '100 Referrals', earned: false, icon: '👑', description: 'Network champion!' },
-            { name: '$200 Bonus', earned: currentEarnings.totalPoints >= 25, icon: '💰', description: 'First bonus unlocked!' },
-            { name: '$500 Bonus', earned: currentEarnings.totalPoints >= 50, icon: '💎', description: 'Growing your wealth!' },
-            { name: '$2,500 Bonus', earned: currentEarnings.totalPoints >= 100, icon: '🚀', description: 'Serious earner!' },
-            { name: '$5,000 Bonus', earned: currentEarnings.totalPoints >= 200, icon: '👑', description: 'Elite achiever!' }
+            { name: '$50 Bonus', earned: currentEarnings.totalPoints >= 25, icon: '💰', description: 'First bonus unlocked!' },
+            { name: '$125 Bonus', earned: currentEarnings.totalPoints >= 50, icon: '💎', description: 'Growing your wealth!' },
+            { name: '$300 Bonus', earned: currentEarnings.totalPoints >= 100, icon: '🚀', description: 'Serious earner!' },
+            { name: '$750 Bonus', earned: currentEarnings.totalPoints >= 200, icon: '👑', description: 'Elite achiever!' }
           ].map((achievement) => (
             <div key={achievement.name} className={`p-4 text-center border rounded-lg transition-all duration-300 ${
               achievement.earned

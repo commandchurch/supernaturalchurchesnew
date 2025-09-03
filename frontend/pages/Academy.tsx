@@ -1,14 +1,22 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useUser } from '@clerk/clerk-react';
 import { Link } from 'react-router-dom';
 
 import { GraduationCap, Clock, Play, Lock, CheckCircle2 } from 'lucide-react';
 import SEO from '../components/SEO';
-import { siteUrl } from '../config';
+import { siteUrl } from '../config/index';
+import { apiClient } from '../lib/apiClient';
+import { useUIStore } from '../stores/uiStore';
+import { useToast } from '../contexts/ToastContext';
 
 export default function Academy() {
   const { isSignedIn, user } = useUser();
+  const { setLoading } = useUIStore();
+  const { showToast } = useToast();
   const [filter, setFilter] = useState<'all' | 'free' | 'paid' | 'healing' | 'discipleship' | 'evangelism'>('all');
+  const [courses, setCourses] = useState<any[]>([]);
+  const [loading, setLocalLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [completedCourses, setCompletedCourses] = useState<Record<string, boolean>>({});
 
   // Load completed courses from localStorage
@@ -17,97 +25,90 @@ export default function Academy() {
     setCompletedCourses(completed);
   }, []);
 
+  // Load courses from API
+  useEffect(() => {
+    const loadCourses = async () => {
+      try {
+        setLocalLoading(true);
+        setError(null);
+        setLoading(true, 'Loading courses...');
+
+        const response = await apiClient.academy.listCourses({
+          page: 1,
+          limit: 50 // Load more courses for the academy page
+        });
+
+        setCourses(response.courses || []);
+      } catch (err: any) {
+        console.error('Failed to load courses:', err);
+        setError(err.message || 'Failed to load courses');
+
+        // Fallback to sample courses if API fails
+        setCourses([
+          {
+            id: 1,
+            title: 'New Life in Jesus: Foundations',
+            description: 'Essential foundations covering the body and blood of Jesus, how to receive from God, how to pray to God, how to renew your mind, and more.',
+            category: 'discipleship',
+            isPremium: false,
+            durationMinutes: 120
+          },
+          {
+            id: 4,
+            title: 'Evangelism Essentials',
+            description: 'Master the foundational principles of effective soul-winning and Gospel outreach. Learn biblical evangelism methods and supernatural outreach strategies.',
+            category: 'evangelism',
+            isPremium: false,
+            durationMinutes: 120
+          }
+        ]);
+      } finally {
+        setLocalLoading(false);
+        setLoading(false);
+      }
+    };
+
+    loadCourses();
+  }, []);
+
   const markCourseCompleted = (courseTitle: string) => {
     const courseId = courseTitle.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
     const updated = { ...completedCourses, [courseId]: true };
     setCompletedCourses(updated);
     localStorage.setItem('completedCourses', JSON.stringify(updated));
-    alert(`Congratulations! You have completed "${courseTitle}". This completion is now tracked in your dashboard.`);
+    showToast(`Congratulations! You have completed "${courseTitle}". This completion is now tracked in your dashboard.`, 'success');
   };
 
   // Mock membership data
   const membership = { active: true, planName: 'GOLD', renewsAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString() };
 
-  // Mock course data including the new free discipleship course
-  const coursesData = useMemo(() => ({
-    courses: [
-      {
-        id: 1,
-        title: 'New Life in Jesus: Foundations',
-        description: 'Essential foundations covering the body and blood of Jesus, how to receive from God, how to pray to God, how to renew your mind, and more.',
-        category: 'Discipleship',
-        isPremium: false,
-        duration: 120,
-        instructor: 'Senior Leader, Samuel Waterhouse'
-      },
-      {
-        id: 4,
-        title: 'Evangelism Essentials',
-        description: 'Master the foundational principles of effective soul-winning and Gospel outreach. Learn biblical evangelism methods and supernatural outreach strategies.',
-        category: 'Evangelism',
-        isPremium: false,
-        duration: 120,
-        instructor: 'Ministry Team'
-      },
-      {
-        id: 2,
-        title: 'Divine Healing Masterclass',
-        description: 'Learn the biblical foundation of divine healing and supernatural health.',
-        category: 'Healing',
-        isPremium: true,
-        duration: 180,
-        instructor: 'Senior Leader, Samuel Waterhouse'
-      },
-      {
-        id: 3,
-        title: 'Evangelism in Power',
-        description: 'Master the art of supernatural evangelism with signs following.',
-        category: 'Evangelism',
-        isPremium: true,
-        duration: 150,
-        instructor: 'Ministry Team'
-      },
-      {
-        id: 5,
-        title: 'Advanced Discipleship',
-        description: 'Deep discipleship principles for mature believers.',
-        category: 'Discipleship',
-        isPremium: true,
-        duration: 200,
-        instructor: 'Senior Leader, Samuel Waterhouse'
-      }
-    ]
-  }), []);
 
-  // Mock progress data
-  const progressData = {
-    progress: [
-      { courseId: 1, progressPercentage: 100, completedAt: new Date().toISOString() },
-      { courseId: 2, progressPercentage: 75, completedAt: null },
-      { courseId: 3, progressPercentage: 50, completedAt: null },
-      { courseId: 4, progressPercentage: 25, completedAt: null },
-      { courseId: 5, progressPercentage: 0, completedAt: null }
-    ]
-  };
 
+  // Create progress map from completed courses (should be replaced with real progress API)
   const progressMap = useMemo(() => {
     const m = new Map<number, { pct: number; completedAt?: string | null }>();
-    progressData.progress.forEach(p => m.set(p.courseId, { pct: p.progressPercentage, completedAt: p.completedAt }));
+    courses.forEach(course => {
+      const courseId = course.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+      const isCompleted = completedCourses[courseId];
+      m.set(course.id, {
+        pct: isCompleted ? 100 : 0,
+        completedAt: isCompleted ? new Date().toISOString() : null
+      });
+    });
     return m;
-  }, []);
+  }, [courses, completedCourses]);
 
   const completeMutation = async (params: { courseId: string }) => {
-    // Mock completion - just show alert
-    alert('Course completed successfully!');
+    // Mock completion - just show toast
+    showToast('Course completed successfully!', 'success');
   };
 
   const filteredCourses = useMemo(() => {
-    const courses = coursesData?.courses ?? [];
     if (filter === 'all') return courses;
     if (filter === 'free') return courses.filter(c => !c.isPremium);
     if (filter === 'paid') return courses.filter(c => c.isPremium);
     return courses.filter(c => c.category.toLowerCase() === filter);
-  }, [coursesData, filter]);
+  }, [courses, filter]);
 
   const getCategoryColor = (category: string) => {
     switch (category.toLowerCase()) {
@@ -171,7 +172,7 @@ export default function Academy() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-        {filteredCourses.map((course) => {
+        {filteredCourses.map((course: any) => {
           const progress = progressMap.get(course.id)?.pct ?? 0;
           const completed = (progressMap.get(course.id)?.completedAt ?? null) !== null;
           const access = canAccess(course.isPremium);
@@ -252,7 +253,7 @@ export default function Academy() {
                     </>
                   ) : (
                     <button
-                      onClick={() => alert('Please sign in to track progress')}
+                      onClick={() => showToast('Please sign in to track progress', 'info')}
                       className="w-full bg-white text-black hover:bg-gray-200 px-4 py-2 font-semibold uppercase tracking-wide text-sm"
                     >
                       Sign in to Track Progress

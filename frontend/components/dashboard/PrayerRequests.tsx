@@ -1,12 +1,13 @@
-// @ts-nocheck
 import React, { useMemo, useState } from 'react';
 
 import { Heart, Loader2 } from 'lucide-react';
 import { useUser } from '@clerk/clerk-react';
 import client from '../../client';
+import { useToast } from '../../contexts/ToastContext';
 
 export default function PrayerRequests() {
   const { user } = useUser();
+  const { showToast } = useToast();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -47,7 +48,7 @@ export default function PrayerRequests() {
       }
     ]);
 
-    alert('✅ Prayer request submitted successfully!');
+    showToast('Prayer request submitted successfully!', 'success');
     setFormData({ name: '', email: '', phone: '', request: '', isUrgent: false, isPrivate: false });
     setErrors({});
     setTouched({});
@@ -132,7 +133,7 @@ export default function PrayerRequests() {
 
     // Validate form
     if (!validateForm()) {
-      alert('Please fix the errors in the form before submitting.');
+      showToast('Please fix the errors in the form before submitting.', 'error');
       return;
     }
 
@@ -146,7 +147,7 @@ export default function PrayerRequests() {
 
     } catch (error: any) {
       console.error('❌ Submission failed:', error);
-      alert('❌ Submission failed. Please try again.');
+      showToast('Submission failed. Please try again.', 'error');
     } finally {
       setIsSubmitting(false);
     }

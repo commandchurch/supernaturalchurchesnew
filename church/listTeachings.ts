@@ -1,7 +1,8 @@
 import { api } from "encore.dev/api";
 import { churchDB } from "./db";
 
-export interface Teaching {
+// Teaching interface for list operations (excludes content for performance)
+export interface TeachingList {
   id: number;
   title: string;
   slug: string;
@@ -14,7 +15,7 @@ export interface Teaching {
 }
 
 interface ListTeachingsResponse {
-  teachings: Teaching[];
+  teachings: TeachingList[];
 }
 
 // Lists all published teachings

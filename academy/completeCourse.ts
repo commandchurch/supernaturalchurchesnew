@@ -3,19 +3,10 @@ import { academyDB } from "./db";
 import { membership } from "~encore/clients";
 import { getAuthData } from "~encore/auth";
 import { issueOrUpdateCertificate } from "./util_certificates";
+import { Certificate } from "./listCertificates";
 
 interface CompleteCourseParams {
   courseId: number;
-}
-
-interface Certificate {
-  id: number;
-  courseId: number;
-  userId: string;
-  issuedAt: string;
-  certificateCode: string;
-  recipientName?: string | null;
-  certificateUrl?: string | null;
 }
 
 interface CompleteCourseResponse {

@@ -1,6 +1,6 @@
 import { api, APIError } from "encore.dev/api";
 import { churchDB } from "./db";
-import type { Teaching as TeachingType } from "./listTeachings";
+import type { Teaching } from "./getTeaching";
 import { requireAdmin } from "../auth/admin";
 
 interface CreateTeachingParams {
@@ -16,7 +16,7 @@ interface CreateTeachingParams {
 }
 
 // Creates a new teaching (admin).
-export const createTeaching = api<CreateTeachingParams, TeachingType>(
+export const createTeaching = api<CreateTeachingParams, Teaching>(
   { auth: true, expose: true, method: "POST", path: "/admin/church/teachings" },
   async (p) => {
     requireAdmin();

@@ -1,6 +1,7 @@
 import { api, APIError } from "encore.dev/api";
 import { churchDB } from "./db";
 
+// Full Teaching interface for get operations (includes content)
 export interface Teaching {
   id: number;
   title: string;

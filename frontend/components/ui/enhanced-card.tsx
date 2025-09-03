@@ -6,15 +6,15 @@ interface EnhancedCardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
 
-export const EnhancedCard = React.forwardRef<HTMLDivElement, EnhancedCardProps>(
+const EnhancedCardComponent = React.forwardRef<HTMLDivElement, EnhancedCardProps>(
   ({ className, variant = 'default', children, ...props }, ref) => {
     const baseClasses = "rounded-lg border bg-card text-card-foreground shadow-sm";
 
     const variants = {
       default: "border-gray-200 bg-white",
       gradient: "border-gray-800 bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-sm",
-      supernatural: "border-supernatural-accent-purple/30 bg-gradient-to-br from-supernatural-accent-purple/10 to-supernatural-accent-blue/10 backdrop-blur-sm",
-      animated: "border-orange-500/30 bg-gradient-to-br from-orange-500/10 to-red-500/10 backdrop-blur-sm animate-pulse"
+      supernatural: "border-supernatural-accent bg-gradient-to-br bg-supernatural-gradient backdrop-blur-sm",
+      animated: "border-orange-500 bg-gradient-to-br from-orange-500 to-red-500 backdrop-blur-sm animate-pulse"
     };
 
     return (
@@ -28,9 +28,13 @@ export const EnhancedCard = React.forwardRef<HTMLDivElement, EnhancedCardProps>(
     );
   }
 );
+
+EnhancedCardComponent.displayName = "EnhancedCard";
+
+export const EnhancedCard = React.memo(EnhancedCardComponent);
 EnhancedCard.displayName = "EnhancedCard";
 
-export const EnhancedCardHeader = React.forwardRef<
+const EnhancedCardHeaderComponent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
@@ -40,9 +44,12 @@ export const EnhancedCardHeader = React.forwardRef<
     {...props}
   />
 ));
-EnhancedCardHeader.displayName = "EnhancedCardHeader";
 
-export const EnhancedCardTitle = React.forwardRef<
+EnhancedCardHeaderComponent.displayName = "EnhancedCardHeader";
+
+export const EnhancedCardHeader = React.memo(EnhancedCardHeaderComponent);
+
+const EnhancedCardTitleComponent = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLHeadingElement> & { gradient?: boolean }
 >(({ className, gradient, ...props }, ref) => (
@@ -56,9 +63,12 @@ export const EnhancedCardTitle = React.forwardRef<
     {...props}
   />
 ));
-EnhancedCardTitle.displayName = "EnhancedCardTitle";
 
-export const EnhancedCardDescription = React.forwardRef<
+EnhancedCardTitleComponent.displayName = "EnhancedCardTitle";
+
+export const EnhancedCardTitle = React.memo(EnhancedCardTitleComponent);
+
+const EnhancedCardDescriptionComponent = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
@@ -68,17 +78,23 @@ export const EnhancedCardDescription = React.forwardRef<
     {...props}
   />
 ));
-EnhancedCardDescription.displayName = "EnhancedCardDescription";
 
-export const EnhancedCardContent = React.forwardRef<
+EnhancedCardDescriptionComponent.displayName = "EnhancedCardDescription";
+
+export const EnhancedCardDescription = React.memo(EnhancedCardDescriptionComponent);
+
+const EnhancedCardContentComponent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
   <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
 ));
-EnhancedCardContent.displayName = "EnhancedCardContent";
 
-export const EnhancedCardFooter = React.forwardRef<
+EnhancedCardContentComponent.displayName = "EnhancedCardContent";
+
+export const EnhancedCardContent = React.memo(EnhancedCardContentComponent);
+
+const EnhancedCardFooterComponent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
@@ -88,4 +104,7 @@ export const EnhancedCardFooter = React.forwardRef<
     {...props}
   />
 ));
-EnhancedCardFooter.displayName = "EnhancedCardFooter";
+
+EnhancedCardFooterComponent.displayName = "EnhancedCardFooter";
+
+export const EnhancedCardFooter = React.memo(EnhancedCardFooterComponent);

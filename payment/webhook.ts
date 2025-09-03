@@ -1,9 +1,10 @@
-import { api, APIError, Request } from "encore.dev/api";
+import { api, APIError } from "encore.dev/api";
 import { secret } from "encore.dev/config";
 import Stripe from "stripe";
 import { membership } from "~encore/clients";
 import { membershipDB } from "../membership/db";
 import { paymentTopic } from "../commission/pubsub";
+import { IncomingMessage } from "http";
 
 const stripeKey = secret("StripeSecretKey");
 const webhookSecret = secret("StripeWebhookSecret");
@@ -11,8 +12,8 @@ const webhookSecret = secret("StripeWebhookSecret");
 // Handles incoming Stripe webhooks.
 export const webhook = api.raw(
   { expose: true, path: "/payment/webhook" },
-  async (req: Request) => {
-    const stripe = new Stripe(stripeKey(), { apiVersion: "2024-04-10" });
+  async (req: IncomingMessage) => {
+    const stripe = new Stripe(stripeKey(), { apiVersion: "2025-02-24.acacia" });
     const sig = req.headers["stripe-signature"];
     if (!sig) {
       throw APIError.invalidArgument("missing stripe signature");
@@ -20,7 +21,13 @@ export const webhook = api.raw(
 
     let event: Stripe.Event;
     try {
-      event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret());
+      const body = await new Promise<string>((resolve, reject) => {
+        let data = '';
+        req.on('data', chunk => data += chunk);
+        req.on('end', () => resolve(data));
+        req.on('error', reject);
+      });
+      event = stripe.webhooks.constructEvent(body, sig, webhookSecret());
     } catch (err: any) {
       throw APIError.invalidArgument(`webhook signature verification failed: ${err.message}`);
     }

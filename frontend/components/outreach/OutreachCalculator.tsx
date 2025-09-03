@@ -51,15 +51,15 @@ export default function OutreachCalculator() {
   }, [tier, directReferrals, avgReferralsPerPerson, avgMembershipPrice]);
 
   return (
-    <div className="bg-white/5 border border-white/10 backdrop-blur-sm p-6 sm:p-8">
+    <div className="bg-white/5 border border-white/10 backdrop-blur-sm p-4 sm:p-6 lg:p-8">
       <div className="flex items-center gap-3 mb-6">
         <Calculator className="h-5 w-5 text-white" />
-        <h3 className="text-xl font-bold text-white heading-font">Estimate Your Potential Earnings</h3>
+        <h3 className="text-lg sm:text-xl font-bold text-white heading-font">Estimate Your Potential Earnings</h3>
       </div>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
         {/* Inputs */}
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           <SliderInput
             label="Your Direct Referrals"
             value={directReferrals}
@@ -93,9 +93,11 @@ export default function OutreachCalculator() {
                 <button
                   key={t}
                   onClick={() => setTier(t)}
-                  className={`px-3 py-2 text-xs font-semibold uppercase tracking-wide ${
-                    tier === t ? 'bg-white text-black' : 'bg-gray-700 text-white hover:bg-gray-600'
-                  }`}
+                  className={`px-2 sm:px-3 py-2 text-xs font-semibold uppercase tracking-wide touch-manipulation ${
+                    tier === t
+                      ? 'bg-white text-black scale-105'
+                      : 'bg-gray-700 text-white hover:bg-gray-600 active:bg-gray-500'
+                  } transition-all duration-200`}
                 >
                   {t}
                 </button>
@@ -105,11 +107,11 @@ export default function OutreachCalculator() {
         </div>
 
         {/* Outputs */}
-        <div className="bg-gray-800/50 border border-gray-700 p-6">
-          <h4 className="text-lg font-bold text-white mb-4 heading-font">Estimated Monthly Earnings</h4>
-          <div className="text-center mb-6">
-            <p className="text-5xl font-black text-white heading-font">{formatCurrency(estimatedEarnings.total)}</p>
-            <p className="text-gray-400">per 28 days</p>
+        <div className="bg-gray-800/50 border border-gray-700 p-4 sm:p-6">
+          <h4 className="text-base sm:text-lg font-bold text-white mb-4 heading-font">Estimated Monthly Earnings</h4>
+          <div className="text-center mb-4 sm:mb-6">
+            <p className="text-3xl sm:text-4xl lg:text-5xl font-black text-white heading-font">{formatCurrency(estimatedEarnings.total)}</p>
+            <p className="text-gray-400 text-sm">per 28 days</p>
           </div>
           <div className="space-y-2">
             {estimatedEarnings.details.map(item => (
@@ -121,8 +123,8 @@ export default function OutreachCalculator() {
               </div>
             ))}
           </div>
-          <p className="text-xs text-gray-500 mt-4">
-            This is an estimate. Actual earnings depend on your network's activity. Commando tier earnings are capped at $10,000/month per user.
+          <p className="text-xs text-gray-500 mt-4 leading-relaxed">
+            This is an estimate. Actual earnings depend on your network's activity. Diamond tier earnings are capped at $10,000/month per user.
           </p>
         </div>
       </div>

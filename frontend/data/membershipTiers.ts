@@ -8,9 +8,37 @@ import {
   Target,
   Sparkles
 } from 'lucide-react';
+import { LucideIcon } from 'lucide-react';
+
+export interface MembershipTier {
+  name: string;
+  churchName?: string;
+  price: number;
+  annualPrice?: number;
+  color: string;
+  icon: LucideIcon;
+  description: string;
+  tagline?: string;
+  subtitle?: string;
+  benefits: string[];
+  limitations?: string[];
+  upgradeOffer?: string;
+  courses: string[];
+  level: string;
+  churchSpecific?: boolean;
+  featured?: boolean;
+  powerStatement?: string;
+  requirements?: string;
+  commission?: number;
+  points?: number;
+  popular?: boolean;
+  planCode?: string;
+  range?: string;
+  suggested?: number;
+}
 
 // Church-specific membership tiers with appropriate names
-export const churchMembershipTiers = [
+export const churchMembershipTiers: MembershipTier[] = [
   {
     name: 'SUPERNATURAL CHURCHES PARTNERSHIP',
     churchName: 'Apostolic Partnership',
@@ -60,8 +88,8 @@ export const churchMembershipTiers = [
   }
 ];
 
-// Individual membership tiers (existing structure)  
-export const individualMembershipTiers = [
+// Individual membership tiers (existing structure)
+export const individualMembershipTiers: MembershipTier[] = [
   {
     name: 'FREE',
     price: 0,
@@ -106,9 +134,10 @@ export const individualMembershipTiers = [
     courses: ['Access to all institute (premium) courses'],
     level: 'Entry Level',
     churchSpecific: false,
-    commission: 4,
+    commission: 3, // 30% of $10 = $3 commission rate
     points: 1,
-    popular: false
+    popular: false,
+    planCode: 'BRONZE'
   },
   {
     name: 'SILVER',
@@ -126,9 +155,10 @@ export const individualMembershipTiers = [
     courses: ['Access to all institute (premium) courses'],
     level: 'Intermediate',
     churchSpecific: false,
-    commission: 8,
+    commission: 6, // 30% of $20 = $6 commission rate
     points: 2,
-    popular: true
+    popular: false,
+    planCode: 'SILVER'
   },
   {
     name: 'GOLD',
@@ -148,9 +178,10 @@ export const individualMembershipTiers = [
     courses: ['All institute courses + Advanced Ministry Training'],
     level: 'Advanced',
     churchSpecific: false,
-    commission: 16,
+    commission: 15, // 30% of $50 = $15 commission rate
     points: 5,
-    popular: false
+    popular: true,
+    planCode: 'GOLD'
   },
   {
     name: 'DIAMOND',
@@ -163,7 +194,6 @@ export const individualMembershipTiers = [
       'Everything in Gold',
       '+ Affiliate commission earnings (7 levels)',
       '+ Fortnightly Private Live Teaching',
-      '+ Direct level 1 referrals increase from 20% to 35%',
       '+ Free tickets to all in person or online events',
       '+ 10% discount on any merch available',
       '+ Sign up bonus qualification'
@@ -172,8 +202,9 @@ export const individualMembershipTiers = [
     level: 'Elite',
     churchSpecific: false,
     featured: true,
-    commission: 32,
+    commission: 30, // 30% of $100 = $30 commission rate
     points: 10,
-    popular: false
+    popular: false,
+    planCode: 'DIAMOND'
   }
 ];

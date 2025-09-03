@@ -1,59 +1,49 @@
 import React, { useState } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
-import { MessageCircle, Settings } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
 import Overview from '../components/dashboard/Overview';
 import HelpMeFund from '../components/dashboard/HelpMeFund';
 import SoulOutreach from '../components/dashboard/SoulOutreach';
+import CommissionCalculator from '../components/dashboard/CommissionCalculator';
 import PrayerRequests from '../components/dashboard/PrayerRequests';
-import BillingSettings from '../components/dashboard/BillingSettings';
-import Support from '../components/dashboard/Support';
 import TestimonySubmission from '../components/dashboard/TestimonySubmission';
 import PartnershipApplication from '../components/dashboard/PartnershipApplication';
-import CommissionCalculator from '../components/dashboard/CommissionCalculator';
-import Messages from '../components/dashboard/Messages';
-import EnhancedMessages from '../components/EnhancedMessages';
+import BillingSettings from '../components/dashboard/BillingSettings';
+import Support from '../components/dashboard/Support';
 import UserMessagesInbox from '../components/dashboard/UserMessagesInbox';
 
-type TabKey = 'overview' | 'fund' | 'outreach' | 'prayer' | 'testimony' | 'billing' | 'support' | 'affiliate-rewards' | 'messages' | 'partnership';
+interface Tab {
+  key: string;
+  label: string;
+}
+
+const tabs: Tab[] = [
+  { key: 'overview', label: 'OVERVIEW' },
+  { key: 'fund', label: 'HELP ME FUND' },
+  { key: 'outreach', label: 'SOUL OUTREACH' },
+  { key: 'affiliate-rewards', label: 'AFFILIATE REWARDS' },
+  { key: 'prayer', label: 'PRAYER REQUEST' },
+  { key: 'testimony', label: 'TESTIMONY' },
+  { key: 'partnership', label: 'PARTNERSHIP' },
+  { key: 'billing', label: 'BILLING' },
+  { key: 'support', label: 'SUPPORT' },
+  { key: 'messages', label: 'MESSAGES' },
+];
 
 export default function Dashboard() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const tab = (searchParams.get('tab') as TabKey) || 'overview';
-  const [notifications] = useState(3); // Mock notification count
-
-  const setTab = (newTab: TabKey) => {
-    setSearchParams({ tab: newTab });
-  };
-
-  const tabs: { key: TabKey; label: string }[] = [
-    { key: 'overview', label: 'Overview' },
-    { key: 'fund', label: 'Help Me Fund' },
-    { key: 'outreach', label: 'Outreach' },
-    { key: 'affiliate-rewards', label: 'AFFILIATE REWARDS' },
-    { key: 'prayer', label: 'Prayer Request' },
-    { key: 'testimony', label: 'Testimony' },
-    { key: 'partnership', label: 'Partnership' },
-    { key: 'billing', label: 'Billing' },
-    { key: 'support', label: 'Support' },
-  ];
+  const [tab, setTab] = useState('overview');
+  const [notifications] = useState(0); // Mock notifications count
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div className="mb-6 flex justify-between items-start">
-        <div>
-          <h1 className="text-4xl md:text-5xl font-black text-white mb-2 heading-font">
-            Your Dashboard
-          </h1>
-          <p className="text-lg text-gray-400">
-            Manage your account, track progress, and access exclusive content.
-          </p>
-        </div>
-        
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
+      {/* Header */}
+      <div className="flex items-center justify-between p-6 border-b border-gray-800">
+        <h1 className="text-2xl font-bold text-white">Dashboard</h1>
+
         {/* Messages */}
         <div className="flex items-center gap-3">
           <button
             onClick={() => setTab('messages')}
-            className="relative p-3 bg-gray-800 border border-gray-700 hover:bg-gray-700 transition-colors"
+            className="relative p-3 bg-gray-800 border border-gray-700 hover:bg-gray-700 transition-colors rounded-lg"
           >
             <MessageCircle className="w-6 h-6 text-white" />
             {notifications > 0 && (
@@ -65,7 +55,8 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="w-full mb-8">
+      {/* Tab Navigation */}
+      <div className="w-full mb-8 px-6">
         <div className="flex flex-wrap justify-center gap-1 bg-gray-800 p-1 rounded-lg">
           {tabs.map(t => (
             <button
@@ -78,15 +69,15 @@ export default function Dashboard() {
                   <span className="hidden sm:inline">AFFILIATE REWARDS</span>
                   <span className="sm:hidden">REWARDS</span>
                 </>
-              ) : t.label === 'Prayer Request' ? (
+              ) : t.label === 'PRAYER REQUEST' ? (
                 <>
-                  <span className="hidden sm:inline">Prayer Request</span>
-                  <span className="sm:hidden">Prayer</span>
+                  <span className="hidden sm:inline">PRAYER REQUEST</span>
+                  <span className="sm:hidden">PRAYER</span>
                 </>
-              ) : t.label === 'Help Me Fund' ? (
+              ) : t.label === 'HELP ME FUND' ? (
                 <>
-                  <span className="hidden sm:inline">Help Me Fund</span>
-                  <span className="sm:hidden">Fund</span>
+                  <span className="hidden sm:inline">HELP ME FUND</span>
+                  <span className="sm:hidden">FUND</span>
                 </>
               ) : (
                 t.label
@@ -96,7 +87,8 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div>
+      {/* Content */}
+      <div className="px-6 pb-8">
         {tab === 'overview' && <Overview />}
         {tab === 'fund' && <HelpMeFund />}
         {tab === 'outreach' && <SoulOutreach />}

@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { ClerkProvider } from "@clerk/clerk-react";
 import App from "./App";
+import { ToastProvider } from "./contexts/ToastContext";
 import "./index.css";
 
 // Environment Variables
@@ -9,7 +10,7 @@ const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 const CLIENT_TARGET = import.meta.env.VITE_CLIENT_TARGET;
 const STRIPE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
 
-const missingVars = [];
+const missingVars: string[] = [];
 if (!PUBLISHABLE_KEY) missingVars.push('VITE_CLERK_PUBLISHABLE_KEY');
 if (!CLIENT_TARGET) missingVars.push('VITE_CLIENT_TARGET');
 if (!STRIPE_KEY) missingVars.push('VITE_STRIPE_PUBLISHABLE_KEY');
@@ -90,7 +91,9 @@ if (missingVars.length > 0) {
   ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
       <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
-        <App />
+        <ToastProvider>
+          <App />
+        </ToastProvider>
       </ClerkProvider>
     </React.StrictMode>
   );

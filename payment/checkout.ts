@@ -22,7 +22,7 @@ export const createCheckoutSession = api<CreateCheckoutSessionParams, CreateChec
   { auth: true, expose: true, method: "POST", path: "/payment/checkout" },
   async ({ planCode, successUrl, cancelUrl }) => {
     const auth = getAuthData()!;
-    const stripe = new Stripe(stripeKey(), { apiVersion: "2024-04-10" });
+    const stripe = new Stripe(stripeKey(), { apiVersion: "2025-02-24.acacia" });
 
     const plan = await membershipDB.queryRow<{ price_monthly: string }>`
       SELECT price_monthly FROM subscription_plans WHERE code = ${planCode}

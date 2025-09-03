@@ -1,7 +1,7 @@
 import { api, APIError } from "encore.dev/api";
 import { membershipDB } from "./db";
 import { getAuthData } from "~encore/auth";
-import { secret }from "encore.dev/config";
+import { secret } from "encore.dev/config";
 import Stripe from "stripe";
 
 const stripeKey = secret("StripeSecretKey");
@@ -16,7 +16,7 @@ export const cancelSubscription = api<void, CancelSubscriptionResponse>(
   { auth: true, expose: true, method: "POST", path: "/membership/subscription/cancel" },
   async () => {
     const auth = getAuthData()!;
-    const stripe = new Stripe(stripeKey(), { apiVersion: '2024-04-10' });
+    const stripe = new Stripe(stripeKey(), { apiVersion: '2025-02-24.acacia' });
 
     const sub = await membershipDB.queryRow<{ stripe_subscription_id: string }>`
       SELECT stripe_subscription_id FROM subscriptions
@@ -34,7 +34,7 @@ export const cancelSubscription = api<void, CancelSubscriptionResponse>(
     } catch (err: any) {
       // If subscription is already canceled on Stripe, we can ignore the error.
       if (err.code !== 'resource_missing') {
-        throw APIError.internal("Failed to cancel Stripe subscription", { detail: err.message });
+        throw APIError.internal("Failed to cancel Stripe subscription");
       }
     }
 

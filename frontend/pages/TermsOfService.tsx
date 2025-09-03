@@ -135,9 +135,37 @@ const TermsOfService: React.FC = () => {
             </div>
           </section>
 
+          {/* Activity Recommendations */}
+          <section className="bg-green-500/10 border border-green-500/30 p-6 rounded-lg">
+            <h2 className="text-2xl font-black text-white mb-4 heading-font">7. Activity Recommendations</h2>
+            <div className="space-y-4 text-gray-300 leading-relaxed">
+              <p className="text-green-100 font-semibold">
+                OPTIONAL MINISTRY ENCOURAGEMENT:
+              </p>
+              <div className="bg-white/5 border border-white/10 p-4 rounded">
+                <p className="text-white font-medium">
+                  We encourage members to actively participate in gospel outreach by sharing their experience with others. This is completely optional and recommended for the best experience.
+                </p>
+              </div>
+              <ul className="list-disc list-inside space-y-2 ml-4">
+                <li>Sharing is encouraged but never required for any membership level</li>
+                <li>No account suspensions or limitations for not sharing</li>
+                <li>Optional activities enhance the Kingdom advancement experience</li>
+                <li>Free tier members may optionally upgrade to Bronze at any time</li>
+                <li>All membership benefits remain available regardless of sharing activity</li>
+                <li>Community focus is maintained through voluntary participation</li>
+              </ul>
+              <div className="bg-blue-500/10 border border-blue-500/30 p-4 rounded mt-4">
+                <p className="text-blue-200 font-medium">
+                  <strong>Australian Consumer Law Compliance:</strong> No mandatory recruitment or activity requirements exist. All participation is voluntary.
+                </p>
+              </div>
+            </div>
+          </section>
+
           {/* Prohibited Activities */}
           <section>
-            <h2 className="text-2xl font-black text-white mb-4 heading-font">7. Prohibited Activities</h2>
+            <h2 className="text-2xl font-black text-white mb-4 heading-font">8. Prohibited Activities</h2>
             <div className="space-y-4 text-gray-300 leading-relaxed">
               <p>You agree not to:</p>
               <ul className="list-disc list-inside space-y-2 ml-4">
@@ -167,7 +195,7 @@ const TermsOfService: React.FC = () => {
 
           {/* Termination */}
           <section>
-            <h2 className="text-2xl font-black text-white mb-4 heading-font">9. Termination</h2>
+            <h2 className="text-2xl font-black text-white mb-4 heading-font">10. Termination</h2>
             <div className="space-y-4 text-gray-300 leading-relaxed">
               <p>
                 We reserve the right to terminate or suspend your account immediately, without prior notice, if you violate these Terms or engage in activities that compromise the integrity of our ministry or platform.
@@ -177,7 +205,7 @@ const TermsOfService: React.FC = () => {
 
           {/* Governing Law */}
           <section>
-            <h2 className="text-2xl font-black text-white mb-4 heading-font">10. Governing Law</h2>
+            <h2 className="text-2xl font-black text-white mb-4 heading-font">11. Governing Law</h2>
             <div className="space-y-4 text-gray-300 leading-relaxed">
               <p>
                 These Terms are governed by the laws of Australia. Any disputes will be resolved in the appropriate courts of Australia.
@@ -187,7 +215,7 @@ const TermsOfService: React.FC = () => {
 
           {/* Contact Information */}
           <section className="bg-white/5 border border-white/10 p-6 rounded-lg">
-            <h2 className="text-2xl font-black text-white mb-4 heading-font">11. Contact Us</h2>
+            <h2 className="text-2xl font-black text-white mb-4 heading-font">12. Contact Us</h2>
             <div className="text-gray-300 leading-relaxed">
               <p>If you have questions about these Terms of Service, please contact us:</p>
               <p className="mt-4">

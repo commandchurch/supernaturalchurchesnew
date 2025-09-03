@@ -40,8 +40,6 @@ const CompensationPlan = lazy(() => import('./pages/CompensationPlan'));
 const Merch = lazy(() => import('./pages/Merch'));
 const Connect = lazy(() => import('./pages/Connect'));
 
-
-
 function ScrollToTop() {
   const { pathname } = useLocation();
 
@@ -61,36 +59,38 @@ export default function App() {
               <ScrollToTop />
               <Suspense fallback={<LoadingSpinner />}>
                 <Routes>
-                  <Route path="/" element={<Layout><Home /></Layout>} />
-                  <Route path="/academy" element={<Layout><Academy /></Layout>} />
-                  <Route path="/about" element={<Layout><About /></Layout>} />
-                  <Route path="/give" element={<Layout><Give /></Layout>} />
-                  <Route path="/help-me-fund" element={<Layout><HelpMeFundPublic /></Layout>} />
-                  <Route path="/membership" element={<Layout><Membership /></Layout>} />
-                  <Route path="/soul-outreach" element={<Layout><SoulOutreach /></Layout>} />
-                  <Route path="/find-church" element={<Layout><FindChurch /></Layout>} />
+                  <Route path="/" element={<Layout><ErrorBoundary><Home /></ErrorBoundary></Layout>} />
+                  <Route path="/academy" element={<Layout><ErrorBoundary><Academy /></ErrorBoundary></Layout>} />
+                  <Route path="/about" element={<Layout><ErrorBoundary><About /></ErrorBoundary></Layout>} />
+                  <Route path="/give" element={<Layout><ErrorBoundary><Give /></ErrorBoundary></Layout>} />
+                  <Route path="/help-me-fund" element={<Layout><ErrorBoundary><HelpMeFundPublic /></ErrorBoundary></Layout>} />
+                  <Route path="/membership" element={<Layout><ErrorBoundary><Membership /></ErrorBoundary></Layout>} />
+                  <Route path="/soul-outreach" element={<Layout><ErrorBoundary><SoulOutreach /></ErrorBoundary></Layout>} />
+                  <Route path="/find-church" element={<Layout><ErrorBoundary><FindChurch /></ErrorBoundary></Layout>} />
+                  <Route path="/church" element={<Layout><ErrorBoundary><Church /></ErrorBoundary></Layout>} />
+                  <Route path="/events" element={<Layout><ErrorBoundary><Events /></ErrorBoundary></Layout>} />
 
                   {/* Enhanced Pages with Consistent Design System */}
-                  <Route path="/merch" element={<Merch />} />
-                  <Route path="/connect" element={<Connect />} />
+                  <Route path="/merch" element={<ErrorBoundary><Merch /></ErrorBoundary>} />
+                  <Route path="/connect" element={<ErrorBoundary><Connect /></ErrorBoundary>} />
 
                   {/* Other Pages */}
-                  <Route path="/privacy" element={<Layout><Privacy /></Layout>} />
-                  <Route path="/statement-of-faith" element={<Layout><StatementOfFaith /></Layout>} />
-                  <Route path="/terms/:documentType" element={<Layout><Terms /></Layout>} />
-                  <Route path="/legal" element={<Layout><Legal /></Layout>} />
-                  <Route path="/legal/terms-of-service" element={<Layout><TermsOfService /></Layout>} />
-                  <Route path="/legal/privacy-policy" element={<Layout><PrivacyPolicy /></Layout>} />
-                  <Route path="/legal/refund-policy" element={<Layout><RefundPolicy /></Layout>} />
-                  <Route path="/legal/disclaimer" element={<Layout><LegalDisclaimer /></Layout>} />
-                  <Route path="/legal/user-agreement" element={<Layout><UserAgreement /></Layout>} />
-                  <Route path="/legal/cookie-policy" element={<Layout><CookiePolicy /></Layout>} />
-                  <Route path="/legal/data-protection" element={<Layout><DataProtection /></Layout>} />
-                  <Route path="/legal/donation-terms" element={<Layout><DonationTerms /></Layout>} />
-                  <Route path="/legal/medical-disclaimer" element={<Layout><MedicalDisclaimer /></Layout>} />
-                  <Route path="/legal/compensation-plan" element={<Layout><CompensationPlan /></Layout>} />
-                  <Route path="/dashboard" element={<ProtectedRoute><Layout><Dashboard /></Layout></ProtectedRoute>} />
-                  <Route path="/admin" element={<ProtectedRoute requireAdmin><Layout><Admin /></Layout></ProtectedRoute>} />
+                  <Route path="/privacy" element={<Layout><ErrorBoundary><Privacy /></ErrorBoundary></Layout>} />
+                  <Route path="/statement-of-faith" element={<Layout><ErrorBoundary><StatementOfFaith /></ErrorBoundary></Layout>} />
+                  <Route path="/terms/:documentType" element={<Layout><ErrorBoundary><Terms /></ErrorBoundary></Layout>} />
+                  <Route path="/legal" element={<Layout><ErrorBoundary><Legal /></ErrorBoundary></Layout>} />
+                  <Route path="/legal/terms-of-service" element={<Layout><ErrorBoundary><TermsOfService /></ErrorBoundary></Layout>} />
+                  <Route path="/legal/privacy-policy" element={<Layout><ErrorBoundary><PrivacyPolicy /></ErrorBoundary></Layout>} />
+                  <Route path="/legal/refund-policy" element={<Layout><ErrorBoundary><RefundPolicy /></ErrorBoundary></Layout>} />
+                  <Route path="/legal/disclaimer" element={<Layout><ErrorBoundary><LegalDisclaimer /></ErrorBoundary></Layout>} />
+                  <Route path="/legal/user-agreement" element={<Layout><ErrorBoundary><UserAgreement /></ErrorBoundary></Layout>} />
+                  <Route path="/legal/cookie-policy" element={<Layout><ErrorBoundary><CookiePolicy /></ErrorBoundary></Layout>} />
+                  <Route path="/legal/data-protection" element={<Layout><ErrorBoundary><DataProtection /></ErrorBoundary></Layout>} />
+                  <Route path="/legal/donation-terms" element={<Layout><ErrorBoundary><DonationTerms /></ErrorBoundary></Layout>} />
+                  <Route path="/legal/medical-disclaimer" element={<Layout><ErrorBoundary><MedicalDisclaimer /></ErrorBoundary></Layout>} />
+                  <Route path="/legal/compensation-plan" element={<Layout><ErrorBoundary><CompensationPlan /></ErrorBoundary></Layout>} />
+                  <Route path="/dashboard" element={<ProtectedRoute><Layout><ErrorBoundary><Dashboard /></ErrorBoundary></Layout></ProtectedRoute>} />
+                  <Route path="/admin" element={<ProtectedRoute requireAdmin><Layout><ErrorBoundary><Admin /></ErrorBoundary></Layout></ProtectedRoute>} />
                 </Routes>
               </Suspense>
             </Router>

@@ -27,55 +27,50 @@ export const updateEvent = api<UpdateEventParams, Event>(
       throw APIError.notFound("event not found");
     }
 
-    // Build the update query with conditional field updates
-    let updateFields = [];
-    let hasUpdates = false;
+    // Use individual UPDATE statements for each field to avoid SQL injection
+
+    // Use conditional updates for each field
+    let updated = false;
 
     if (p.title !== undefined) {
-      updateFields.push(`title = ${p.title}`);
-      hasUpdates = true;
+      await churchDB.exec`UPDATE events SET title = ${p.title}, updated_at = NOW() WHERE id = ${p.id}`;
+      updated = true;
     }
     if (p.description !== undefined) {
-      updateFields.push(`description = ${p.description}`);
-      hasUpdates = true;
+      await churchDB.exec`UPDATE events SET description = ${p.description}, updated_at = NOW() WHERE id = ${p.id}`;
+      updated = true;
     }
     if (p.eventType !== undefined) {
-      updateFields.push(`event_type = ${p.eventType}`);
-      hasUpdates = true;
+      await churchDB.exec`UPDATE events SET event_type = ${p.eventType}, updated_at = NOW() WHERE id = ${p.id}`;
+      updated = true;
     }
     if (p.startDate !== undefined) {
-      updateFields.push(`start_date = ${p.startDate}`);
-      hasUpdates = true;
+      await churchDB.exec`UPDATE events SET start_date = ${p.startDate}, updated_at = NOW() WHERE id = ${p.id}`;
+      updated = true;
     }
     if (p.endDate !== undefined) {
-      updateFields.push(`end_date = ${p.endDate}`);
-      hasUpdates = true;
+      await churchDB.exec`UPDATE events SET end_date = ${p.endDate}, updated_at = NOW() WHERE id = ${p.id}`;
+      updated = true;
     }
     if (p.locationName !== undefined) {
-      updateFields.push(`location_name = ${p.locationName}`);
-      hasUpdates = true;
+      await churchDB.exec`UPDATE events SET location_name = ${p.locationName}, updated_at = NOW() WHERE id = ${p.id}`;
+      updated = true;
     }
     if (p.virtualLink !== undefined) {
-      updateFields.push(`virtual_link = ${p.virtualLink}`);
-      hasUpdates = true;
+      await churchDB.exec`UPDATE events SET virtual_link = ${p.virtualLink}, updated_at = NOW() WHERE id = ${p.id}`;
+      updated = true;
     }
     if (p.isPublished !== undefined) {
-      updateFields.push(`is_published = ${p.isPublished}`);
-      hasUpdates = true;
+      await churchDB.exec`UPDATE events SET is_published = ${p.isPublished}, updated_at = NOW() WHERE id = ${p.id}`;
+      updated = true;
     }
 
-    if (!hasUpdates) {
+    if (!updated) {
       throw APIError.invalidArgument("no fields to update");
     }
 
-    updateFields.push(`updated_at = NOW()`);
-
-    const row = await churchDB.queryRow<any>`
-      UPDATE events
-      SET ${updateFields.join(', ')}
-      WHERE id = ${p.id}
-      RETURNING id, title, description, event_type, start_date, end_date, location_name, virtual_link, is_published
-    `;
+    // Get the updated event
+    const row = await churchDB.queryRow`SELECT id, title, description, event_type, start_date, end_date, location_name, virtual_link, is_published FROM events WHERE id = ${p.id}`;
 
     if (!row) {
       throw APIError.internal("failed to update event");

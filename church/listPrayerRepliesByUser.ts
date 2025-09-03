@@ -1,13 +1,6 @@
 import { api, APIError, Query } from "encore.dev/api";
 import { churchDB } from "./db";
-
-export interface PrayerReply {
-  id: number;
-  requestId: number;
-  message: string;
-  responderName?: string | null;
-  createdAt: string;
-}
+import { PrayerReply } from "./listPrayerReplies";
 
 interface ListPrayerRepliesByUserParams {
   userId: Query<string>;

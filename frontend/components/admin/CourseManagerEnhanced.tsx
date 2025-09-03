@@ -1,7 +1,22 @@
-// @ts-nocheck
 import React, { useState, useEffect } from 'react';
+import { useToast } from '../../contexts/ToastContext';
 import { Edit, Trash2, Plus, CheckCircle, XCircle, BookOpen, FileText, HelpCircle, Award, Loader2 } from 'lucide-react';
 import client from '../../client';
+
+// Import Course interface from backend
+interface Course {
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+  thumbnailUrl?: string;
+  videoUrl?: string;
+  pdfUrl?: string;
+  durationMinutes?: number;
+  isPublished: boolean;
+  isPremium: boolean;
+  createdAt: string;
+}
 
 interface CourseModule {
   title: string;
@@ -17,30 +32,20 @@ interface QuizQuestion {
   correctAnswer: 'A' | 'B' | 'C' | 'D';
 }
 
-interface Course {
-  id: number;
-  title: string;
-  description: string;
-  category: string;
-  thumbnailUrl?: string;
-  videoUrl?: string;
-  pdfUrl?: string;
-  durationMinutes?: number;
-  isPublished: boolean;
-  isPremium: boolean;
-  createdAt: string;
-}
-
 const emptyCourse = {
+  id: 0,
   title: '',
   description: '',
   category: 'discipleship',
+  thumbnailUrl: '',
+  videoUrl: '',
+  pdfUrl: '',
   durationMinutes: 0,
   isPublished: false,
   isPremium: false,
+  createdAt: '',
   requiresQuiz: false,
   passingScore: 70,
-  thumbnailUrl: '',
   modules: [{ title: '', contentUrl: '' }] as CourseModule[],
   quizQuestions: Array(10).fill(null).map(() => ({
     question: '',
@@ -54,11 +59,12 @@ const emptyCourse = {
 };
 
 export default function CourseManagerEnhanced() {
+  const { showToast } = useToast();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCourse, setEditingCourse] = useState(emptyCourse);
   const [moduleCount, setModuleCount] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [courses, setCourses] = useState<any[]>([]);
+  const [courses, setCourses] = useState<Course[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -88,13 +94,13 @@ export default function CourseManagerEnhanced() {
   };
 
   const updateMutation = async (params: any) => {
-    const course = await client.academy.updateCourse(params);
+    const course = await client.academy.updateCourse(params.id, params);
     setCourses(prev => prev.map(c => c.id === course.id ? course : c));
     return course;
   };
 
   const deleteMutation = async (params: any) => {
-    await client.academy.deleteCourse({ id: params.id });
+    await client.academy.deleteCourse(params.id);
     setCourses(prev => prev.filter(c => c.id !== params.id));
   };
 
@@ -114,10 +120,10 @@ export default function CourseManagerEnhanced() {
     if (window.confirm('Are you sure you want to delete this course? This will also delete all modules, quiz questions, and student progress.')) {
       try {
         await deleteMutation({ id: courseId });
-        alert('Course deleted successfully!');
+        showToast('Course deleted successfully!', 'success');
       } catch (error) {
         console.error('Failed to delete course:', error);
-        alert('Failed to delete course. Please try again.');
+        showToast('Failed to delete course. Please try again.', 'error');
       }
     }
   };
@@ -127,7 +133,7 @@ export default function CourseManagerEnhanced() {
 
     // Validate required fields
     if (!editingCourse.title || !editingCourse.description) {
-      alert('Please fill in all required fields');
+      showToast('Please fill in all required fields', 'error');
       return;
     }
 
@@ -148,15 +154,15 @@ export default function CourseManagerEnhanced() {
 
       if (editingCourse.id) {
         await updateMutation({ ...courseData, id: editingCourse.id });
-        alert('Course updated successfully!');
+        showToast('Course updated successfully!', 'success');
       } else {
         await createMutation(courseData);
-        alert('Course created successfully!');
+        showToast('Course created successfully!', 'success');
       }
       resetModal();
     } catch (error) {
       console.error('Failed to save course:', error);
-      alert('Failed to save course. Please try again.');
+      showToast('Failed to save course. Please try again.', 'error');
     } finally {
       setIsSubmitting(false);
     }
@@ -230,7 +236,7 @@ export default function CourseManagerEnhanced() {
               </tr>
             </thead>
             <tbody>
-              {courses.map((course: any) => (
+              {courses.map((course: Course) => (
                 <tr key={course.id} className="border-b border-gray-700">
                   <td className="py-3 px-3 text-white">{course.title}</td>
                   <td className="py-3 px-3 text-gray-300 capitalize">{course.category}</td>
@@ -390,7 +396,7 @@ export default function CourseManagerEnhanced() {
                         min="0" 
                         max="100"
                         value={editingCourse.passingScore} 
-                        onChange={(e) => setEditingCourse({ ...editingCourse, passingScore: parseInt(e.target.value) || 70 })} 
+                        onChange={(e) => setEditingCourse({ ...editingCourse, passingScore: parseInt(e.target.value, 10) || 70 })} 
                         className="w-32 bg-gray-700 border border-gray-600 text-white px-3 py-2 text-sm" 
                       />
                     </div>

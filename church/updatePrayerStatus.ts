@@ -27,20 +27,21 @@ export const updatePrayerStatus = api<UpdatePrayerStatusParams, UpdatePrayerStat
     }
 
     // Update prayer request status and rating
-    const updateData: any = {
-      resolution_status: status,
-      resolved_at: status === 'resolved' ? new Date().toISOString() : null
-    };
+    const resolvedAt = status === 'resolved' ? new Date().toISOString() : null;
 
     if (status === 'resolved' && rating) {
-      updateData.rating = rating;
+      await churchDB.queryRow`
+        UPDATE prayer_requests
+        SET resolution_status = ${status}, resolved_at = ${resolvedAt}, rating = ${rating}
+        WHERE id = ${prayerRequestId} AND user_id = ${auth.userID}
+      `;
+    } else {
+      await churchDB.queryRow`
+        UPDATE prayer_requests
+        SET resolution_status = ${status}, resolved_at = ${resolvedAt}
+        WHERE id = ${prayerRequestId} AND user_id = ${auth.userID}
+      `;
     }
-
-    await churchDB.queryRow`
-      UPDATE prayer_requests
-      SET ${updateData}
-      WHERE id = ${prayerRequestId} AND user_id = ${auth.userID}
-    `;
 
     const message = status === 'resolved'
       ? `Prayer request marked as answered with ${rating} star rating. Thank you for your feedback!`

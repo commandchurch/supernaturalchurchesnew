@@ -54,6 +54,7 @@ export default function About() {
 
   const tabs = [
     { id: 'church-partnership', name: 'Church Partnership', icon: Building2 },
+    { id: 'compensation-plan', name: 'Compensation Plan', icon: DollarSign },
     { id: 'beliefs', name: 'Our Beliefs', icon: BookOpen },
     { id: 'miracles-testimony', name: 'Miracles Testimony', icon: Heart },
     { id: 'leadership', name: 'Leadership', icon: Crown }
@@ -69,14 +70,14 @@ export default function About() {
 
       <div className="text-center mb-12 sm:mb-16">
         <div className="flex items-center justify-center gap-4 mb-6">
-          <div className="w-16 h-16 bg-white/10 border border-white/20 flex items-center justify-center">
-            <Church className="w-8 h-8 text-blue-400" />
+          <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white/10 border border-white/20 flex items-center justify-center">
+            <Church className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400" />
           </div>
-          <div className="w-16 h-16 bg-white/10 border border-white/20 flex items-center justify-center">
-            <Zap className="w-8 h-8 text-blue-400" />
+          <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white/10 border border-white/20 flex items-center justify-center">
+            <Zap className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400" />
           </div>
-          <div className="w-16 h-16 bg-white/10 border border-white/20 flex items-center justify-center">
-            <Globe className="w-8 h-8 text-blue-400" />
+          <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white/10 border border-white/20 flex items-center justify-center">
+            <Globe className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400" />
           </div>
         </div>
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 heading-font">
@@ -103,14 +104,26 @@ export default function About() {
                   setActiveTab(tab.id);
                   const element = document.getElementById(tab.id);
                   if (element) {
-                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    // Dynamic offset based on screen size and header height
+                    const isMobile = window.innerWidth < 768;
+                    const headerOffset = isMobile ? 160 : 180; // Account for mobile header and tab navigation
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                    window.scrollTo({
+                      top: Math.max(0, offsetPosition), // Ensure we don't scroll above top
+                      behavior: 'smooth'
+                    });
                   }
                 }}
-                className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 px-2 sm:px-3 py-3 sm:py-4 text-xs sm:text-sm font-semibold uppercase tracking-wide transition-all duration-300 flex-1 min-w-0 ${
+                className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 px-2 sm:px-3 py-3 sm:py-4 text-xs sm:text-sm font-semibold uppercase tracking-wide transition-all duration-300 flex-1 min-w-0 touch-manipulation ${
                   activeTab === tab.id
-                    ? 'bg-purple-600 text-white shadow-lg'
-                    : 'bg-transparent text-gray-400 hover:text-white hover:bg-white/10'
+                    ? 'bg-purple-600 text-white shadow-lg active:bg-purple-700'
+                    : 'bg-transparent text-gray-400 hover:text-white hover:bg-white/10 active:bg-white/5'
                 }`}
+                aria-label={`Navigate to ${tab.name} section`}
+                role="tab"
+                aria-selected={activeTab === tab.id}
               >
                 <Icon className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
                 <span className="text-center leading-tight text-xs sm:text-sm">{tab.name}</span>
@@ -122,209 +135,205 @@ export default function About() {
 
       {/* Outreach & Soul Winning */}
       <section id="overview" className="mb-12 sm:mb-20">
-        <div className="text-center mb-8 sm:mb-12">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-4 sm:mb-6 heading-font">
-            Our Core Focus: Outreach & Soul Winning
-          </h2>
-          <p className="text-base sm:text-lg text-gray-400 max-w-4xl mx-auto">
-            Everything we do centers around winning souls for the Kingdom of God through supernatural demonstration and biblical discipleship.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
-          <div className="bg-gray-800/50 border border-gray-700 p-6 sm:p-8 relative group hover:bg-gray-800/70 transition-colors">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="w-12 h-12 bg-white/10 border border-white/20 flex items-center justify-center">
-                <Users className="w-6 h-6 text-blue-400" />
-              </div>
-              <h3 className="text-xl sm:text-2xl font-black text-white heading-font">WIN SOULS</h3>
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header Container */}
+          <div className="bg-gray-900/30 border border-gray-700/50 p-6 sm:p-8 mb-8 sm:mb-12 rounded-xl">
+            <div className="text-center">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-4 sm:mb-6 heading-font">
+                Our Core Focus: Outreach & Soul Winning
+              </h2>
+              <p className="text-base sm:text-lg text-gray-400 max-w-4xl mx-auto leading-relaxed">
+                Everything we do centers around winning souls for the Kingdom of God through supernatural demonstration and biblical discipleship.
+              </p>
             </div>
-            <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
-              We train believers to perform supernatural outreach—healing the sick, casting out demons, and demonstrating God's power to win souls for Christ.
-            </p>
           </div>
 
-          <div className="bg-gray-800/50 border border-gray-700 p-6 sm:p-8 relative group hover:bg-gray-800/70 transition-colors">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="w-12 h-12 bg-white/10 border border-white/20 flex items-center justify-center">
-                <BookOpen className="w-6 h-6 text-blue-400" />
+          {/* Core Pillars Container */}
+          <div className="bg-gray-800/30 border border-gray-700/50 p-6 sm:p-8 mb-8 sm:mb-12 rounded-xl">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+              <div className="bg-gray-800/50 border border-gray-700 p-6 sm:p-8 relative group hover:bg-gray-800/70 transition-all duration-300 rounded-lg">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 bg-white/10 border border-white/20 flex items-center justify-center rounded-full">
+                    <Users className="w-6 h-6 text-blue-400" />
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-black text-white heading-font">WIN SOULS</h3>
+                </div>
+                <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
+                  We train believers to perform supernatural outreach—healing the sick, casting out demons, and demonstrating God's power to win souls for Christ through Kingdom authority.
+                </p>
               </div>
-              <h3 className="text-xl sm:text-2xl font-black text-white heading-font">DISCIPLE THEM</h3>
+
+              <div className="bg-gray-800/50 border border-gray-700 p-6 sm:p-8 relative group hover:bg-gray-800/70 transition-all duration-300 rounded-lg">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 bg-white/10 border border-white/20 flex items-center justify-center rounded-full">
+                    <BookOpen className="w-6 h-6 text-blue-400" />
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-black text-white heading-font">DISCIPLE THEM</h3>
+                </div>
+                <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
+                  New believers receive comprehensive discipleship training—learning to walk in God's power, understand His Word, and mature in their faith through supernatural ministry.
+                </p>
+              </div>
+
+              <div className="bg-gray-800/50 border border-gray-700 p-6 sm:p-8 relative group hover:bg-gray-800/70 transition-all duration-300 rounded-lg">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 bg-white/10 border border-white/20 flex items-center justify-center rounded-full">
+                    <Church className="w-6 h-6 text-blue-400" />
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-black text-white heading-font">PLUG INTO CHURCHES</h3>
+                </div>
+                <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
+                  We connect discipled believers with partnered churches in their local area for ongoing fellowship, growth, and ministry opportunities in Kingdom communities.
+                </p>
+              </div>
             </div>
-            <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
-              New believers receive comprehensive discipleship training—learning to walk in God's power, understand His Word, and mature in their faith.
-            </p>
           </div>
 
-          <div className="bg-gray-800/50 border border-gray-700 p-6 sm:p-8 relative group hover:bg-gray-800/70 transition-colors">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="w-12 h-12 bg-white/10 border border-white/20 flex items-center justify-center">
-                <Church className="w-6 h-6 text-blue-400" />
-              </div>
-              <h3 className="text-xl sm:text-2xl font-black text-white heading-font">PLUG INTO CHURCHES</h3>
+          {/* Strategy Container */}
+          <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/30 p-6 sm:p-8 rounded-xl">
+            <div className="max-w-4xl mx-auto">
+              <h3 className="text-xl sm:text-2xl font-black text-white mb-4 heading-font text-center">
+                The Supernatural Outreach Strategy
+              </h3>
+              <p className="text-gray-300 text-sm sm:text-base leading-relaxed text-center mb-4">
+                Our approach goes beyond traditional evangelism. We train believers to demonstrate the Gospel through signs, wonders, and miracles—just as Jesus commissioned in Mark 16:15-20.
+              </p>
+              <p className="text-gray-300 text-sm sm:text-base leading-relaxed text-center">
+                When people see God's power in action, hearts are opened, souls are won, and communities are transformed. This supernatural outreach creates a multiplication effect
+                as new converts become equipped disciples who reach others in their spheres of influence through Kingdom ministry.
+              </p>
             </div>
-            <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
-              We connect discipled believers with partnered churches in their local area for ongoing fellowship, growth, and ministry opportunities.
-            </p>
           </div>
-        </div>
-
-        <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/30 p-6 sm:p-8 mt-8 sm:mt-12">
-          <h3 className="text-xl sm:text-2xl font-black text-white mb-4 heading-font text-center">
-            The Supernatural Outreach Strategy
-          </h3>
-          <p className="text-gray-300 text-sm sm:text-base leading-relaxed text-center max-w-4xl mx-auto">
-            Our approach goes beyond traditional evangelism. We train believers to demonstrate the Gospel through signs, wonders, and miracles—just as Jesus commissioned in Mark 16:15-20. 
-            When people see God's power in action, hearts are opened, souls are won, and communities are transformed. This supernatural outreach creates a multiplication effect 
-            as new converts become equipped disciples who reach others in their spheres of influence.
-          </p>
         </div>
       </section>
 
       {/* Ministry Features */}
       <section className="mb-12 sm:mb-20">
-        <div className="text-center mb-8 sm:mb-12">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-4 sm:mb-6 heading-font">
-            Ministry Features
-          </h2>
-          <p className="text-base sm:text-lg text-gray-400 max-w-3xl mx-auto">
-            Practical support and pathways designed to help you thrive in life and ministry.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-          <div className="bg-gray-800/50 border border-gray-700 p-6 sm:p-8 relative group hover:bg-gray-800/70 transition-colors">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="w-12 h-12 bg-white/10 border border-white/20 flex items-center justify-center">
-                <DollarSign className="w-6 h-6 text-blue-400" />
-              </div>
-              <h3 className="text-xl sm:text-2xl font-black text-white heading-font">HELP ME FUND</h3>
-            </div>
-            <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
-              A compassionate fund designed to support students in times of need—so you can keep learning, serving, and moving forward.
-            </p>
-          </div>
-
-          <div className="bg-gray-800/50 border border-gray-700 p-6 sm:p-8 relative group hover:bg-gray-800/70 transition-colors">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="w-12 h-12 bg-white/10 border border-white/20 flex items-center justify-center">
-                <MessageCircle className="w-6 h-6 text-blue-400" />
-              </div>
-              <h3 className="text-xl sm:text-2xl font-black text-white heading-font">PRAYER REQUESTS</h3>
-            </div>
-            <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
-              Every student can submit prayer requests and receive pastoral support, encouragement, and ministry from our team.
-            </p>
-          </div>
-
-          <div className="bg-gray-800/50 border border-gray-700 p-6 sm:p-8 relative group hover:bg-gray-800/70 transition-colors">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="w-12 h-12 bg-white/10 border border-white/20 flex items-center justify-center">
-                <Users className="w-6 h-6 text-blue-400" />
-              </div>
-              <h3 className="text-xl sm:text-2xl font-black text-white heading-font">AFFILIATE PROGRAM</h3>
-            </div>
-            <div className="space-y-4">
-              <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
-                Earn while spreading the Gospel! After completing evangelism training, qualified students can participate in our comprehensive affiliate program.
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gray-900/30 border border-gray-700/50 p-6 sm:p-8 mb-8 sm:mb-12">
+            <div className="text-center">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-4 sm:mb-6 heading-font">
+                Ministry Features
+              </h2>
+              <p className="text-base sm:text-lg text-gray-400 max-w-3xl mx-auto">
+                Practical support and pathways designed to help you thrive in life and ministry.
               </p>
-              
-              <div className="bg-blue-500/10 border border-blue-500/30 p-4 rounded-lg">
-                <h4 className="text-white font-semibold mb-2">How It Works:</h4>
-                <ul className="space-y-2 text-sm text-gray-300">
-                  <li>• Complete evangelism training course</li>
-                  <li>• Receive unique referral code and marketing materials</li>
-                  <li>• Share with your network, social media, or during outreach</li>
-                  <li>• Earn commissions when referrals join membership plans</li>
-                </ul>
-              </div>
+            </div>
+          </div>
 
-              <div className="bg-green-500/10 border border-green-500/30 p-4 rounded-lg">
-                <h4 className="text-white font-semibold mb-2">Example Earnings:</h4>
-                <div className="text-sm text-gray-300 space-y-1">
-                  <p>• BRONZE ($20/mo) = <span className="text-green-400 font-semibold">$4.00 monthly commission (1 level)</span></p>
-                  <p>• SILVER ($35/mo) = <span className="text-green-400 font-semibold">$7.00 monthly commission (2 levels)</span></p>
-                  <p>• GOLD ($150/mo) = <span className="text-green-400 font-semibold">$30.00 monthly commission (5 levels)</span></p>
-                  <p>• DIAMOND ($500/mo) = <span className="text-green-400 font-semibold">$175.00 monthly commission (7 levels, 35% on level 1)</span></p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mb-8 sm:mb-12">
+            <div className="bg-gray-800/50 border border-gray-700 p-6 sm:p-8 relative group hover:bg-gray-800/70 transition-colors">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 bg-white/10 border border-white/20 flex items-center justify-center">
+                  <DollarSign className="w-6 h-6 text-blue-400" />
+                </div>
+                <h3 className="text-xl sm:text-2xl font-black text-white heading-font">HELP ME FUND</h3>
+              </div>
+              <p className="text-gray-300 text-sm sm:text-base leading-relaxed mb-4">
+                A compassionate emergency fund for our paid members facing genuine crisis situations. We support urgent bills, unexpected hardship, and emergency medical expenses.
+              </p>
+              <div className="space-y-3 mb-4">
+                <div className="bg-green-500/10 border border-green-500/30 p-3 rounded">
+                  <h4 className="text-green-400 font-semibold text-sm mb-2">✅ What We Cover:</h4>
+                  <ul className="text-green-200 text-xs space-y-1">
+                    <li>• Emergency rent or utility bills</li>
+                    <li>• Urgent medical expenses (accident-related)</li>
+                    <li>• Unexpected hardship situations</li>
+                    <li>• Crisis support for active ministry members</li>
+                  </ul>
+                </div>
+                <div className="bg-red-500/10 border border-red-500/30 p-3 rounded">
+                  <h4 className="text-red-400 font-semibold text-sm mb-2">❌ What We Don't Cover:</h4>
+                  <ul className="text-red-200 text-xs space-y-1">
+                    <li>• General medication or ongoing medical treatment</li>
+                    <li>• Education or study expenses</li>
+                    <li>• Business or personal loans</li>
+                    <li>• Non-emergency situations</li>
+                  </ul>
                 </div>
               </div>
-
-              <p className="text-blue-400 text-sm font-medium">
-                Transform your ministry outreach into sustainable income while helping others access supernatural training.
-              </p>
-            </div>
-          </div>
-
-          <div className="bg-gray-800/50 border border-gray-700 p-6 sm:p-8 relative group hover:bg-gray-800/70 transition-colors">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="w-12 h-12 bg-white/10 border border-white/20 flex items-center justify-center">
-                <GraduationCap className="w-6 h-6 text-blue-400" />
+              <div className="text-center">
+                <Link to="/dashboard/help-me-fund" className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 font-semibold uppercase tracking-wide text-sm transition-colors">
+                  REQUEST HELP →
+                </Link>
               </div>
-              <h3 className="text-xl sm:text-2xl font-black text-white heading-font">SCHOOL</h3>
             </div>
-            <p className="text-gray-300 text-sm sm:text-base mb-4 leading-relaxed">
-              We equip believers to obey Christ's command in <span className="text-orange-400 font-semibold">Mark 16:15–20 (NKJV)</span> and restore the fullness of God's truth to His church.
-              Many understand the blood of Jesus; we also teach the power of His body—broken for you—to walk in divine health daily.
-            </p>
-            <blockquote className="border-l-4 border-orange-500/50 pl-4 text-gray-300 text-sm italic bg-gray-900/30 p-3 rounded-r">
-              "And He said to them, 'Go into all the world and preach the gospel to every creature. He who believes and is baptized will be saved; but he who does not believe will be condemned. And these signs will follow those who believe: In My name they will cast out demons; they will speak with new tongues; they will take up serpents; and if they drink anything deadly, it will by no means hurt them; they will lay hands on the sick, and they will recover.' So then, after the Lord had spoken to them, He was received up into heaven, and sat down at the right hand of God. And they went out and preached everywhere, the Lord working with them and confirming the word through the accompanying signs. Amen." — <span className="text-orange-400 font-semibold">Mark 16:15–20 (NKJV)</span>
-            </blockquote>
+
+            <div className="bg-gray-800/50 border border-gray-700 p-6 sm:p-8 relative group hover:bg-gray-800/70 transition-colors">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 bg-white/10 border border-white/20 flex items-center justify-center">
+                  <MessageCircle className="w-6 h-6 text-blue-400" />
+                </div>
+                <h3 className="text-xl sm:text-2xl font-black text-white heading-font">PRAYER REQUESTS</h3>
+              </div>
+              <p className="text-gray-300 text-sm sm:text-base leading-relaxed mb-4">
+                Submit prayer requests and receive pastoral support, encouragement, and ministry guidance from our experienced team.
+              </p>
+              <div className="text-center">
+                <Link to="/dashboard/prayer-requests" className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 font-semibold uppercase tracking-wide text-sm transition-colors">
+                  SUBMIT REQUEST →
+                </Link>
+              </div>
+            </div>
+
+            <div className="bg-gray-800/50 border border-gray-700 p-6 sm:p-8 relative group hover:bg-gray-800/70 transition-colors lg:col-span-2">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 bg-white/10 border border-white/20 flex items-center justify-center">
+                  <Users className="w-6 h-6 text-blue-400" />
+                </div>
+                <h3 className="text-xl sm:text-2xl font-black text-white heading-font">AFFILIATE PROGRAM</h3>
+              </div>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <p className="text-gray-300 text-sm sm:text-base leading-relaxed mb-4">
+                    Earn 30% commissions on all levels while spreading the Gospel. Our equal-opportunity affiliate program rewards everyone the same generous rate.
+                  </p>
+                  <div className="bg-green-500/10 border border-green-500/30 p-4 rounded-lg">
+                    <h4 className="text-green-400 font-semibold mb-2">💰 Commission Structure:</h4>
+                    <div className="text-sm text-gray-300 space-y-1">
+                      <p>• <strong>30% on ALL levels</strong> - Same rate for everyone</p>
+                      <p>• Up to 7 levels deep network</p>
+                      <p>• Payouts on second Friday of each month</p>
+                      <p>• No special Diamond rates - equal opportunity</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center justify-center">
+                  <Link to="/dashboard/affiliate-rewards" className="inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-3 font-semibold uppercase tracking-wide text-sm transition-colors">
+                    VIEW DASHBOARD →
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gray-800/50 border border-gray-700 p-6 sm:p-8 relative group hover:bg-gray-800/70 transition-colors lg:col-span-2">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 bg-white/10 border border-white/20 flex items-center justify-center">
+                  <GraduationCap className="w-6 h-6 text-blue-400" />
+                </div>
+                <h3 className="text-xl sm:text-2xl font-black text-white heading-font">SCHOOL</h3>
+              </div>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <p className="text-gray-300 text-sm sm:text-base mb-4 leading-relaxed">
+                    We equip believers to obey Christ's command in <span className="text-blue-400 font-semibold">Mark 16:15–20 (NKJV)</span> and restore the fullness of God's truth to His church.
+                    Many understand the blood of Jesus; we also teach the power of His body—broken for you—to walk in divine health daily.
+                  </p>
+                  <blockquote className="border-l-4 border-blue-500/50 pl-4 text-gray-300 text-sm italic bg-gray-900/30 p-3 rounded-r mb-4">
+                    "And He said to them, 'Go into all the world and preach the gospel to every creature..." — <span className="text-blue-400 font-semibold">Mark 16:15–20 (NKJV)</span>
+                  </blockquote>
+                </div>
+                <div className="flex items-center justify-center">
+                  <Link to="/academy" className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 font-semibold uppercase tracking-wide text-sm transition-colors">
+                    START TRAINING →
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Leadership */}
-      <section className="mb-12 sm:mb-20">
-        <div className="text-center mb-8 sm:mb-12">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <Crown className="w-8 h-8 text-yellow-500" />
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white heading-font">
-              Leadership
-            </h2>
-            <Crown className="w-8 h-8 text-yellow-500" />
-          </div>
-          <p className="text-gray-400 max-w-2xl mx-auto">
-            Leadership demonstrating authentic supernatural power and ministry excellence.
-          </p>
-        </div>
-        <div className="bg-gray-800/50 border border-gray-700 p-6 sm:p-8 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-yellow-500/10 to-transparent"></div>
-          <div className="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
-            <div className="w-28 h-28 sm:w-32 sm:h-32 bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center overflow-hidden">
-              <img 
-                src="/samuel-waterhouse.png" 
-                alt="Senior Leader, Samuel Waterhouse"
-                className="w-full h-full object-cover"
-                width="128"
-                height="128"
-                loading="lazy"
-                decoding="async"
-                onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).style.display = 'none';
-                  const fallback = (e.currentTarget.nextElementSibling as HTMLElement);
-                  if (fallback) fallback.style.display = 'flex';
-                }}
-              />
-              <span className="text-3xl sm:text-4xl font-black text-white hidden">SW</span>
-            </div>
-            <div className="text-center md:text-left">
-              <h3 className="text-2xl sm:text-3xl font-black text-white mb-2 heading-font">
-                Senior Leader, Samuel Waterhouse
-              </h3>
-              <p className="text-gray-400 mb-4 text-sm sm:text-base">Sole Director & Founder</p>
-              <p className="text-gray-300 leading-relaxed mb-4 sm:mb-6 text-sm sm:text-base">
-                Under the leadership of Senior Leader, Samuel Waterhouse, Supernatural Institute and Supernatural Churches Limited are committed to building disciples,
-                supporting global ministry, and spreading the Gospel worldwide through authentic community and bold demonstration of God’s power.
-              </p>
-              <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
-                Samuel walks in demonstrated power and has witnessed countless miracles, including supernatural healings that have been 
-                documented and verified. His ministry is marked by the authentic move of God's Spirit and a commitment to seeing 
-                believers equipped to walk in the same supernatural power that Jesus demonstrated.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Simplified Authority & Training */}
       <section className="mb-12 sm:mb-20">
@@ -445,6 +454,148 @@ export default function About() {
 
 
 
+      {/* Compensation Plan Section */}
+      <section id="compensation-plan" className="mb-12 sm:mb-20">
+        <div className="text-center mb-8 sm:mb-12">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-4 sm:mb-6 heading-font">
+            Compensation Plan
+          </h2>
+          <p className="text-base sm:text-lg text-gray-400 max-w-4xl mx-auto">
+            Earn while spreading the Gospel. Our 30% commission structure rewards you for helping others discover supernatural ministry.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          <div className="bg-gray-800/50 border border-gray-700 p-6 sm:p-8">
+            <h3 className="text-xl sm:text-2xl font-black text-white mb-6 heading-font">Membership Tiers</h3>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center p-4 bg-blue-500/10 border border-blue-500/30 rounded">
+                <div>
+                  <div className="text-blue-400 font-semibold">BRONZE</div>
+                  <div className="text-gray-400 text-sm">$20/month</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-green-400 font-semibold">30% Level 1</div>
+                  <div className="text-gray-400 text-sm">$6/month max</div>
+                </div>
+              </div>
+              <div className="flex justify-between items-center p-4 bg-purple-500/10 border border-purple-500/30 rounded">
+                <div>
+                  <div className="text-purple-400 font-semibold">SILVER</div>
+                  <div className="text-gray-400 text-sm">$50/month</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-green-400 font-semibold">30% Levels 1-2</div>
+                  <div className="text-gray-400 text-sm">$15/month max</div>
+                </div>
+              </div>
+              <div className="flex justify-between items-center p-4 bg-pink-500/10 border border-pink-500/30 rounded">
+                <div>
+                  <div className="text-pink-400 font-semibold">GOLD</div>
+                  <div className="text-gray-400 text-sm">$100/month</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-green-400 font-semibold">30% Levels 1-5</div>
+                  <div className="text-gray-400 text-sm">$30/month max</div>
+                </div>
+              </div>
+              <div className="flex justify-between items-center p-4 bg-cyan-500/10 border border-cyan-500/30 rounded">
+                <div>
+                  <div className="text-cyan-400 font-semibold">DIAMOND</div>
+                  <div className="text-gray-400 text-sm">$250/month</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-green-400 font-semibold">30% Levels 1-7</div>
+                  <div className="text-gray-400 text-sm">$75/month max</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-gray-800/50 border border-gray-700 p-6 sm:p-8">
+            <h3 className="text-xl sm:text-2xl font-black text-white mb-6 heading-font">Commission Structure</h3>
+            <div className="space-y-4">
+              <div className="p-4 bg-green-500/10 border border-green-500/30 rounded">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-8 h-8 bg-green-500/20 border border-green-500/40 rounded-full flex items-center justify-center">
+                    <span className="text-green-400 text-sm">30%</span>
+                  </div>
+                  <div>
+                    <div className="text-green-400 font-semibold">All Levels</div>
+                    <div className="text-gray-400 text-sm">Same commission rate</div>
+                  </div>
+                </div>
+                <p className="text-gray-300 text-sm">Equal opportunity for everyone - no special rates for Diamond tier</p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-3 bg-gray-700/30 rounded text-center">
+                  <div className="text-white font-semibold">Level 1</div>
+                  <div className="text-green-400 text-sm">30%</div>
+                </div>
+                <div className="p-3 bg-gray-700/30 rounded text-center">
+                  <div className="text-white font-semibold">Level 2</div>
+                  <div className="text-green-400 text-sm">30%</div>
+                </div>
+                <div className="p-3 bg-gray-700/30 rounded text-center">
+                  <div className="text-white font-semibold">Level 3</div>
+                  <div className="text-green-400 text-sm">30%</div>
+                </div>
+                <div className="p-3 bg-gray-700/30 rounded text-center">
+                  <div className="text-white font-semibold">Level 4</div>
+                  <div className="text-green-400 text-sm">30%</div>
+                </div>
+                <div className="p-3 bg-gray-700/30 rounded text-center">
+                  <div className="text-white font-semibold">Level 5</div>
+                  <div className="text-green-400 text-sm">30%</div>
+                </div>
+                <div className="p-3 bg-gray-700/30 rounded text-center">
+                  <div className="text-white font-semibold">Level 6</div>
+                  <div className="text-green-400 text-sm">30%</div>
+                </div>
+                <div className="p-3 bg-gray-700/30 rounded text-center">
+                  <div className="text-white font-semibold">Level 7</div>
+                  <div className="text-green-400 text-sm">30%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-r from-green-500/10 to-blue-500/10 border border-green-500/30 p-6 sm:p-8">
+          <h3 className="text-xl sm:text-2xl font-black text-white mb-6 heading-font text-center">How It Works</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-green-500/20 border border-green-500/40 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-green-400 text-2xl">1️⃣</span>
+              </div>
+              <h4 className="text-lg font-semibold text-white mb-2">Join FREE</h4>
+              <p className="text-gray-300 text-sm">Start with FREE membership and begin building your network</p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-blue-500/20 border border-blue-500/40 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-blue-400 text-2xl">2️⃣</span>
+              </div>
+              <h4 className="text-lg font-semibold text-white mb-2">Share & Recruit</h4>
+              <p className="text-gray-300 text-sm">Share your referral link and help others join the ministry</p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-purple-500/20 border border-purple-500/40 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-purple-400 text-2xl">3️⃣</span>
+              </div>
+              <h4 className="text-lg font-semibold text-white mb-2">Earn Commissions</h4>
+              <p className="text-gray-300 text-sm">Receive 30% commissions on all referrals in your network</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="text-center mt-8">
+          <Link to="/compensation-plan" className="inline-block bg-green-600 hover:bg-green-700 text-white px-8 py-4 font-semibold uppercase tracking-wide text-lg transition-colors">
+            VIEW FULL COMPENSATION PLAN →
+          </Link>
+        </div>
+      </section>
+
       {/* Statement of Faith Preview */}
       <section id="beliefs" className="mb-12 sm:mb-20">
         <div className="text-center mb-8 sm:mb-12">
@@ -501,33 +652,61 @@ export default function About() {
       {/* Leadership Section */}
       <section id="leadership" className="mb-16 sm:mb-20">
         <div className="text-center mb-10 sm:mb-12">
-          <h2 className="text-3xl sm:text-4xl font-black text-white mb-4 heading-font">
-            LEADERSHIP
-          </h2>
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <Crown className="w-8 h-8 text-blue-400" />
+            <h2 className="text-3xl sm:text-4xl font-black text-white mb-4 heading-font">
+              LEADERSHIP
+            </h2>
+            <Crown className="w-8 h-8 text-blue-400" />
+          </div>
           <p className="text-base sm:text-lg text-gray-400 max-w-4xl mx-auto leading-relaxed">
             Meet the senior leadership team that provides apostolic oversight, supernatural training, and biblical accuracy to churches worldwide.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          <div className="bg-white/5 border border-white/10 backdrop-blur-sm p-6 sm:p-8 text-center">
-            <div className="w-24 h-24 bg-gradient-to-br from-purple-500/30 to-blue-500/30 border border-purple-500/40 flex items-center justify-center mx-auto mb-6 rounded-full">
-              <Crown className="w-12 h-12 text-purple-400" />
+        {/* Senior Leader Profile */}
+        <div className="bg-gray-800/50 border border-gray-700 p-6 sm:p-8 mb-12 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-blue-500/10 to-transparent"></div>
+          <div className="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
+            <div className="w-28 h-28 sm:w-32 sm:h-32 bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center overflow-hidden">
+              <img
+                src="/samuel-waterhouse.png"
+                alt="Senior Leader, Samuel Waterhouse"
+                className="w-full h-full object-cover"
+                width="128"
+                height="128"
+                loading="lazy"
+                decoding="async"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).style.display = 'none';
+                  const fallback = (e.currentTarget.nextElementSibling as HTMLElement);
+                  if (fallback) fallback.style.display = 'flex';
+                }}
+              />
+              <span className="text-3xl sm:text-4xl font-black text-white hidden">SW</span>
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">Samuel Waterhouse</h3>
-            <p className="text-purple-300 text-sm mb-4 font-semibold">Senior Leader & Founder</p>
-            <p className="text-gray-400 text-sm leading-relaxed mb-4">
-              Apostolic oversight and supernatural ministry training. Demonstrated healing ministry with documented miracles and church transformation across Australia.
-            </p>
-            <div className="space-y-2 text-xs text-gray-500">
-              <div>• 15+ years ministry experience</div>
-              <div>• Church planting and revival</div>
-              <div>• Supernatural healing protocols</div>
+            <div className="text-center md:text-left flex-1">
+              <h3 className="text-2xl sm:text-3xl font-black text-white mb-2 heading-font">
+                Senior Leader, Samuel Waterhouse
+              </h3>
+              <p className="text-blue-400 mb-4 text-sm sm:text-base font-semibold">Sole Director & Founder</p>
+              <p className="text-gray-300 leading-relaxed mb-4 sm:mb-6 text-sm sm:text-base">
+                Under the leadership of Senior Leader, Samuel Waterhouse, Supernatural Institute and Supernatural Churches Limited are committed to building disciples,
+                supporting global ministry, and spreading the Gospel worldwide through authentic community and bold demonstration of God's power.
+              </p>
+              <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
+                Samuel walks in demonstrated power and has witnessed countless miracles, including supernatural healings that have been
+                documented and verified. His ministry is marked by the authentic move of God's Spirit and a commitment to seeing
+                believers equipped to walk in the same supernatural power that Jesus demonstrated.
+              </p>
             </div>
           </div>
+        </div>
 
+        {/* Leadership Team Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           <div className="bg-white/5 border border-white/10 backdrop-blur-sm p-6 sm:p-8 text-center">
-            <div className="w-24 h-24 bg-gradient-to-br from-blue-500/30 to-green-500/30 border border-blue-500/40 flex items-center justify-center mx-auto mb-6 rounded-full">
+            <div className="w-24 h-24 bg-gradient-to-br from-blue-500/30 to-purple-500/30 border border-blue-500/40 flex items-center justify-center mx-auto mb-6 rounded-full">
               <BookOpen className="w-12 h-12 text-blue-400" />
             </div>
             <h3 className="text-xl font-bold text-white mb-2">Ministry Team</h3>
@@ -542,8 +721,8 @@ export default function About() {
             </div>
           </div>
 
-          <div className="bg-white/5 border border-white/10 backdrop-blur-sm p-6 sm:p-8 text-center md:col-span-2 lg:col-span-1">
-            <div className="w-24 h-24 bg-gradient-to-br from-green-500/30 to-orange-500/30 border border-green-500/40 flex items-center justify-center mx-auto mb-6 rounded-full">
+          <div className="bg-white/5 border border-white/10 backdrop-blur-sm p-6 sm:p-8 text-center">
+            <div className="w-24 h-24 bg-gradient-to-br from-green-500/30 to-blue-500/30 border border-green-500/40 flex items-center justify-center mx-auto mb-6 rounded-full">
               <Users className="w-12 h-12 text-green-400" />
             </div>
             <h3 className="text-xl font-bold text-white mb-2">Partner Network</h3>
@@ -557,9 +736,26 @@ export default function About() {
               <div>• Practical implementation</div>
             </div>
           </div>
+
+          <div className="bg-white/5 border border-white/10 backdrop-blur-sm p-6 sm:p-8 text-center md:col-span-2 lg:col-span-1">
+            <div className="w-24 h-24 bg-gradient-to-br from-purple-500/30 to-orange-500/30 border border-purple-500/40 flex items-center justify-center mx-auto mb-6 rounded-full">
+              <Church className="w-12 h-12 text-purple-400" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2">Ordination Board</h3>
+            <p className="text-purple-300 text-sm mb-4 font-semibold">Ecclesiastical Authority</p>
+            <p className="text-gray-400 text-sm leading-relaxed mb-4">
+              Official ordination certificates and ecclesiastical covering for ministry leaders completing our comprehensive training programs.
+            </p>
+            <div className="space-y-2 text-xs text-gray-500">
+              <div>• Official ordination certificates</div>
+              <div>• Ecclesiastical authority</div>
+              <div>• Ministry credentialing</div>
+            </div>
+          </div>
         </div>
 
-        <div className="bg-gradient-to-r from-purple-900/30 to-blue-900/30 border border-purple-500/30 p-8 rounded">
+        {/* Leadership Principles & Contact */}
+        <div className="bg-gradient-to-r from-blue-900/30 to-purple-900/30 border border-blue-500/30 p-8 rounded">
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div>
               <h3 className="text-2xl font-bold text-white mb-4">Leadership Principles</h3>
@@ -600,7 +796,7 @@ export default function About() {
                 <p className="text-gray-300 text-sm mb-6">
                   Need direct access to our senior leadership team? Partner churches receive priority consultation and support.
                 </p>
-                <Link to="/about#church-partnership" className="inline-block bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 font-semibold uppercase tracking-wide text-sm transition-colors">
+                <Link to="/about#church-partnership" className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 font-semibold uppercase tracking-wide text-sm transition-colors">
                   Become a Partner
                 </Link>
               </div>
@@ -621,16 +817,16 @@ export default function About() {
           </p>
         </div>
 
-        <div className="bg-white/5 border border-white/10 backdrop-blur-sm p-8 sm:p-12 mb-12">
+        <div className="bg-gray-800/50 border border-gray-700 p-8 sm:p-12 mb-12">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <h3 className="text-2xl sm:text-3xl font-black text-white mb-6 heading-font">
                 Bring Dunamis Power to Your Church
               </h3>
               <p className="text-gray-300 leading-relaxed mb-6">
-                <strong className="text-blue-400">"Dunamis power"</strong> (Greek: δύναμις - miraculous power, mighty works, strength - Strong's G1411) 
-                - not just words, but demonstration. This is Australia's time to rise up with correct doctrine. 
-                For too long the devil has flooded Australia with twisted lies. We are here to restore order to the body of Christ 
+                <strong className="text-blue-400">"Dunamis power"</strong> (Greek: δύναμις - miraculous power, mighty works, strength - Strong's G1411)
+                - not just words, but demonstration. This is Australia's time to rise up with correct doctrine.
+                For too long the devil has flooded Australia with twisted lies. We are here to restore order to the body of Christ
                 and we prove it with power, as the Kingdom of God is demonstrated in power.
               </p>
               <p className="text-gray-300 leading-relaxed mb-8">
@@ -656,48 +852,48 @@ export default function About() {
                   </li>
                 </ul>
               </div>
-              
+
               <div className="grid sm:grid-cols-2 gap-6">
-                <div className="bg-purple-500/20 border border-purple-500/30 p-4 rounded">
-                  <h4 className="text-purple-200 font-bold mb-3 flex items-center gap-2">
+                <div className="bg-blue-500/20 border border-blue-500/30 p-4 rounded">
+                  <h4 className="text-blue-200 font-bold mb-3 flex items-center gap-2">
                     <Crown className="w-5 h-5" />
                     Senior Leadership Access
                   </h4>
-                  <p className="text-purple-100 text-sm leading-relaxed">
-                    24/7 Q&A access to our senior leadership team. Complete our comprehensive Leadership Course 
+                  <p className="text-blue-100 text-sm leading-relaxed">
+                    24/7 Q&A access to our senior leadership team. Complete our comprehensive Leadership Course
                     and receive official ordination certificates upon completion.
                   </p>
                 </div>
-                
+
                 <div className="bg-blue-500/20 border border-blue-500/30 p-4 rounded">
                   <h4 className="text-blue-200 font-bold mb-3 flex items-center gap-2">
                     <Zap className="w-5 h-5" />
                     Supernatural Training
                   </h4>
                   <p className="text-blue-100 text-sm leading-relaxed">
-                    Complete ministry training in: Healing-the-Sick, Deliverance Ministry, Evangelism, 
+                    Complete ministry training in: Healing-the-Sick, Deliverance Ministry, Evangelism,
                     and Five-fold office development (Apostle, Prophet, Evangelist, Pastor, Teacher).
                   </p>
                 </div>
-                
-                <div className="bg-green-500/20 border border-green-500/30 p-4 rounded">
-                  <h4 className="text-green-200 font-bold mb-3 flex items-center gap-2">
+
+                <div className="bg-blue-500/20 border border-blue-500/30 p-4 rounded">
+                  <h4 className="text-blue-200 font-bold mb-3 flex items-center gap-2">
                     <Users className="w-5 h-5" />
                     Congregation Integration
                   </h4>
-                  <p className="text-green-100 text-sm leading-relaxed">
-                    Seamlessly onboard your entire congregation into our proven discipleship programs 
+                  <p className="text-blue-100 text-sm leading-relaxed">
+                    Seamlessly onboard your entire congregation into our proven discipleship programs
                     with unified spiritual growth protocols and systematic training pathways.
                   </p>
                 </div>
-                
-                <div className="bg-orange-500/20 border border-orange-500/30 p-4 rounded">
-                  <h4 className="text-orange-200 font-bold mb-3 flex items-center gap-2">
+
+                <div className="bg-blue-500/20 border border-blue-500/30 p-4 rounded">
+                  <h4 className="text-blue-200 font-bold mb-3 flex items-center gap-2">
                     <DollarSign className="w-5 h-5" />
                     Affiliate Network & Support
                   </h4>
-                  <p className="text-orange-100 text-sm leading-relaxed">
-                    Access our 3-tier commission structure (20%/10%/5%) for sustainable ministry income, 
+                  <p className="text-blue-100 text-sm leading-relaxed">
+                    Access our 3-tier commission structure (20%/10%/5%) for sustainable ministry income,
                     plus Help Me Fund access for churches facing financial challenges.
                   </p>
                 </div>
@@ -711,14 +907,14 @@ export default function About() {
                 </div>
                 <div className="text-gray-400 mb-4">/month</div>
                 <p className="text-gray-300 text-sm mb-6 leading-relaxed">
-                  Complete church transformation package with senior leadership oversight, 
+                  Complete church transformation package with senior leadership oversight,
                   comprehensive training, and ongoing support.
                 </p>
                 <p className="text-xs text-gray-500 mb-4">
                   Free to apply • Leadership Course required • Cancel anytime
                 </p>
-                <ChurchPartnershipCTA 
-                  variant="compact" 
+                <ChurchPartnershipCTA
+                  variant="compact"
                   showLearnMore={false}
                   className="bg-transparent border-0 p-0"
                 />
@@ -729,7 +925,7 @@ export default function About() {
                   🔥 WE BRING SPIRITUALLY DEAD CHURCHES BACK TO LIFE
                 </h4>
                 <p className="text-red-100 text-sm text-center leading-relaxed">
-                  Transform your ministry through supernatural power demonstration, accurate biblical teaching, 
+                  Transform your ministry through supernatural power demonstration, accurate biblical teaching,
                   and proven Kingdom principles that produce lasting fruit.
                 </p>
               </div>

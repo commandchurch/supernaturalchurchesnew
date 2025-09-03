@@ -218,38 +218,6 @@ export default function Give() {
               </div>
             </div>
 
-            <div className="bg-white/5 border border-white/10 backdrop-blur-sm p-6">
-              <h3 className="text-xl font-bold text-white mb-4 heading-font">Current Needs</h3>
-              <div className="space-y-4">
-                {needsData?.needs?.slice(0, 3).map((need: any, index: number) => (
-                  <div key={index} className="border-l-4 border-white pl-4">
-                    <h4 className="font-semibold text-white">{need.title}</h4>
-                    <p className="text-gray-400 text-sm mb-2">{need.description}</p>
-                    <div className="flex justify-between items-center">
-                      <span className="text-green-400 font-semibold">${need.currentAmount || 0} raised</span>
-                      <span className="text-gray-400 text-sm">Goal: ${need.targetAmount}</span>
-                    </div>
-                  </div>
-                )) || [
-                  <div key="1" className="border-l-4 border-white pl-4">
-                    <h4 className="font-semibold text-white">Global Outreach Fund</h4>
-                    <p className="text-gray-400 text-sm mb-2">Supporting evangelism efforts worldwide</p>
-                    <div className="flex justify-between items-center">
-                      <span className="text-green-400 font-semibold">$15,750 raised</span>
-                      <span className="text-gray-400 text-sm">Goal: $25,000</span>
-                    </div>
-                  </div>,
-                  <div key="2" className="border-l-4 border-white pl-4">
-                    <h4 className="font-semibold text-white">Ministry Training Center</h4>
-                    <p className="text-gray-400 text-sm mb-2">Equipment for supernatural ministry training</p>
-                    <div className="flex justify-between items-center">
-                      <span className="text-green-400 font-semibold">$8,200 raised</span>
-                      <span className="text-gray-400 text-sm">Goal: $12,000</span>
-                    </div>
-                  </div>
-                ]}
-              </div>
-            </div>
           </div>
         </div>
 
