@@ -7,16 +7,16 @@ import { join } from 'path';
 console.log('🚀 SUPERNATURAL INSTITUTE - PRODUCTION INFRASTRUCTURE SETUP');
 console.log('==========================================================\n');
 
-// Credentials from user input
+// Credentials from environment variables (NEVER commit real secrets!)
 const CREDENTIALS = {
-  vercel: '1AZeM4ogEmKAbwDDpJB9bUKa',
+  vercel: process.env.VERCEL_TOKEN || 'VERCEL_TOKEN_PLACEHOLDER',
   clerk: {
-    publishable: 'pk_test_aW1tdW5lLW9wb3NzdW0tNDQuY2xlcmsuYWNjb3VudHMuZGV2JA',
-    secret: 'sk_test_vOyTgc8ByHbTu70w7ktWu4QA8qFDY1UKCasefl3bga'
+    publishable: process.env.CLERK_PUBLISHABLE_KEY || 'CLERK_PUBLISHABLE_KEY_PLACEHOLDER',
+    secret: process.env.CLERK_SECRET_KEY || 'CLERK_SECRET_KEY_PLACEHOLDER'
   },
   stripe: {
-    publishable: 'pk_live_51RrEeWCcmcORuWflzSQTjDNoaRQSD0fXXerjSrXbnxdEthESi0V9E16CRQzqW0vNpRKB17xKODs2nB5AqPm1knjp00DSNNjhIh',
-    secret: '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'
+    publishable: process.env.STRIPE_PUBLISHABLE_KEY || 'STRIPE_PUBLISHABLE_KEY_PLACEHOLDER',
+    secret: process.env.STRIPE_SECRET_KEY || 'STRIPE_SECRET_KEY_PLACEHOLDER'
   }
 };
 
