@@ -12,6 +12,9 @@ encore.gen.cue
 .env.development
 frontend/.env*
 
+# Setup files with secrets (should be configured manually)
+production-setup.js
+
 # Dependencies
 node_modules/
 npm-debug.log*
