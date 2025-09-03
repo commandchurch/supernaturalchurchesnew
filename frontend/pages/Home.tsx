@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { ArrowRight, Play, Users, GraduationCap, Info, Heart, Calendar, MapPin, Shield } from 'lucide-react';
 import SEO from '../components/SEO';
+import { siteUrl } from '../config/index';
 import ChurchPartnershipCTA from '../components/ChurchPartnershipCTA';
 
 const ministryTiles = [
@@ -62,6 +63,7 @@ export default function Home() {
       <SEO
         title="Global Discipleship, Training and Funding"
         description="Supernatural Institute is a global Christian discipleship, training, and funding platform. Join us to spread the Gospel and build disciples worldwide."
+        canonicalUrl={siteUrl}
         type="website"
       />
 
@@ -280,7 +282,7 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
                   to="/academy"
-                  className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 font-semibold uppercase tracking-wide transition-all duration-300 hover:scale-105 inline-flex items-center justify-center"
+                  className="bg-orange-700 hover:bg-orange-800 text-white px-8 py-4 font-semibold uppercase tracking-wide transition-all duration-300 hover:scale-105 inline-flex items-center justify-center shadow-lg"
                 >
                   Start Training Now
                   <ArrowRight className="ml-2 h-5 w-5" />

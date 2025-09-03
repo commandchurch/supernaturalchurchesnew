@@ -101,3 +101,4 @@ export interface MembershipSettingsProps {
   onUpdateSubscription: (settings: SubscriptionSettings) => void;
   onCancelSubscription: () => void;
 }
+

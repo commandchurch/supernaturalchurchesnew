@@ -65,7 +65,7 @@ export default function App() {
                   <Route path="/give" element={<Layout><ErrorBoundary><Give /></ErrorBoundary></Layout>} />
                   <Route path="/help-me-fund" element={<Layout><ErrorBoundary><HelpMeFundPublic /></ErrorBoundary></Layout>} />
                   <Route path="/membership" element={<Layout><ErrorBoundary><Membership /></ErrorBoundary></Layout>} />
-                  <Route path="/soul-outreach" element={<Layout><ErrorBoundary><SoulOutreach /></ErrorBoundary></Layout>} />
+                  <Route path="/outreach" element={<Layout><ErrorBoundary><SoulOutreach /></ErrorBoundary></Layout>} />
                   <Route path="/find-church" element={<Layout><ErrorBoundary><FindChurch /></ErrorBoundary></Layout>} />
                   <Route path="/church" element={<Layout><ErrorBoundary><Church /></ErrorBoundary></Layout>} />
                   <Route path="/events" element={<Layout><ErrorBoundary><Events /></ErrorBoundary></Layout>} />

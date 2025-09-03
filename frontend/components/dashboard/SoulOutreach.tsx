@@ -690,21 +690,21 @@ P.S. If you'd prefer not to receive any more messages about this, just reply "ST
     <div className="space-y-6">
       {/* Sub Navigation Tabs */}
       <div className="border-b border-gray-700">
-        <nav className="flex space-x-8">
+        <nav className="flex flex-wrap gap-2 sm:gap-8">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 py-4 px-2 text-sm font-medium border-b-2 transition-colors ${
+                className={`flex items-center gap-1 sm:gap-2 py-3 sm:py-4 px-2 sm:px-2 text-xs sm:text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
                   activeTab === tab.id
                     ? 'border-orange-500 text-orange-400'
                     : 'border-transparent text-gray-400 hover:text-gray-300'
                 }`}
               >
-                <Icon className="w-4 h-4" />
-                {tab.name}
+                <Icon className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                <span className="truncate max-w-16 sm:max-w-none">{tab.name}</span>
               </button>
             );
           })}
@@ -794,7 +794,7 @@ P.S. If you'd prefer not to receive any more messages about this, just reply "ST
         <div className="space-y-6">
           {/* CRM Sub-tabs */}
           <div className="border-b border-gray-700">
-            <nav className="flex space-x-1">
+            <nav className="flex flex-wrap gap-1 sm:gap-2">
               {crmSubTabs.map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeCrmSubTab === tab.id;
@@ -802,36 +802,36 @@ P.S. If you'd prefer not to receive any more messages about this, just reply "ST
                   <button
                     key={tab.id}
                     onClick={() => setActiveCrmSubTab(tab.id)}
-                    className={`px-4 py-3 text-sm font-medium inline-flex items-center gap-2 border-b-2 transition-colors ${
+                    className={`px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-medium inline-flex items-center gap-1 sm:gap-2 border-b-2 transition-colors whitespace-nowrap flex-1 sm:flex-none ${
                       isActive
                         ? 'text-orange-400 border-orange-400'
                         : 'text-gray-400 hover:text-white border-transparent hover:border-gray-600'
                     }`}
                   >
-                    <Icon className="w-4 h-4" />
-                    {tab.name}
+                    <Icon className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                    <span className="truncate">{tab.name}</span>
                   </button>
                 );
               })}
             </nav>
           </div>
           {/* Controls */}
-          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+          <div className="flex flex-col gap-4">
             <div className="flex flex-col sm:flex-row gap-3">
-              <div className="relative">
+              <div className="relative flex-1 sm:flex-none">
                 <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
                 <input
                   type="text"
                   placeholder="Search recruits..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 pr-4 py-2 bg-gray-700 border border-gray-600 text-white text-sm"
+                  className="w-full sm:w-64 pl-10 pr-4 py-2 bg-gray-700 border border-gray-600 text-white text-sm"
                 />
               </div>
               <select
                 value={membershipFilter}
                 onChange={(e) => setMembershipFilter(e.target.value)}
-                className="bg-gray-700 border border-gray-600 text-white px-3 py-2 text-sm"
+                className="bg-gray-700 border border-gray-600 text-white px-3 py-2 text-sm w-full sm:w-auto"
               >
                 <option value="all">All Tiers ({membershipStats.total})</option>
                 <option value="FREE">FREE ({membershipStats.FREE})</option>
@@ -841,13 +841,15 @@ P.S. If you'd prefer not to receive any more messages about this, just reply "ST
                 <option value="DIAMOND">DIAMOND ({membershipStats.DIAMOND})</option>
               </select>
             </div>
-            <button
-              onClick={() => setShowAddRecruit(true)}
-              className="bg-orange-500 text-white hover:bg-orange-600 px-4 py-2 font-semibold uppercase tracking-wide inline-flex items-center gap-2"
-            >
-              <Plus className="w-4 h-4" />
-              Add Recruit
-            </button>
+            <div className="flex justify-center sm:justify-start">
+              <button
+                onClick={() => setShowAddRecruit(true)}
+                className="bg-orange-500 text-white hover:bg-orange-600 px-4 py-2 font-semibold uppercase tracking-wide inline-flex items-center gap-2 w-full sm:w-auto justify-center"
+              >
+                <Plus className="w-4 h-4" />
+                Add Recruit
+              </button>
+            </div>
           </div>
 
           {/* Add Recruit Modal */}
@@ -941,89 +943,90 @@ P.S. If you'd prefer not to receive any more messages about this, just reply "ST
           <div className="space-y-4">
             {filteredRecruits.map((recruit) => (
               <div key={recruit.id} className={`bg-gray-800/50 border p-4 ${recruit.doNotContact ? 'border-red-500/30 bg-red-500/5' : 'border-gray-700'}`}>
-                <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-white font-semibold">{recruit.name}</h3>
-                      <span className={`px-2 py-1 text-xs font-semibold ${
-                        recruit.membershipTier === 'FREE' ? 'bg-gray-500/20 text-gray-400' :
-                        recruit.membershipTier === 'BRONZE' ? 'bg-blue-500/20 text-blue-400' :
-                        recruit.membershipTier === 'SILVER' ? 'bg-purple-500/20 text-purple-400' :
-                        recruit.membershipTier === 'GOLD' ? 'bg-yellow-500/20 text-yellow-400' :
-                        'bg-pink-500/20 text-pink-400'
-                      }`}>
-                        {recruit.membershipTier}
-                      </span>
-                      <span className={`px-2 py-1 text-xs ${
-                        recruit.status === 'active' ? 'bg-green-500/20 text-green-400' :
-                        recruit.status === 'unresponsive_3_days' ? 'bg-yellow-500/20 text-yellow-400' :
-                        recruit.status === 'opted_out' ? 'bg-red-500/20 text-red-400' :
-                        'bg-gray-500/20 text-gray-400'
-                      }`}>
-                        {recruit.status.replace('_', ' ')}
-                      </span>
-                      {recruit.doNotContact && (
-                        <span className="px-2 py-1 text-xs bg-red-500/20 text-red-400 border border-red-500/30">
-                          DO NOT CONTACT
+                <div className="flex flex-col gap-4">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
+                    <div className="flex-1">
+                      <div className="flex flex-wrap items-center gap-2 mb-3">
+                        <h3 className="text-white font-semibold text-lg">{recruit.name}</h3>
+                        <span className={`px-2 py-1 text-xs font-semibold rounded ${
+                          recruit.membershipTier === 'FREE' ? 'bg-gray-500/20 text-gray-400' :
+                          recruit.membershipTier === 'BRONZE' ? 'bg-blue-500/20 text-blue-400' :
+                          recruit.membershipTier === 'SILVER' ? 'bg-purple-500/20 text-purple-400' :
+                          recruit.membershipTier === 'GOLD' ? 'bg-yellow-500/20 text-yellow-400' :
+                          'bg-pink-500/20 text-pink-400'
+                        }`}>
+                          {recruit.membershipTier}
                         </span>
-                      )}
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                      <div>
-                        <p className="text-gray-400">Contact:</p>
-                        <p className="text-white">
-                          {recruit.doNotContact ? (
-                            <span className="text-gray-500">*** HIDDEN ***</span>
-                          ) : (
-                            <>
-                              {recruit.email && <span>{recruit.email}</span>}
-                              {recruit.email && recruit.mobile && <br />}
-                              {recruit.mobile && <span>{recruit.mobile}</span>}
-                            </>
-                          )}
-                        </p>
+                        <span className={`px-2 py-1 text-xs rounded ${
+                          recruit.status === 'active' ? 'bg-green-500/20 text-green-400' :
+                          recruit.status === 'unresponsive_3_days' ? 'bg-yellow-500/20 text-yellow-400' :
+                          recruit.status === 'opted_out' ? 'bg-red-500/20 text-red-400' :
+                          'bg-gray-500/20 text-gray-400'
+                        }`}>
+                          {recruit.status.replace('_', ' ')}
+                        </span>
+                        {recruit.doNotContact && (
+                          <span className="px-2 py-1 text-xs bg-red-500/20 text-red-400 border border-red-500/30 rounded">
+                            DO NOT CONTACT
+                          </span>
+                        )}
                       </div>
-                      <div>
-                        <p className="text-gray-400">Last Contact:</p>
-                        <p className="text-white">{recruit.lastContact}</p>
-                      </div>
-                      <div>
-                        <p className="text-gray-400">Earnings:</p>
-                        <p className="text-green-400 font-semibold">${recruit.earnings}</p>
-                      </div>
-                    </div>
-                  </div>
 
-                  {!recruit.doNotContact && (
-                    <div className="flex gap-2">
-                      {recruit.email && (
-                        <button
-                          onClick={() => handleSendFollowUp(recruit.id, 'email')}
-                          className="bg-blue-500 text-white hover:bg-blue-600 px-3 py-1 text-xs font-semibold inline-flex items-center gap-1"
-                        >
-                          <Mail className="w-3 h-3" />
-                          Email
-                        </button>
-                      )}
-                      {recruit.mobile && (
-                        <button
-                          onClick={() => handleSendFollowUp(recruit.id, 'sms')}
-                          className="bg-green-500 text-white hover:bg-green-600 px-3 py-1 text-xs font-semibold inline-flex items-center gap-1"
-                        >
-                          <MessageSquare className="w-3 h-3" />
-                          SMS
-                        </button>
-                      )}
-                      <button
-                        onClick={() => handleOptOut(recruit.id)}
-                        className="bg-red-500 text-white hover:bg-red-600 px-3 py-1 text-xs font-semibold inline-flex items-center gap-1"
-                      >
-                        <X className="w-3 h-3" />
-                        Opt Out
-                      </button>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+                        <div>
+                          <p className="text-gray-400 font-medium mb-1">Contact:</p>
+                          <p className="text-white break-all">
+                            {recruit.doNotContact ? (
+                              <span className="text-gray-500">*** HIDDEN ***</span>
+                            ) : (
+                              <>
+                                {recruit.email && <span className="block">{recruit.email}</span>}
+                                {recruit.mobile && <span className="block">{recruit.mobile}</span>}
+                              </>
+                            )}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-gray-400 font-medium mb-1">Last Contact:</p>
+                          <p className="text-white">{recruit.lastContact}</p>
+                        </div>
+                        <div>
+                          <p className="text-gray-400 font-medium mb-1">Earnings:</p>
+                          <p className="text-green-400 font-semibold">${recruit.earnings}</p>
+                        </div>
+                      </div>
                     </div>
-                  )}
+
+                    {!recruit.doNotContact && (
+                      <div className="flex flex-wrap gap-2 justify-center sm:justify-end">
+                        {recruit.email && (
+                          <button
+                            onClick={() => handleSendFollowUp(recruit.id, 'email')}
+                            className="bg-blue-500 text-white hover:bg-blue-600 px-3 py-2 text-xs font-semibold inline-flex items-center gap-1 rounded"
+                          >
+                            <Mail className="w-3 h-3" />
+                            Email
+                          </button>
+                        )}
+                        {recruit.mobile && (
+                          <button
+                            onClick={() => handleSendFollowUp(recruit.id, 'sms')}
+                            className="bg-green-500 text-white hover:bg-green-600 px-3 py-2 text-xs font-semibold inline-flex items-center gap-1 rounded"
+                          >
+                            <MessageSquare className="w-3 h-3" />
+                            SMS
+                          </button>
+                        )}
+                        <button
+                          onClick={() => handleOptOut(recruit.id)}
+                          className="bg-red-500 text-white hover:bg-red-600 px-3 py-2 text-xs font-semibold inline-flex items-center gap-1 rounded"
+                        >
+                          <X className="w-3 h-3" />
+                          Opt Out
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}

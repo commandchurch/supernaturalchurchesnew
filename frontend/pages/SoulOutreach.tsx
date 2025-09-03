@@ -11,6 +11,7 @@ export default function SoulOutreach() {
       <SEO
         title="Outreach - Affiliate Program | Supernatural Institute"
         description="Join our Outreach Affiliate Program and earn commissions while sharing the Gospel. Complete Evangelism Essentials and start your ministry outreach journey."
+        canonicalUrl={`${siteUrl}/outreach`}
         type="website"
       />
 
@@ -24,7 +25,7 @@ export default function SoulOutreach() {
             Share the Gospel and earn commissions through our ministry outreach program. We equip you with training and support to naturally connect people with the life-changing message of Jesus Christ.
           </p>
           <div className="bg-white/10 border border-white/20 p-6 rounded max-w-3xl mx-auto">
-            <h3 className="text-xl font-bold text-white mb-3">Our Heart for Souls</h3>
+            <h2 className="text-xl font-bold text-white mb-3">Our Heart for Souls</h2>
             <p className="text-gray-300 text-sm leading-relaxed">
               "Freely you have received, freely give" - Matthew 10:8. We never require payment for salvation, healing, or deliverance. Our mission is to win souls, nurture them through free training, and naturally connect them with our community. As they grow in faith and see the value, many choose to become members to access deeper training.
             </p>
@@ -130,14 +131,14 @@ export default function SoulOutreach() {
           <div className="flex justify-center">
             <Link
               to="/academy"
-              className="bg-orange-500 text-white hover:bg-orange-600 px-8 py-4 text-lg font-semibold uppercase tracking-wide shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 inline-flex items-center gap-2"
+              className="bg-orange-700 text-white hover:bg-orange-800 px-8 py-4 text-lg font-semibold uppercase tracking-wide shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 inline-flex items-center gap-2"
             >
               Complete Evangelism Essentials
               <ExternalLink className="w-5 h-5" />
             </Link>
           </div>
 
-          <p className="text-sm text-gray-500 mt-6">
+          <p className="text-sm text-gray-300 mt-6">
             Program participation requires active membership • Commissions paid monthly • Terms apply
           </p>
         </div>

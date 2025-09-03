@@ -14,7 +14,7 @@ const navItems = [
   { name: 'HOME', path: '/' },
   { name: 'TRAINING', path: '/academy' },
   { name: 'MEMBERSHIP', path: '/membership' },
-  { name: 'OUTREACH', path: '/soul-outreach' },
+  { name: 'OUTREACH', path: '/outreach' },
   { name: 'GIVE', path: '/give' },
   { name: 'ABOUT', path: '/about' },
   { name: 'FIND A CHURCH', path: '/find-church' },
@@ -139,7 +139,7 @@ export default function Layout({ children }: LayoutProps) {
                   <UserButton afterSignOutUrl="/" />
                 ) : (
                   <SignInButton mode="modal">
-                    <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 font-semibold uppercase tracking-wide text-sm">
+                    <button className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 font-semibold uppercase tracking-wide text-sm">
                       Sign In
                     </button>
                   </SignInButton>
@@ -174,7 +174,7 @@ export default function Layout({ children }: LayoutProps) {
                   </div>
                 ) : (
                   <SignInButton mode="modal">
-                    <button className="w-full bg-orange-500 hover:bg-orange-600 text-white px-4 py-3 font-semibold uppercase tracking-wide text-sm" onClick={() => setIsMobileMenuOpen(false)}>
+                    <button className="w-full bg-orange-600 hover:bg-orange-700 text-white px-4 py-3 font-semibold uppercase tracking-wide text-sm" onClick={() => setIsMobileMenuOpen(false)}>
                       Sign In / Sign Up
                     </button>
                   </SignInButton>

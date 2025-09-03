@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Search, MapPin, Phone, Mail, ExternalLink, Navigation, Clock, Users, Star, Map } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Search, MapPin, Phone, Mail, ExternalLink, Navigation, Clock, Users, Star, Map, Crown, Zap, DollarSign, CheckCircle } from 'lucide-react';
 import SEO from '../components/SEO';
 import ChurchPartnershipCTA from '../components/ChurchPartnershipCTA';
 import { siteUrl } from '../config';
@@ -29,7 +29,7 @@ export default function FindChurch() {
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [locationError, setLocationError] = useState('');
   const [churches, setChurches] = useState<Church[]>([]);
-  const [filteredChurches, setFilteredChurches] = useState<Church[]>([]);
+
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [selectedDay, setSelectedDay] = useState('all');
   const [selectedTime, setSelectedTime] = useState('all');
@@ -38,7 +38,8 @@ export default function FindChurch() {
   const [selectedChurch, setSelectedChurch] = useState<Church | null>(null);
 
   // Mock church data - in real app this would come from backend
-  const mockChurches: Church[] = [
+  // Using useMemo to optimize performance and reduce re-renders
+  const mockChurches: Church[] = useMemo(() => [
     {
       id: '1',
       name: 'Supernatural Life Church',
@@ -148,12 +149,38 @@ export default function FindChurch() {
       ],
       coordinates: { lat: -31.9505, lng: 115.8605 }
     }
-  ];
+  ], []);
+
+  // Optimized filtered churches using useMemo
+  const optimizedFilteredChurches = useMemo(() => {
+    let filtered = churches;
+
+    // Location-based filtering (if user has location)
+    if (userLocation) {
+      filtered = filtered.map(church => ({
+        ...church,
+        distance: calculateDistance(userLocation, church.coordinates)
+      })).sort((a, b) => (a.distance || 0) - (b.distance || 0));
+    }
+
+    // Search query filter
+    if (searchQuery.trim()) {
+      filtered = filtered.filter(church =>
+        church.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        church.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        church.state.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        church.postcode.includes(searchQuery) ||
+        church.pastor.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        church.specialties.some(specialty => specialty.toLowerCase().includes(searchQuery.toLowerCase()))
+      );
+    }
+
+    return filtered;
+  }, [churches, userLocation, searchQuery]);
 
   useEffect(() => {
     setChurches(mockChurches);
-    setFilteredChurches(mockChurches);
-  }, []);
+  }, [mockChurches]);
 
   const requestLocation = () => {
     if (navigator.geolocation) {
@@ -173,7 +200,6 @@ export default function FindChurch() {
           })).sort((a, b) => (a.distance || 0) - (b.distance || 0));
           
           setChurches(churchesWithDistance);
-          setFilteredChurches(churchesWithDistance);
         },
         (error) => {
           setLocationError('Unable to get your location. Please search by city or postcode.');
@@ -203,20 +229,6 @@ export default function FindChurch() {
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    if (query.trim() === '') {
-      setFilteredChurches(churches);
-      return;
-    }
-
-    const filtered = churches.filter(church =>
-      church.name.toLowerCase().includes(query.toLowerCase()) ||
-      church.city.toLowerCase().includes(query.toLowerCase()) ||
-      church.state.toLowerCase().includes(query.toLowerCase()) ||
-      church.postcode.includes(query) ||
-      church.pastor.toLowerCase().includes(query.toLowerCase()) ||
-      church.specialties.some(specialty => specialty.toLowerCase().includes(query.toLowerCase()))
-    );
-    setFilteredChurches(filtered);
   };
 
   const handleFilterChange = (filter: string) => {
@@ -240,45 +252,8 @@ export default function FindChurch() {
   };
 
   const applyFilters = (filter: string, day: string, time: string, location: string) => {
-    let filtered = churches;
-
-    // Service Type Filter (All churches, Sunday Church, Youth Group, etc.)
-    if (filter !== 'all') {
-      filtered = filtered.filter(church => 
-        church.serviceTypes.includes(filter) ||
-        church.specialties.some(specialty => 
-          specialty.toLowerCase().includes(filter.toLowerCase())
-        ) ||
-        church.denomination.toLowerCase().includes(filter.toLowerCase())
-      );
-    }
-
-    // Day Filter
-    if (day !== 'all') {
-      filtered = filtered.filter(church =>
-        church.serviceTimes.some(serviceTime => serviceTime.day === day)
-      );
-    }
-
-    // Time Filter (AM/PM)
-    if (time !== 'all') {
-      filtered = filtered.filter(church =>
-        church.serviceTimes.some(serviceTime => serviceTime.ampm === time)
-      );
-    }
-
-    // Location Filter
-    if (location.trim()) {
-      const locationLower = location.toLowerCase();
-      filtered = filtered.filter(church =>
-        church.city.toLowerCase().includes(locationLower) ||
-        church.state.toLowerCase().includes(locationLower) ||
-        church.postcode.includes(location) ||
-        church.address.toLowerCase().includes(locationLower)
-      );
-    }
-
-    setFilteredChurches(filtered);
+    // Filters are handled by the optimizedFilteredChurches useMemo
+    // No need for separate state management
   };
 
   const breadcrumbs = {
@@ -295,6 +270,7 @@ export default function FindChurch() {
       <SEO
         title="Find a Supernatural Church Near You - Partner Churches Directory"
         description="Discover supernatural ministry churches in your area. Find partner churches that practice divine healing, deliverance, and signs & wonders across Australia."
+        canonicalUrl={`${siteUrl}/find-church`}
         breadcrumbsJsonLd={breadcrumbs}
       />
 
@@ -325,7 +301,7 @@ export default function FindChurch() {
           
           <button
             onClick={requestLocation}
-            className="bg-orange-500 text-white hover:bg-orange-600 px-6 py-3 font-semibold uppercase tracking-wide inline-flex items-center justify-center gap-2"
+            className="bg-blue-600 text-white hover:bg-blue-700 px-6 py-3 font-semibold uppercase tracking-wide inline-flex items-center justify-center gap-2"
           >
             <Navigation className="w-5 h-5" />
             Find Churches Near Me
@@ -428,7 +404,6 @@ export default function FindChurch() {
                 setSelectedDay('all');
                 setSelectedTime('all');
                 setLocationFilter('');
-                setFilteredChurches(churches);
               }}
               className="px-4 py-2 text-sm bg-gray-600 text-white hover:bg-gray-500 border border-gray-500"
             >
@@ -443,7 +418,7 @@ export default function FindChurch() {
             onClick={() => setViewMode('list')}
             className={`px-4 py-2 text-sm font-semibold uppercase tracking-wide border inline-flex items-center gap-2 ${
               viewMode === 'list'
-                ? 'bg-orange-500 text-white border-orange-500'
+                ? 'bg-blue-600 text-white border-blue-600'
                 : 'bg-transparent text-gray-300 border-gray-600 hover:border-gray-500'
             }`}
           >
@@ -454,7 +429,7 @@ export default function FindChurch() {
             onClick={() => setViewMode('map')}
             className={`px-4 py-2 text-sm font-semibold uppercase tracking-wide border inline-flex items-center gap-2 ${
               viewMode === 'map'
-                ? 'bg-orange-500 text-white border-orange-500'
+                ? 'bg-blue-600 text-white border-blue-600'
                 : 'bg-transparent text-gray-300 border-gray-600 hover:border-gray-500'
             }`}
           >
@@ -467,7 +442,7 @@ export default function FindChurch() {
       {/* Churches Display */}
       {viewMode === 'list' ? (
         <div className="space-y-6">
-          {filteredChurches.length === 0 ? (
+          {optimizedFilteredChurches.length === 0 ? (
             <div className="bg-gray-800/50 border border-gray-700 p-8 text-center">
               <MapPin className="w-12 h-12 text-gray-500 mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-white mb-2">No Churches Found</h3>
@@ -476,21 +451,21 @@ export default function FindChurch() {
               </p>
             </div>
           ) : (
-            filteredChurches.map((church) => (
+            optimizedFilteredChurches.map((church) => (
             <div key={church.id} className="bg-gray-800/50 border border-gray-700 p-6 hover:bg-gray-800/70 transition-colors">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Church Info */}
                 <div className="lg:col-span-2">
                   <div className="flex items-start justify-between mb-4">
                     <div>
-                      <h3 className="text-xl font-bold text-white mb-2 heading-font">{church.name}</h3>
+                      <h2 className="text-xl font-bold text-white mb-2 heading-font">{church.name}</h2>
                       <div className="flex items-center gap-2 text-gray-400 mb-2">
                         <MapPin className="w-4 h-4" />
                         <span className="text-sm">
                           {church.address}, {church.city}, {church.state} {church.postcode}
                         </span>
                         {church.distance && (
-                          <span className="bg-orange-500/20 text-orange-400 px-2 py-1 text-xs font-semibold rounded">
+                          <span className="bg-blue-500/20 text-blue-400 px-2 py-1 text-xs font-semibold rounded">
                             {church.distance}km away
                           </span>
                         )}
@@ -568,10 +543,10 @@ export default function FindChurch() {
                   </div>
 
                   <div className="space-y-2">
-                    <button className="w-full bg-orange-500 text-white hover:bg-orange-600 px-4 py-3 font-semibold uppercase tracking-wide">
+                    <button className="w-full bg-blue-600 text-white hover:bg-blue-700 px-4 py-3 font-semibold uppercase tracking-wide">
                       Get Directions
                     </button>
-                    <button className="w-full bg-blue-500 text-white hover:bg-blue-600 px-4 py-3 font-semibold uppercase tracking-wide">
+                    <button className="w-full bg-blue-600 text-white hover:bg-blue-700 px-4 py-3 font-semibold uppercase tracking-wide">
                       Contact Church
                     </button>
                   </div>
@@ -607,7 +582,7 @@ export default function FindChurch() {
                   />
                   
                   {/* Church Pins */}
-                  {filteredChurches.map((church, idx) => {
+                  {optimizedFilteredChurches.map((church: Church, idx: number) => {
                     // Map coordinates to SVG positions (simplified mapping)
                     const positions = [
                       { x: 580, y: 280 }, // Sydney
@@ -677,7 +652,7 @@ export default function FindChurch() {
                     <div className="text-blue-400 text-sm">Led by {selectedChurch.pastor}</div>
                     
                     {selectedChurch.distance && (
-                      <div className="bg-orange-500/20 text-orange-400 px-2 py-1 text-xs font-semibold rounded inline-block">
+                      <div className="bg-blue-500/20 text-blue-400 px-2 py-1 text-xs font-semibold rounded inline-block">
                         {selectedChurch.distance}km away
                       </div>
                     )}
@@ -730,10 +705,10 @@ export default function FindChurch() {
                     </div>
                     
                     <div className="space-y-2 pt-4">
-                      <button className="w-full bg-orange-500 text-white hover:bg-orange-600 px-4 py-2 font-semibold uppercase tracking-wide text-sm">
+                      <button className="w-full bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 font-semibold uppercase tracking-wide text-sm">
                         Get Directions
                       </button>
-                      <button className="w-full bg-blue-500 text-white hover:bg-blue-600 px-4 py-2 font-semibold uppercase tracking-wide text-sm">
+                      <button className="w-full bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 font-semibold uppercase tracking-wide text-sm">
                         Contact Church
                       </button>
                     </div>
@@ -752,6 +727,186 @@ export default function FindChurch() {
           </div>
         </div>
       )}
+
+      {/* Partner Your Church Section */}
+      <div className="mt-16 bg-gray-800/50 border border-gray-700 p-8 sm:p-12">
+        <div className="text-center mb-10">
+          <h2 className="text-3xl sm:text-4xl font-black text-white mb-4 heading-font">
+            PARTNER YOUR CHURCH
+          </h2>
+          <p className="text-base sm:text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed">
+            Join our Supernatural Churches Apostolic Partnership and demonstrate Kingdom power through miraculous ministry.
+            We equip churches to be the light of this world through authentic supernatural power and biblical authority.
+          </p>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-12 items-center mb-12">
+          <div>
+            <h3 className="text-2xl sm:text-3xl font-black text-white mb-6 heading-font">
+              Bring Dunamis Power to Your Church
+            </h3>
+            <p className="text-gray-300 leading-relaxed mb-6">
+              <strong className="text-blue-400">"Dunamis power"</strong> (Greek: δύναμις - miraculous power, mighty works, strength - Strong's G1411)
+              - not just words, but demonstration. This is Australia's time to rise up with correct doctrine.
+              For too long the devil has flooded Australia with twisted lies. We are here to restore order to the body of Christ
+              and we prove it with power, as the Kingdom of God is demonstrated in power.
+            </p>
+            <p className="text-gray-300 leading-relaxed mb-8">
+              We provide clear, practical teaching on:
+            </p>
+            <div className="mb-8">
+              <ul className="space-y-2 text-gray-300">
+                <li className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                  <span>How to heal your congregation with proven protocols</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                  <span>How to identify and combat doctrines of demons</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                  <span>Establishing supernatural ministry foundations</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                  <span>Demonstrating Kingdom power that transforms lives</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-6">
+              <div className="bg-blue-500/20 border border-blue-500/30 p-4 rounded">
+                <h4 className="text-blue-200 font-bold mb-3 flex items-center gap-2">
+                  <Crown className="w-5 h-5" />
+                  Senior Leadership Access
+                </h4>
+                <p className="text-blue-100 text-sm leading-relaxed">
+                  24/7 Q&A access to our senior leadership team. Complete our comprehensive Leadership Course
+                  and receive official ordination certificates upon completion.
+                </p>
+              </div>
+
+              <div className="bg-blue-500/20 border border-blue-500/30 p-4 rounded">
+                <h4 className="text-blue-200 font-bold mb-3 flex items-center gap-2">
+                  <Zap className="w-5 h-5" />
+                  Supernatural Training
+                </h4>
+                <p className="text-blue-100 text-sm leading-relaxed">
+                  Complete ministry training in: Healing-the-Sick, Deliverance Ministry, Evangelism,
+                  and Five-fold office development (Apostle, Prophet, Evangelist, Pastor, Teacher).
+                </p>
+              </div>
+
+              <div className="bg-blue-500/20 border border-blue-500/30 p-4 rounded">
+                <h4 className="text-blue-200 font-bold mb-3 flex items-center gap-2">
+                  <Users className="w-5 h-5" />
+                  Congregation Integration
+                </h4>
+                <p className="text-blue-100 text-sm leading-relaxed">
+                  Seamlessly onboard your entire congregation into our proven discipleship programs
+                  with unified spiritual growth protocols and systematic training pathways.
+                </p>
+              </div>
+
+              <div className="bg-blue-500/20 border border-blue-500/30 p-4 rounded">
+                <h4 className="text-blue-200 font-bold mb-3 flex items-center gap-2">
+                  <DollarSign className="w-5 h-5" />
+                  Affiliate Network & Support
+                </h4>
+                <p className="text-blue-100 text-sm leading-relaxed">
+                  Access our 3-tier commission structure (20%/10%/5%) for sustainable ministry income,
+                  plus Help Me Fund access for churches facing financial challenges.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <div className="bg-white/10 border border-white/20 p-6 text-center">
+              <div className="text-4xl font-black text-white heading-font mb-2">
+                $200 AUD
+              </div>
+              <div className="text-gray-300 mb-4">/month</div>
+              <p className="text-gray-300 text-sm mb-6 leading-relaxed">
+                Complete church transformation package with senior leadership oversight,
+                comprehensive training, and ongoing support.
+              </p>
+              <p className="text-xs text-gray-200 mb-4">
+                Free to apply • Leadership Course required • Cancel anytime
+              </p>
+              <ChurchPartnershipCTA
+                variant="compact"
+                showLearnMore={false}
+                className="bg-transparent border-0 p-0"
+              />
+            </div>
+
+            <div className="bg-red-500/20 border border-red-500/30 p-6 rounded">
+              <h4 className="text-red-200 font-bold text-lg mb-3 text-center">
+                🔥 WE BRING SPIRITUALLY DEAD CHURCHES BACK TO LIFE
+              </h4>
+              <p className="text-red-100 text-sm text-center leading-relaxed">
+                Transform your ministry through supernatural power demonstration, accurate biblical teaching,
+                and proven Kingdom principles that produce lasting fruit.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <h4 className="text-white font-semibold mb-3">Complete Partnership Benefits:</h4>
+              {[
+                'Complete church leadership team access',
+                'Five-fold ministry office training modules',
+                'Ordination Certificates for Pastors',
+                'Monthly leadership strategy sessions',
+                'Church-wide miracle healing protocols',
+                'Prophetic ministry development curriculum',
+                'Apostolic church planting resources',
+                'Evangelistic outreach training programs',
+                'Pastoral care excellence frameworks',
+                'Teaching ministry anointing development',
+                'Priority support & consultation',
+                'Custom curriculum development',
+                'Quarterly on-site ministry visits (Australia)'
+              ].map((benefit, idx) => (
+                <div key={idx} className="flex items-start gap-2 text-sm text-gray-300">
+                  <CheckCircle className="w-3 h-3 text-green-400 mt-1 flex-shrink-0" />
+                  <span>{benefit}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="text-center">
+          <div className="bg-gradient-to-r from-purple-900/30 to-blue-900/30 border border-purple-500/30 p-8 rounded">
+            <h3 className="text-2xl font-bold text-white mb-4">How Partnership Works</h3>
+            <div className="grid md:grid-cols-3 gap-6 text-center">
+              <div>
+                <div className="w-12 h-12 bg-purple-500/20 border border-purple-500/40 flex items-center justify-center mx-auto mb-3 rounded">
+                  <span className="text-purple-400 font-bold">1</span>
+                </div>
+                <h4 className="font-bold text-white mb-2">Apply</h4>
+                <p className="text-gray-300 text-sm">Submit your church partnership application for review and approval</p>
+              </div>
+              <div>
+                <div className="w-12 h-12 bg-blue-500/20 border border-blue-500/40 flex items-center justify-center mx-auto mb-3 rounded">
+                  <span className="text-blue-400 font-bold">2</span>
+                </div>
+                <h4 className="font-bold text-white mb-2">Payment Required</h4>
+                <p className="text-gray-300 text-sm">Upon approval, $200 AUD/month payment begins your partnership journey</p>
+              </div>
+              <div>
+                <div className="w-12 h-12 bg-green-500/20 border border-green-500/40 flex items-center justify-center mx-auto mb-3 rounded">
+                  <span className="text-green-400 font-bold">3</span>
+                </div>
+                <h4 className="font-bold text-white mb-2">Complete Access</h4>
+                <p className="text-gray-300 text-sm">Leadership training, ordination certificates, and full ministry resources</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Church Partnership CTA */}
       <div className="mt-12">

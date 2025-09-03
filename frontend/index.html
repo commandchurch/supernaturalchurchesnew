@@ -28,20 +28,62 @@
 
     <!-- Favicon will be added when available -->
 
-    <!-- Preconnect to important origins -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <!-- Optimized preconnect hints -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://immune-opossum-44.clerk.accounts.dev" />
     <link rel="preconnect" href="https://js.stripe.com" />
+    <link rel="preconnect" href="https://api.stripe.com" />
+    <link rel="preconnect" href="https://checkout.stripe.com" />
 
-    <!-- DNS prefetch for other origins -->
-    <link rel="dns-prefetch" href="//api.stripe.com" />
-    <link rel="dns-prefetch" href="//checkout.stripe.com" />
+    <!-- Preload critical fonts -->
+    <link rel="preload" href="https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="https://fonts.gstatic.com/s/archivo/v18/k3kPo8UDI-1M0wlSV9XAw6lQkqWYfLQt93LsTv4.woff2" as="font" type="font/woff2" crossorigin />
 
-    <!-- Fonts with display=swap for better performance -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Optimized Font Loading -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap&family=Archivo:wght@700;900&display=swap" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap&family=Archivo:wght@700;900&display=swap"></noscript>
+
+    <!-- Critical CSS for font loading -->
+    <style>
+      /* Ensure text is visible during font load */
+      body, .heading-font, h1, h2, h3, h4, h5, h6 {
+        font-display: swap;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Inter', sans-serif;
+      }
+    </style>
+
+    <!-- Critical CSS for above-the-fold content -->
+    <style>
+      /* Critical styles for instant rendering */
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+        background-color: #000;
+        color: #fff;
+        line-height: 1.5;
+      }
+
+      /* Ensure header renders immediately */
+      .min-h-screen { min-height: 100vh; }
+      .flex { display: flex; }
+      .items-center { align-items: center; }
+      .justify-center { justify-content: center; }
+
+      /* Critical layout styles */
+      .fixed { position: fixed; }
+      .top-0 { top: 0; }
+      .left-0 { left: 0; }
+      .right-0 { right: 0; }
+      .z-50 { z-index: 50; }
+      .bg-black\/80 { background-color: rgba(0, 0, 0, 0.8); }
+      .backdrop-blur-md { backdrop-filter: blur(12px); }
+      .border-b { border-bottom-width: 1px; }
+      .border-gray-800 { border-color: rgb(31 41 55); }
+
+      /* Fallback font CSS */
+      .heading-font { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif; }
+    </style>
 
     <!-- Security headers -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
@@ -51,8 +93,7 @@
     <meta name="theme-color" content="#000000" />
     <meta name="msapplication-TileColor" content="#000000" />
 
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://supernatural.institute/" />
+    <!-- Canonical URL will be set dynamically by React Helmet -->
 
     <!-- Structured Data -->
     <script type="application/ld+json">

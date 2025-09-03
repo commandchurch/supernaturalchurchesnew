@@ -40,7 +40,10 @@ export default function Academy() {
 
         setCourses(response.courses || []);
       } catch (err: any) {
-        console.error('Failed to load courses:', err);
+        // Log error in development only
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Failed to load courses:', err);
+        }
         setError(err.message || 'Failed to load courses');
 
         // Fallback to sample courses if API fails
@@ -138,6 +141,7 @@ export default function Academy() {
       <SEO
         title="Supernatural Institute of Ministry - Complete Ministry Training Courses"
         description="God's supernatural ministry training for believers equipped for Kingdom advancement. Master signs, wonders, miracles and apply faith to every aspect of life."
+        canonicalUrl={`${siteUrl}/academy`}
         breadcrumbsJsonLd={breadcrumbs}
       />
 
@@ -172,7 +176,29 @@ export default function Academy() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-        {filteredCourses.map((course: any) => {
+        {loading ? (
+          // Skeleton loading
+          Array.from({ length: 6 }).map((_, index) => (
+            <div key={index} className="relative bg-black border-0 shadow-none group">
+              <div className="p-0">
+                <div className="w-full h-48 bg-gray-800 mb-3 sm:mb-4 flex items-center justify-center animate-pulse" style={{aspectRatio: '16/9'}}>
+                  <div className="w-10 h-10 bg-gray-700 rounded-full"></div>
+                </div>
+                <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
+                  <div className="h-4 bg-gray-700 rounded w-16"></div>
+                  <div className="h-3 bg-gray-700 rounded w-12"></div>
+                </div>
+                <div className="h-5 bg-gray-700 rounded mb-2 animate-pulse"></div>
+                <div className="h-4 bg-gray-700 rounded mb-3 animate-pulse"></div>
+                <div className="flex items-center text-xs text-gray-400 mb-3">
+                  <div className="h-3 bg-gray-700 rounded w-24"></div>
+                </div>
+                <div className="h-8 bg-gray-700 rounded animate-pulse"></div>
+              </div>
+            </div>
+          ))
+        ) : (
+          filteredCourses.map((course: any) => {
           const progress = progressMap.get(course.id)?.pct ?? 0;
           const completed = (progressMap.get(course.id)?.completedAt ?? null) !== null;
           const access = canAccess(course.isPremium);
@@ -180,7 +206,7 @@ export default function Academy() {
           return (
             <div key={course.id} className="relative bg-black border-0 shadow-none group">
               <div className="p-0">
-                <div className="aspect-video bg-gray-800 mb-3 sm:mb-4 flex items-center justify-center relative">
+                <div className="w-full h-48 bg-gray-800 mb-3 sm:mb-4 flex items-center justify-center relative" style={{aspectRatio: '16/9'}}>
                   <Play className="h-10 w-10 sm:h-12 sm:w-12 text-white/60" />
                   {course.isPremium && !access && (
                     <div className="absolute inset-0 bg-black/70 flex items-center justify-center px-3">
@@ -209,9 +235,9 @@ export default function Academy() {
                   )}
                 </div>
 
-                <h3 className="text-base sm:text-lg font-bold heading-font text-white mb-2 group-hover:text-gray-300 transition-colors">
+                <h2 className="text-base sm:text-lg font-bold heading-font text-white mb-2 group-hover:text-gray-300 transition-colors">
                   {course.title}
-                </h3>
+                </h2>
                 <p className="text-gray-400 text-sm mb-3 line-clamp-3">
                   {course.description}
                 </p>
@@ -263,7 +289,8 @@ export default function Academy() {
               </div>
             </div>
           );
-        })}
+        })
+        )}
       </div>
 
       <section className="mt-12 sm:mt-20">
@@ -275,7 +302,7 @@ export default function Academy() {
         
         <div className="bg-white/5 border border-white/10 backdrop-blur-sm p-6 sm:p-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-center">
-            <div className="aspect-video bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center relative overflow-hidden">
+            <div className="w-full h-48 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center relative overflow-hidden" style={{aspectRatio: '16/9'}}>
               <div className="absolute inset-0 bg-gradient-to-br from-green-600/20 to-blue-600/20" />
               <Play className="h-12 w-12 sm:h-16 sm:w-16 text-white/80 relative z-10" />
             </div>
@@ -283,9 +310,9 @@ export default function Academy() {
               <div className="bg-green-500/20 text-green-400 border border-green-500/30 px-2 sm:px-3 py-1 text-xs sm:text-sm font-semibold inline-block mb-3 sm:mb-4">
                 DISCIPLESHIP
               </div>
-              <h3 className="text-xl sm:text-2xl font-black text-white mb-3 sm:mb-4 heading-font">
+              <h2 className="text-xl sm:text-2xl font-black text-white mb-3 sm:mb-4 heading-font">
                 New Life in Jesus: Foundations
-              </h3>
+              </h2>
               <p className="text-gray-400 leading-relaxed mb-4 sm:mb-6 text-sm sm:text-base">
                 Begin your walk with Jesus strong. Understand His finished work, establish healthy rhythms, and learn how to guard your mind, body, and spirit.
               </p>

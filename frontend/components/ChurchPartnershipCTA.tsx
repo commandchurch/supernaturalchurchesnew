@@ -50,17 +50,18 @@ const ChurchPartnershipCTA: React.FC<ChurchPartnershipCTAProps> = ({
         </p>
         <div className="flex gap-3">
           {showLearnMore && (
-            <Link 
+            <Link
               to="/about#church-partnership"
               className="px-6 py-3 bg-white hover:bg-gray-100 text-black font-semibold transition-all duration-300 transform hover:scale-105"
+              aria-label="Learn more about Supernatural Churches Partnership"
             >
-              LEARN MORE
+              Learn About Church Partnership
             </Link>
           )}
           {showPartnerButton && (
-            <button 
+            <button
               onClick={() => setIsFormOpen(true)}
-              className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold transition-all duration-300 transform hover:scale-105"
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all duration-300 transform hover:scale-105"
             >
               PARTNER WITH US
             </button>
@@ -128,13 +129,13 @@ const ChurchPartnershipCTA: React.FC<ChurchPartnershipCTAProps> = ({
                 to="/about#church-partnership"
                 className="px-6 py-3 bg-white hover:bg-gray-100 text-black font-semibold transition-all duration-300 transform hover:scale-105"
               >
-                LEARN MORE
+                Learn About Church Partnership
               </Link>
             )}
             {showPartnerButton && (
               <button 
                 onClick={() => setIsFormOpen(true)}
-                className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold transition-all duration-300 transform hover:scale-105"
+                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all duration-300 transform hover:scale-105"
               >
                 PARTNER WITH US
               </button>
@@ -172,13 +173,13 @@ const ChurchPartnershipCTA: React.FC<ChurchPartnershipCTAProps> = ({
                 to="/about#church-partnership"
                 className="px-6 py-3 bg-white hover:bg-gray-100 text-black font-semibold transition-all duration-300 transform hover:scale-105"
               >
-                LEARN MORE
+                Learn About Church Partnership
               </Link>
             )}
             {showPartnerButton && (
               <button 
                 onClick={() => setIsFormOpen(true)}
-                className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold transition-all duration-300 transform hover:scale-105"
+                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all duration-300 transform hover:scale-105"
               >
                 PARTNER WITH US
               </button>

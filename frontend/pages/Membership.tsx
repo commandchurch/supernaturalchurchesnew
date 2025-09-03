@@ -16,6 +16,8 @@ import ChurchPartnershipCTA from '../components/ChurchPartnershipCTA';
 import FiveFoldPartnershipApplication from '../components/FiveFoldPartnershipApplication';
 import MembershipToggle from '../components/MembershipToggle';
 import { individualMembershipTiers, churchMembershipTiers, MembershipTier } from '../data/membershipTiers';
+import SEO from '../components/SEO';
+import { siteUrl } from '../config/index';
 import {
   Crown,
   Zap,
@@ -44,6 +46,32 @@ import {
 const SkeletonLoader = ({ className }: { className?: string }) => (
   <div className={`animate-pulse bg-gray-700/50 rounded ${className || ""}`}></div>
 );
+
+// FAQ Item Component
+const FAQItem = ({ question, answer }: { question: string; answer: string }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="bg-gray-800/50 border border-gray-700/50 rounded-xl overflow-hidden">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full text-left p-6 hover:bg-gray-700/30 transition-colors flex items-center justify-between"
+      >
+        <h3 className="text-lg font-semibold text-white pr-4">{question}</h3>
+        <div className={`transform transition-transform ${isOpen ? 'rotate-180' : ''}`}>
+          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      </button>
+      {isOpen && (
+        <div className="px-6 pb-6">
+          <p className="text-gray-300 text-sm leading-relaxed">{answer}</p>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const Membership: React.FC = () => {
   const { isSignedIn, user } = useUser();
@@ -280,6 +308,11 @@ const Membership: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-black text-white">
+      <SEO
+        title="Membership Plans - Start Your Supernatural Journey"
+        description="Join our supernatural ministry training platform. Start FREE and build your commission network. Multiple membership tiers available."
+        canonicalUrl={`${siteUrl}/membership`}
+      />
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-16 sm:py-20">
         {/* Hero Section - Concise & Enticing */}
         <div className="text-center mb-16" id="plans">
@@ -288,7 +321,7 @@ const Membership: React.FC = () => {
             <span className="text-orange-400">Supernatural Journey</span>
           </h1>
           <p className="text-xl sm:text-2xl text-gray-300 max-w-4xl mx-auto mb-8 leading-relaxed">
-            Start FREE today. Build your supernatural ministry network and earn commissions as you help others grow in faith.
+            No credit card required. Begin building your ministry network and income potential.
           </p>
 
 
@@ -377,7 +410,7 @@ const Membership: React.FC = () => {
                         <div className="h-12 w-12 bg-blue-500/20 border border-blue-500/40 flex items-center justify-center rounded-full">
                           <span className="text-blue-400 text-xl">⛪</span>
                         </div>
-                        <h4 className="text-white font-bold text-2xl">Partner Your Church</h4>
+                        <h3 className="text-white font-bold text-2xl">Partner Your Church</h3>
                       </div>
 
                       <p className="text-gray-300 text-base leading-relaxed mb-6">
@@ -439,7 +472,7 @@ const Membership: React.FC = () => {
                       <span>{tier.price}</span>
                       <span className="text-sm text-gray-400">/{billingPeriod === 'annual' ? 'year' : 'month'}</span>
                       {billingPeriod === 'annual' && (
-                        <span className="text-lg text-gray-500 line-through ml-2">
+                        <span className="text-lg text-gray-400 line-through ml-2">
                           ${(tier.price * 12).toFixed(0)}
                         </span>
                       )}
@@ -450,7 +483,7 @@ const Membership: React.FC = () => {
                       </div>
                     )}
 
-                    <p className="text-gray-400 text-sm leading-relaxed mb-4">
+                    <p className="text-gray-300 text-sm leading-relaxed mb-4">
                       {tier.name === 'BRONZE' && 'Entry level membership'}
                       {tier.name === 'SILVER' && 'Enhanced membership'}
                       {tier.name === 'GOLD' && 'Advanced membership'}
@@ -458,7 +491,7 @@ const Membership: React.FC = () => {
                     </p>
                   </div>
 
-                  <p className="text-gray-400 text-base leading-relaxed mb-6">
+                  <p className="text-gray-300 text-base leading-relaxed mb-6">
                     {tier.description}
                   </p>
 
@@ -478,7 +511,7 @@ const Membership: React.FC = () => {
                     </div>
                   ))}
                   {tier.benefits.length > 5 && (
-                    <div className="text-xs text-gray-500 text-center pt-2 border-t border-gray-600/50">
+                    <div className="text-xs text-gray-400 text-center pt-2 border-t border-gray-600/50">
                       +{tier.benefits.length - 5} more premium benefits
                     </div>
                   )}
@@ -504,7 +537,6 @@ const Membership: React.FC = () => {
                     ) : (
                       <>
                         {tier.name === 'BRONZE' ? 'START EARNING NOW' : `JOIN ${tier.name}`}
-                        <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
                       </>
                     )}
                   </button>
@@ -562,9 +594,6 @@ const Membership: React.FC = () => {
                     </div>
                   )}
 
-                  {tier.name === 'BRONZE' && (
-                    <p className="text-gray-400 text-xs text-center mt-2">⚡ Most members start here</p>
-                  )}
                 </div>
               </div>
             );
@@ -580,7 +609,7 @@ const Membership: React.FC = () => {
                 Start <span className="text-green-400">FREE</span> Today
               </h2>
               <p className="text-lg text-gray-300 max-w-2xl mx-auto mb-6">
-                Start FREE today. No credit card required. Begin building your ministry network and income potential.
+                No credit card required. Begin building your ministry network and income potential.
               </p>
 
               {/* Key Stats - More Compelling */}
@@ -605,7 +634,7 @@ const Membership: React.FC = () => {
             <div className="bg-gradient-to-br from-gray-800/60 to-gray-900/60 border border-gray-600/50 backdrop-blur-sm p-8 rounded-2xl max-w-2xl mx-auto">
               <div className="text-center mb-6">
                 <div className="text-5xl font-black text-green-400 mb-4">$0</div>
-                <h4 className="text-xl font-bold text-white mb-2">FREE Membership</h4>
+                <h3 className="text-xl font-bold text-white mb-2">FREE Membership</h3>
                 <p className="text-gray-300 text-sm mb-6">Start your journey with our referral program</p>
               </div>
 
@@ -686,17 +715,16 @@ const Membership: React.FC = () => {
                   ) : (
                     <>
                       START FREE NOW
-                      <ArrowRight className="ml-2 h-5 w-5" />
                     </>
                   )}
                 </button>
-                <p className="text-gray-400 text-xs mt-3">Start your earning journey today</p>
+                <p className="text-gray-300 text-xs mt-3">Start your earning journey today</p>
               </div>
             </div>
           </div>
         )}
 
-        {/* FAQ Section - Concise */}
+        {/* FAQ Section - Expandable */}
         <div className="max-w-4xl mx-auto mt-20 mb-12">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-black text-white mb-4 heading-font">
@@ -704,84 +732,75 @@ const Membership: React.FC = () => {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-gray-800/50 border border-gray-700/50 p-6 rounded-xl">
-              <h3 className="text-lg font-semibold text-white mb-3">How do I start earning?</h3>
-              <p className="text-gray-300 text-sm leading-relaxed">
-                Start FREE and share your referral link. Earn 30% commission on every signup through your link.
-              </p>
-            </div>
+          <div className="space-y-4">
+            <FAQItem
+              question="How do I start earning?"
+              answer="Start FREE and share your referral link. Earn 30% commission on every signup through your link."
+            />
 
-            <div className="bg-gray-800/50 border border-gray-700/50 p-6 rounded-xl">
-              <h3 className="text-lg font-semibold text-white mb-3">What's the difference between FREE and paid?</h3>
-              <p className="text-gray-300 text-sm leading-relaxed">
-                FREE gets you started with commissions. Paid memberships unlock deeper levels and premium benefits.
-              </p>
-            </div>
+            <FAQItem
+              question="What's the difference between FREE and paid?"
+              answer="FREE gets you started with commissions. Paid memberships unlock deeper levels and premium benefits."
+            />
 
-            <div className="bg-gray-800/50 border border-gray-700/50 p-6 rounded-xl">
-              <h3 className="text-lg font-semibold text-white mb-3">How does the optional sharing work?</h3>
-              <p className="text-gray-300 text-sm leading-relaxed">
-                Sharing is completely optional and recommended for the best experience. There are no mandatory requirements or time limits for maintaining your membership benefits.
-              </p>
-            </div>
+            <FAQItem
+              question="How does the optional sharing work?"
+              answer="Sharing is completely optional and recommended for the best experience. There are no mandatory requirements or time limits for maintaining your membership benefits."
+            />
 
-            <div className="bg-gray-800/50 border border-gray-700/50 p-6 rounded-xl">
-              <h3 className="text-lg font-semibold text-white mb-3">Can I cancel anytime?</h3>
-              <p className="text-gray-300 text-sm leading-relaxed">
-                Yes! Cancel anytime. Your earned commissions continue as long as you meet the sharing requirement.
-              </p>
-            </div>
+            <FAQItem
+              question="Can I cancel anytime?"
+              answer="Yes! Cancel anytime. Your earned commissions continue as long as you meet the sharing requirement."
+            />
+
+            <FAQItem
+              question="What's in the FREE pack exactly?"
+              answer="FREE Membership includes: Private Community Access, Premium course access, Help Me Fund access, Affiliate commission earnings (1 level), Sign up bonus qualification."
+            />
+
+            <FAQItem
+              question="What's in the BRONZE pack exactly?"
+              answer="BRONZE Membership includes: Everything in FREE + Affiliate commission earnings (1 level), Private Community Access, Premium course access, Help Me Fund access, Sign up bonus qualification."
+            />
+
+            <FAQItem
+              question="What's in the SILVER pack exactly?"
+              answer="SILVER Membership includes: Everything in BRONZE + Affiliate commission earnings (2 levels), Monthly Private Group Teaching, Sign up bonus qualification."
+            />
+
+            <FAQItem
+              question="What's in the GOLD pack exactly?"
+              answer="GOLD Membership includes: Everything in SILVER + Affiliate commission earnings (5 levels), Fortnightly Q&A group coaching, Fortnightly Private Live Teaching, 5% discount on any merch available, Sign up bonus qualification."
+            />
+
+            <FAQItem
+              question="What's in the DIAMOND pack exactly?"
+              answer="DIAMOND Membership includes: Everything in GOLD + Affiliate commission earnings (7 levels), Fortnightly Private Live Teaching, Direct level 1 referrals increase from 20% to 33%, Free tickets to all in person or online events, 10% discount on any merch available, Sign up bonus qualification."
+            />
+
+            <FAQItem
+              question="How does the commission structure work?"
+              answer="You earn 30% commission on all levels. FREE members earn on 1 level, BRONZE on 1 level, SILVER on 2 levels, GOLD on 5 levels, and DIAMOND on 7 levels. Commissions are paid monthly."
+            />
+
+            <FAQItem
+              question="Is there a sign-up bonus?"
+              answer="Yes! All membership tiers qualify for sign-up bonuses when you refer new members. The bonus amount varies by tier and is paid after your referral completes their first month."
+            />
+
+            <FAQItem
+              question="What happens if I upgrade my membership?"
+              answer="When you upgrade, you immediately gain access to all the benefits of your new tier and start earning commissions on additional levels. Your existing referrals continue to generate commissions at the higher rates."
+            />
+
+            <FAQItem
+              question="Are there any hidden fees?"
+              answer="No hidden fees! Everything is transparent. You only pay your membership fee - no setup fees, no processing fees, no surprise charges."
+            />
           </div>
         </div>
       </div>
 
-      {/* Legal Compliance Footer */}
-      <div className="bg-gray-800/50 border border-gray-700/50 p-6 mt-12">
-        <div className="text-center mb-6">
-          <h3 className="text-xl font-bold text-white mb-2">Legal Compliance & Consumer Rights</h3>
-          <p className="text-gray-300 text-sm">Your rights and protections under Australian law</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <div className="bg-blue-500/10 border border-blue-500/30 p-4 rounded-lg">
-            <div className="text-blue-400 font-semibold text-sm mb-2">🛡️ ACL Protection</div>
-            <div className="text-blue-200 text-xs">
-              Protected under Australian Consumer Law. Unfair contract terms prohibited.
-            </div>
-          </div>
-
-          <div className="bg-green-500/10 border border-green-500/30 p-4 rounded-lg">
-            <div className="text-green-400 font-semibold text-sm mb-2">💰 Refund Rights</div>
-            <div className="text-green-200 text-xs">
-              10 business day cooling-off period. Full refund available.
-            </div>
-          </div>
-
-          <div className="bg-purple-500/10 border border-purple-500/30 p-4 rounded-lg">
-            <div className="text-purple-400 font-semibold text-sm mb-2">📋 No Obligations</div>
-            <div className="text-purple-200 text-xs">
-              No mandatory recruitment. All activities completely optional.
-            </div>
-          </div>
-
-          <div className="bg-orange-500/10 border border-orange-500/30 p-4 rounded-lg">
-            <div className="text-orange-400 font-semibold text-sm mb-2">⚖️ Fair Terms</div>
-            <div className="text-orange-200 text-xs">
-              Transparent pricing. No hidden fees or requirements.
-            </div>
-          </div>
-        </div>
-
-        <div className="text-center">
-          <p className="text-gray-400 text-xs mb-2">
-            Questions about your rights? Contact us at legal@supernatural.institute
-          </p>
-          <p className="text-gray-500 text-xs">
-            This platform is operated by Supernatural Churches Limited, Australian Business Number [ABN]
-          </p>
-        </div>
-      </div>
 
       <FiveFoldPartnershipApplication
         isOpen={isPartnershipFormOpen}

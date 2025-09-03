@@ -1,9 +1,26 @@
-import React from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom/client";
-import { ClerkProvider } from "@clerk/clerk-react";
 import App from "./App";
 import { ToastProvider } from "./contexts/ToastContext";
+import { initPerformanceMonitoring } from "./lib/performance";
 import "./index.css";
+
+// Lazy load Clerk for better performance
+const ClerkProvider = React.lazy(() =>
+  import("@clerk/clerk-react").then(module => ({
+    default: ({ children, ...props }: any) => (
+      <Suspense fallback={
+        <div className="min-h-screen bg-black flex items-center justify-center">
+          <div className="text-white">Loading...</div>
+        </div>
+      }>
+        <module.ClerkProvider {...props}>
+          {children}
+        </module.ClerkProvider>
+      </Suspense>
+    )
+  }))
+);
 
 // Environment Variables
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
@@ -85,12 +102,26 @@ function ErrorFallback() {
   );
 }
 
+// Initialize performance monitoring
+initPerformanceMonitoring();
+
 if (missingVars.length > 0) {
   ReactDOM.createRoot(document.getElementById("root")!).render(<ErrorFallback />);
 } else {
   ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
-      <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+      <ClerkProvider
+        publishableKey={PUBLISHABLE_KEY}
+        // Optimize Clerk loading
+        appearance={{
+          baseTheme: undefined, // Remove default theme to reduce bundle size
+        }}
+        // Only load essential Clerk features
+        signInUrl="/sign-in"
+        signUpUrl="/sign-up"
+        afterSignInUrl="/dashboard"
+        afterSignUpUrl="/dashboard"
+      >
         <ToastProvider>
           <App />
         </ToastProvider>
