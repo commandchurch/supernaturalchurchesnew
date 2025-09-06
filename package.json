@@ -6,9 +6,7 @@
   "scripts": {
     "build": "encore build",
     "dev": "encore run",
-    "deploy": "node deploy-all.js",
-    "deploy:backend": "encore deploy --env=prod",
-    "deploy:frontend": "cd frontend && vercel --prod",
+    "deploy": "encore deploy --env=prod",
     "build:frontend": "cd frontend && npm run build",
     "dev:frontend": "cd frontend && npm run dev"
   },
