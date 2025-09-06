@@ -4,15 +4,12 @@
   "type": "module",
   "packageManager": "npm@10.0.0",
   "scripts": {
-    "build": "encore build",
-    "dev": "encore run",
-    "deploy": "encore deploy --env=prod",
+    "build": "npm run build:frontend",
     "build:frontend": "cd frontend && npm run build",
     "dev:frontend": "cd frontend && npm run dev"
   },
   "dependencies": {
-    "@emailjs/browser": "^4.4.1",
-    "encore.dev": "^1.49.3"
+    "@emailjs/browser": "^4.4.1"
   },
   "devDependencies": {
     "ts-node": "^10.9.2",

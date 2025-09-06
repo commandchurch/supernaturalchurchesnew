@@ -1,1 +1,0 @@
-ALTER TABLE certificates ADD COLUMN IF NOT EXISTS full_name TEXT;

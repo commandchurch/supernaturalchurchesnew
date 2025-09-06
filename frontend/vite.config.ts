@@ -44,7 +44,7 @@ export default defineConfig(({ mode }) => ({
     reportCompressedSize: false,
   },
   server: {
-    port: 5173,
+    port: 3000,
   },
   optimizeDeps: {
     include: ['react', 'react-dom', 'react-router-dom'],
