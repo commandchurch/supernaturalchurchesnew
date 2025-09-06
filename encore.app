@@ -1,4 +1,4 @@
 {
-	"id":   "supernaturalins-tmi2",
-	"lang": "typescript"
+ 	"id":   "supernatural-churches-backend",
+ 	"lang": "typescript"
 }
