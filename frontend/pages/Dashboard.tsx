@@ -5,8 +5,6 @@ import Overview from '../components/dashboard/Overview';
 import HelpMeFund from '../components/dashboard/HelpMeFund';
 import SoulOutreach from '../components/dashboard/SoulOutreach';
 import CommissionCalculator from '../components/dashboard/CommissionCalculator';
-import PrayerRequests from '../components/dashboard/PrayerRequests';
-import TestimonySubmission from '../components/dashboard/TestimonySubmission';
 import BillingSettings from '../components/dashboard/BillingSettings';
 import AccountSettings from '../components/dashboard/AccountSettings'
 import Support from '../components/dashboard/Support';
@@ -24,8 +22,6 @@ const tabs: Tab[] = [
   { key: 'fund', label: 'HELP ME FUND' },
   { key: 'outreach', label: 'SOUL OUTREACH' },
   { key: 'affiliate-rewards', label: 'AFFILIATE REWARDS' },
-  { key: 'prayer', label: 'PRAYER REQUEST' },
-  { key: 'testimony', label: 'TESTIMONY' },
   { key: 'billing', label: 'BILLING' },
   { key: 'settings', label: 'ACCOUNT SETTINGS' },
   { key: 'mobile-app', label: 'MOBILE APP' },
@@ -192,8 +188,6 @@ export default function Dashboard() {
           {tab === 'fund' && <HelpMeFund />}
           {tab === 'outreach' && <SoulOutreach />}
           {tab === 'affiliate-rewards' && <CommissionCalculator />}
-          {tab === 'prayer' && <PrayerRequests />}
-          {tab === 'testimony' && <TestimonySubmission />}
           {tab === 'billing' && <BillingSettings />}
           {tab === 'settings' && <AccountSettings />}
           {tab === 'mobile-app' && <MobileApp />}

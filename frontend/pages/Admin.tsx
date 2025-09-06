@@ -20,10 +20,9 @@ const AffiliateNetworkAdmin = lazy(() => import('../components/admin/AffiliateNe
 const ChurchesAdmin = lazy(() => import('../components/admin/ChurchesAdmin'));
 const SystemStatusAdmin = lazy(() => import('../components/admin/SystemStatusAdmin'));
 const BlacklistAdmin = lazy(() => import('../components/admin/BlacklistAdmin'));
-const PrayerRequestsAdminNew = lazy(() => import('../components/admin/PrayerRequestsAdminNew'));
 const PartnershipApplicationsAdmin = lazy(() => import('../components/admin/PartnershipApplicationsAdmin'));
 
-type TabKey = 'overview' | 'system-status' | 'testimonies' | 'support' | 'affiliate-network' | 'churches' | 'blacklist' | 'content' | 'events' | 'staff' | 'prayer-requests' | 'partnerships';
+type TabKey = 'overview' | 'system-status' | 'testimonies' | 'support' | 'affiliate-network' | 'churches' | 'blacklist' | 'content' | 'events' | 'staff' | 'partnerships';
 
 export default function Admin() {
   const [tab, setTab] = useState<TabKey>('overview');
@@ -57,7 +56,6 @@ export default function Admin() {
     { key: 'overview', label: 'Overview', icon: TrendingUp },
     { key: 'system-status', label: 'System Status', icon: Activity },
     { key: 'testimonies', label: 'Testimony', icon: MessageSquare },
-    { key: 'prayer-requests', label: 'Prayer Requests', icon: Heart },
     { key: 'partnerships', label: 'Partnerships', icon: Handshake },
     { key: 'support', label: 'Support', icon: Headphones },
     { key: 'affiliate-network', label: 'Affiliate Network', icon: Users },
@@ -117,8 +115,6 @@ export default function Admin() {
         {tab === 'system-status' && <SystemStatusAdmin />}
 
         {tab === 'testimonies' && <TestimoniesAdmin />}
-
-        {tab === 'prayer-requests' && <PrayerRequestsAdminNew />}
 
         {tab === 'partnerships' && <PartnershipApplicationsAdmin />}
 
