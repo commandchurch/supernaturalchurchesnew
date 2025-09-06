@@ -81,9 +81,17 @@ export default function ProtectedRoute({ children, requireAdmin = false }: Prote
             <p className="text-gray-400 mb-6">
               You don't have administrator privileges to access this area.
             </p>
-            <div className="flex items-center justify-center gap-4">
-              <UserButton afterSignOutUrl="/" />
-              <span className="text-gray-500">Signed in as {user?.emailAddresses?.[0]?.emailAddress}</span>
+            <div className="space-y-4">
+              <div className="flex items-center justify-center gap-4">
+                <UserButton afterSignOutUrl="/" />
+                <span className="text-gray-500 text-sm">Signed in as {user?.emailAddresses?.[0]?.emailAddress}</span>
+              </div>
+              <button
+                onClick={() => window.history.back()}
+                className="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded transition-colors"
+              >
+                ← Go Back
+              </button>
             </div>
           </div>
         </div>

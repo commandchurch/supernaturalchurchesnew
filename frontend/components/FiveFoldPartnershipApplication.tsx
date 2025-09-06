@@ -60,8 +60,8 @@ export default function FiveFoldPartnershipApplication({ isOpen, onClose }: Five
             </p>
             <div className="bg-purple-500/20 border border-purple-500/30 p-4 rounded">
               <p className="text-purple-200 text-sm leading-relaxed">
-                <strong>Partnership Investment:</strong> $200 AUD/month includes senior leadership oversight, 
-                complete ministry training, congregation discipleship, and growth support.
+                <strong>Partnership Investment:</strong> $99 AUD/month includes senior leadership oversight,
+                complete ministry training, congregation discipleship, and 30% commission earnings from your network.
               </p>
             </div>
           </div>

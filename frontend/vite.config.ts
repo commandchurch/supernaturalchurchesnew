@@ -13,11 +13,9 @@ export default defineConfig(({ mode }) => ({
     react({
       // Remove unnecessary JSX transform for modern browsers
       jsxRuntime: 'automatic',
-      // Optimize for modern browsers
-      fastRefresh: mode === 'development',
     }),
   ],
-  base: './',
+  base: '/',
   build: {
     outDir: 'dist',
     minify: mode === 'production' ? 'terser' : false,

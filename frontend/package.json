@@ -1,17 +1,19 @@
 {
-  "name": "frontend",
+  "name": "supernatural-churches-limited",
   "version": "1.0.0",
+  "description": "Supernatural Churches Limited - Safe Supernatural Churches & Ordination",
   "type": "module",
-  "packageManager": "bun",
+  "packageManager": "npm@9.8.1",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test-websites": "node test-websites.js"
   },
   "dependencies": {
-    "@clerk/clerk-react": "^4.30.0",
     "@stripe/stripe-js": "^4.10.0",
     "clsx": "^2.1.1",
+    "jspdf": "^3.0.2",
     "lucide-react": "^0.484.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

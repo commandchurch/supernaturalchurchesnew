@@ -1,9 +1,13 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Search, MapPin, Phone, Mail, ExternalLink, Navigation, Clock, Users, Star, Map, Crown, Zap, DollarSign, CheckCircle } from 'lucide-react';
+import React, { useState, useEffect, useMemo, useCallback, memo } from 'react';
+import { Link } from 'react-router-dom';
+import { Search, MapPin, Phone, Mail, ExternalLink, Navigation, Clock, Users, Star, Crown, Zap, DollarSign, CheckCircle, AlertTriangle, HelpCircle, X } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 import SEO from '../components/SEO';
 import ChurchPartnershipCTA from '../components/ChurchPartnershipCTA';
 import { siteUrl } from '../config';
+import { churchDirectory, searchChurches, getChurchesByState } from '../data/churchDirectory';
 
+// Define Church type locally
 interface Church {
   id: string;
   name: string;
@@ -14,904 +18,750 @@ interface Church {
   phone?: string;
   email?: string;
   website?: string;
-  pastor: string;
-  denomination: string;
-  services: string[];
-  specialties: string[];
-  serviceTypes: string[]; // Sunday, Youth, Mens, Womens
-  serviceTimes: { day: string; time: string; type: string; ampm: 'AM' | 'PM' }[];
+  pastor?: string;
+  denomination?: string;
+  services?: string[];
+  specialties?: string[];
+  serviceTypes?: string[];
+  serviceTimes?: { day: string; time: string; type: string; ampm: 'AM' | 'PM' }[];
   distance?: number;
   coordinates: { lat: number; lng: number };
+  verified: boolean;
+  source: string;
 }
 
-export default function FindChurch() {
+// Memoized Church Item Component
+const ChurchItem = memo(({ church, index }: { church: Church; index: number }) => (
+  <div className={`bg-gray-800/50 border border-gray-700 p-6 hover:bg-gray-800/70 transition-colors ${
+    index < 3 && church.distance ? 'ring-2 ring-yellow-500/50 bg-yellow-500/5' : ''
+  }`}>
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Church Info */}
+      <div className="lg:col-span-2">
+        <div className="flex items-start justify-between mb-4">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              {index < 3 && church.distance && (
+                <span className="bg-yellow-500/20 text-yellow-400 px-2 py-1 text-xs font-semibold rounded">
+                  #{index + 1} Nearest
+                </span>
+              )}
+              <h2 className="text-xl font-bold text-white heading-font">{church.name}</h2>
+              {church.verified ? (
+                <span className="bg-green-500/20 text-green-400 px-3 py-1 text-xs font-semibold rounded-full border border-green-500/30 inline-flex items-center gap-1">
+                  <CheckCircle className="w-3 h-3" />
+                  Verified
+                </span>
+              ) : (
+                <span className="bg-amber-500/20 text-amber-400 px-3 py-1 text-xs font-semibold rounded-full border border-amber-500/30 inline-flex items-center gap-1">
+                  <AlertTriangle className="w-3 h-3" />
+                  Unverified
+                </span>
+              )}
+            </div>
+            <div className="flex items-center gap-2 text-gray-400 mb-2">
+              <MapPin className="w-4 h-4" />
+              <span className="text-sm">
+                {church.address}, {church.city}, {church.state} {church.postcode}
+              </span>
+              {church.distance && (
+                <span className="bg-blue-500/20 text-blue-400 px-2 py-1 text-xs font-semibold rounded">
+                  {church.distance}km away
+                </span>
+              )}
+            </div>
+            <p className="text-blue-400 text-sm mb-3">Led by {church.pastor}</p>
+          </div>
+        </div>
+
+        {/* Services */}
+        <div className="mb-4">
+          <h3 className="text-white font-semibold mb-2 text-sm flex items-center gap-2">
+            <Clock className="w-4 h-4" />
+            Service Times:
+          </h3>
+          <div className="flex flex-wrap gap-2">
+            {church.services && church.services.map((service: string, idx: number) => (
+              <span key={idx} className="text-gray-300 text-sm bg-gray-700/50 px-2 py-1">
+                {service}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Contact & Actions */}
+      <div className="space-y-4">
+        <div className="bg-gray-700/50 border border-gray-600 p-4">
+          <h3 className="text-white font-semibold mb-3 text-sm">Contact Information</h3>
+          <div className="space-y-2">
+            {church.phone && (
+              <div className="flex items-center gap-2 text-gray-300 text-sm">
+                <Phone className="w-4 h-4" />
+                <a href={`tel:${church.phone}`} className="hover:text-white">
+                  {church.phone}
+                </a>
+              </div>
+            )}
+            {church.email && (
+              <div className="flex items-center gap-2 text-gray-300 text-sm">
+                <Mail className="w-4 h-4" />
+                <a href={`mailto:${church.email}`} className="hover:text-white">
+                  {church.email}
+                </a>
+              </div>
+            )}
+            {church.website && (
+              <div className="flex items-center gap-2 text-gray-300 text-sm">
+                <ExternalLink className="w-4 h-4" />
+                <a href={church.website.startsWith('http') ? church.website : `https://${church.website}`}
+                   target="_blank" rel="noopener noreferrer" className="hover:text-white">
+                  Visit Website
+                </a>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="flex gap-2">
+          {church.coordinates && (
+            <a
+              href={`https://www.google.com/maps/dir/?api=1&destination=${church.coordinates.lat},${church.coordinates.lng}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-sm font-semibold uppercase tracking-wide flex items-center justify-center gap-2 transition-colors"
+            >
+              <Navigation className="w-4 h-4" />
+              Directions
+            </a>
+          )}
+          {church.phone && (
+            <a
+              href={`tel:${church.phone}`}
+              className="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 text-sm font-semibold uppercase tracking-wide flex items-center justify-center gap-2 transition-colors"
+            >
+              <Phone className="w-4 h-4" />
+              Call
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+));
+
+ChurchItem.displayName = 'ChurchItem';
+
+const FindChurch = React.memo(function FindChurch() {
   const [searchQuery, setSearchQuery] = useState('');
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [locationError, setLocationError] = useState('');
-  const [churches, setChurches] = useState<Church[]>([]);
+  const [isGettingLocation, setIsGettingLocation] = useState(false);
+  const [selectedRadius, setSelectedRadius] = useState<number>(50); // Default to 50km
+  const [geocodingCache, setGeocodingCache] = useState<Map<string, { lat: number; lng: number }>>(new Map());
 
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [selectedDay, setSelectedDay] = useState('all');
   const [selectedTime, setSelectedTime] = useState('all');
   const [locationFilter, setLocationFilter] = useState('');
-  const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
-  const [selectedChurch, setSelectedChurch] = useState<Church | null>(null);
+  const [verifiedFilter, setVerifiedFilter] = useState<'all' | 'verified' | 'unverified'>('all');
+  const [showHelpPopup, setShowHelpPopup] = useState(false);
 
-  // Mock church data - in real app this would come from backend
-  // Using useMemo to optimize performance and reduce re-renders
-  const mockChurches: Church[] = useMemo(() => [
-    {
-      id: '1',
-      name: 'Supernatural Life Church',
-      address: '123 King Street',
-      city: 'Sydney',
-      state: 'NSW',
-      postcode: '2000',
-      phone: '+61 2 9555 0123',
-      email: 'info@supernaturallife.church',
-      website: 'https://supernaturallife.church',
-      pastor: 'Pastor John Smith',
-      denomination: 'Pentecostal',
-      services: ['Sunday 9:00 AM', 'Sunday 6:00 PM', 'Wednesday 7:00 PM'],
-      specialties: ['Divine Healing', 'Supernatural Ministry', 'Deliverance'],
-      serviceTypes: ['Sunday Church', 'Youth Group', 'Mens Group'],
-      serviceTimes: [
-        { day: 'Sunday', time: '9:00', type: 'Sunday Church', ampm: 'AM' },
-        { day: 'Sunday', time: '6:00', type: 'Sunday Church', ampm: 'PM' },
-        { day: 'Wednesday', time: '7:00', type: 'Youth Group', ampm: 'PM' },
-        { day: 'Friday', time: '7:30', type: 'Mens Group', ampm: 'PM' }
-      ],
-      coordinates: { lat: -33.8688, lng: 151.2093 }
-    },
-    {
-      id: '2',
-      name: 'Kingdom Power Assembly',
-      address: '456 Collins Street',
-      city: 'Melbourne',
-      state: 'VIC',
-      postcode: '3000',
-      phone: '+61 3 9555 0456',
-      email: 'contact@kingdompower.org.au',
-      website: 'https://kingdompower.org.au',
-      pastor: 'Pastor Sarah Williams',
-      denomination: 'Apostolic',
-      services: ['Sunday 10:00 AM', 'Sunday 7:00 PM', 'Tuesday 7:30 PM'],
-      specialties: ['Signs & Wonders', 'Prophetic Ministry', 'Soul Winning'],
-      serviceTypes: ['Sunday Church', 'Womens Group'],
-      serviceTimes: [
-        { day: 'Sunday', time: '10:00', type: 'Sunday Church', ampm: 'AM' },
-        { day: 'Sunday', time: '7:00', type: 'Sunday Church', ampm: 'PM' },
-        { day: 'Tuesday', time: '7:30', type: 'Womens Group', ampm: 'PM' }
-      ],
-      coordinates: { lat: -37.8136, lng: 144.9631 }
-    },
-    {
-      id: '3',
-      name: 'Fire & Glory Ministries',
-      address: '789 Queen Street',
-      city: 'Brisbane',
-      state: 'QLD',
-      postcode: '4000',
-      phone: '+61 7 3555 0789',
-      email: 'admin@fireglory.church',
-      pastor: 'Pastor David Chen',
-      denomination: 'Charismatic',
-      services: ['Sunday 9:30 AM', 'Sunday 6:30 PM', 'Friday 7:00 PM'],
-      specialties: ['Miracle Services', 'Youth Ministry', 'Evangelism'],
-      serviceTypes: ['Sunday Church', 'Youth Group'],
-      serviceTimes: [
-        { day: 'Sunday', time: '9:30', type: 'Sunday Church', ampm: 'AM' },
-        { day: 'Sunday', time: '6:30', type: 'Sunday Church', ampm: 'PM' },
-        { day: 'Friday', time: '7:00', type: 'Youth Group', ampm: 'PM' }
-      ],
-      coordinates: { lat: -27.4698, lng: 153.0251 }
-    },
-    {
-      id: '4',
-      name: 'Supernatural Breakthrough Church',
-      address: '321 North Terrace',
-      city: 'Adelaide',
-      state: 'SA',
-      postcode: '5000',
-      phone: '+61 8 8555 0321',
-      email: 'info@breakthrough.church',
-      pastor: 'Pastor Maria Rodriguez',
-      denomination: 'Independent',
-      services: ['Sunday 10:30 AM', 'Wednesday 7:00 PM'],
-      specialties: ['Financial Breakthrough', 'Healing Ministry', 'Family Restoration'],
-      serviceTypes: ['Sunday Church', 'Mens Group', 'Womens Group'],
-      serviceTimes: [
-        { day: 'Sunday', time: '10:30', type: 'Sunday Church', ampm: 'AM' },
-        { day: 'Wednesday', time: '7:00', type: 'Mens Group', ampm: 'PM' },
-        { day: 'Thursday', time: '10:00', type: 'Womens Group', ampm: 'AM' }
-      ],
-      coordinates: { lat: -34.9285, lng: 138.6007 }
-    },
-    {
-      id: '5',
-      name: 'Glory Realm Church',
-      address: '654 Hay Street',
-      city: 'Perth',
-      state: 'WA',
-      postcode: '6000',
-      phone: '+61 8 9555 0654',
-      email: 'welcome@gloryrealm.org.au',
-      pastor: 'Pastor Michael Johnson',
-      denomination: 'Revival',
-      services: ['Sunday 9:00 AM', 'Sunday 6:00 PM', 'Thursday 7:30 PM'],
-      specialties: ['Worship & Praise', 'Supernatural Encounters', 'Community Outreach'],
-      serviceTypes: ['Sunday Church', 'Youth Group', 'Womens Group'],
-      serviceTimes: [
-        { day: 'Sunday', time: '9:00', type: 'Sunday Church', ampm: 'AM' },
-        { day: 'Sunday', time: '6:00', type: 'Sunday Church', ampm: 'PM' },
-        { day: 'Thursday', time: '7:30', type: 'Youth Group', ampm: 'PM' },
-        { day: 'Saturday', time: '10:00', type: 'Womens Group', ampm: 'AM' }
-      ],
-      coordinates: { lat: -31.9505, lng: 115.8605 }
-    }
-  ], []);
+  // Contact form state
+  const [contactForm, setContactForm] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    organisation: '',
+    country: 'Australia',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState('');
 
-  // Optimized filtered churches using useMemo
-  const optimizedFilteredChurches = useMemo(() => {
-    let filtered = churches;
-
-    // Location-based filtering (if user has location)
-    if (userLocation) {
-      filtered = filtered.map(church => ({
-        ...church,
-        distance: calculateDistance(userLocation, church.coordinates)
-      })).sort((a, b) => (a.distance || 0) - (b.distance || 0));
-    }
-
-    // Search query filter
-    if (searchQuery.trim()) {
-      filtered = filtered.filter(church =>
-        church.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        church.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        church.state.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        church.postcode.includes(searchQuery) ||
-        church.pastor.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        church.specialties.some(specialty => specialty.toLowerCase().includes(searchQuery.toLowerCase()))
+  // Geocoding function using OpenStreetMap Nominatim
+  const geocodeAddress = useCallback(async (address: string): Promise<{ lat: number; lng: number } | undefined> => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1&countrycodes=AU`
       );
+      const data = await response.json();
+
+      if (data && data.length > 0) {
+        const result = data[0];
+        return { lat: parseFloat(result.lat), lng: parseFloat(result.lon) };
+      }
+      return undefined;
+    } catch (error) {
+      console.error('Geocoding error:', error);
+      return undefined;
     }
+  }, []);
 
-    return filtered;
-  }, [churches, userLocation, searchQuery]);
-
-  useEffect(() => {
-    setChurches(mockChurches);
-  }, [mockChurches]);
-
-  const requestLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const location = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          };
-          setUserLocation(location);
-          setLocationError('');
-          
-          // Calculate distances and sort by nearest
-          const churchesWithDistance = mockChurches.map(church => ({
-            ...church,
-            distance: calculateDistance(location, church.coordinates)
-          })).sort((a, b) => (a.distance || 0) - (b.distance || 0));
-          
-          setChurches(churchesWithDistance);
-        },
-        (error) => {
-          setLocationError('Unable to get your location. Please search by city or postcode.');
-        }
-      );
-    } else {
-      setLocationError('Geolocation is not supported by this browser.');
-    }
-  };
-
-  const calculateDistance = (pos1: { lat: number; lng: number }, pos2: { lat: number; lng: number }) => {
+  // Enhanced distance calculation using haversine formula
+  const calculateDistance = useCallback((pos1: { lat: number; lng: number }, pos2: { lat: number; lng: number }) => {
     const R = 6371; // Radius of the Earth in kilometers
     const dLat = deg2rad(pos2.lat - pos1.lat);
     const dLon = deg2rad(pos2.lng - pos1.lng);
-    const a = 
+    const a =
       Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(deg2rad(pos1.lat)) * Math.cos(deg2rad(pos2.lat)) * 
+      Math.cos(deg2rad(pos1.lat)) * Math.cos(deg2rad(pos2.lat)) *
       Math.sin(dLon/2) * Math.sin(dLon/2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     const d = R * c; // Distance in kilometers
     return Math.round(d * 10) / 10; // Round to 1 decimal place
-  };
+  }, []);
 
   const deg2rad = (deg: number) => {
     return deg * (Math.PI/180);
   };
 
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
+  // Use real church directory data with error handling
+  const allChurches = useMemo(() => {
+    try {
+      return churchDirectory || [];
+    } catch (error) {
+      console.error('Error loading church directory:', error);
+      return [];
+    }
+  }, []);
+
+  // Count verified/unverified churches
+  const churchStats = useMemo(() => {
+    try {
+      const verified = allChurches.filter(church => church.verified).length;
+      const unverified = allChurches.filter(church => !church.verified).length;
+      return { verified, unverified, total: verified + unverified };
+    } catch (error) {
+      console.error('Error calculating church stats:', error);
+      return { verified: 0, unverified: 0, total: 0 };
+    }
+  }, [allChurches]);
+
+  const [filteredChurches, setFilteredChurches] = useState<Church[]>([]);
+
+  // Enhanced filtered churches with geocoding and proper distance calculation
+  useEffect(() => {
+    const filterChurches = async () => {
+      try {
+        let churches = [...allChurches];
+
+        // Geocode churches missing coordinates
+        const geocodedChurches = await Promise.all(
+          churches.map(async (church) => {
+            if (church.coordinates && church.coordinates.lat && church.coordinates.lng) {
+              return church;
+            }
+
+            const cacheKey = `${church.address}, ${church.city}, ${church.state} ${church.postcode}`;
+            let coordinates = geocodingCache.get(cacheKey);
+
+            if (!coordinates) {
+              coordinates = await geocodeAddress(cacheKey);
+              if (coordinates) {
+                setGeocodingCache(prev => new Map(prev.set(cacheKey, coordinates!)));
+              } else {
+                coordinates = undefined;
+              }
+            }
+
+            return {
+              ...church,
+              coordinates: coordinates || church.coordinates
+            };
+          })
+        );
+
+        churches = geocodedChurches;
+
+        // Location-based filtering (if user has location)
+        if (userLocation) {
+          churches = churches.map(church => ({
+            ...church,
+            distance: church.coordinates ? calculateDistance(userLocation, church.coordinates) : undefined
+          })).filter(church => church.distance !== undefined && church.distance <= selectedRadius)
+          .sort((a, b) => (a.distance || 0) - (b.distance || 0));
+
+          // If no churches found within selected radius, show churches from same state
+          if (churches.length === 0) {
+            console.log(`No churches within ${selectedRadius}km, attempting to show churches in same state`);
+
+            // Try to determine user's state from coordinates (rough approximation for Australian states)
+            const userState = userLocation ? getStateFromCoordinates(userLocation.lat, userLocation.lng) : null;
+            if (userState) {
+              churches = allChurches.filter(church => church.state === userState)
+                .map(church => ({
+                  ...church,
+                  distance: church.coordinates ? calculateDistance(userLocation, church.coordinates) : undefined
+                }))
+                .sort((a, b) => (a.distance || 0) - (b.distance || 0));
+            }
+          }
+        }
+
+        setFilteredChurches(churches);
+      } catch (error) {
+        console.error('Error filtering churches:', error);
+        setFilteredChurches([]);
+      }
+    };
+
+    filterChurches();
+  }, [allChurches, userLocation, selectedRadius, geocodingCache, geocodeAddress, calculateDistance]);
+
+  // Get user's location
+  const getUserLocation = useCallback(() => {
+    setIsGettingLocation(true);
+    setLocationError('');
+
+    if (!navigator.geolocation) {
+      setLocationError('Geolocation is not supported by this browser.');
+      setIsGettingLocation(false);
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setUserLocation({ lat: latitude, lng: longitude });
+        setIsGettingLocation(false);
+      },
+      (error) => {
+        console.error('Error getting location:', error);
+        setLocationError('Unable to get your location. Please check your browser permissions.');
+        setIsGettingLocation(false);
+
+        // Fallback: show all churches in user's state (would need IP geolocation)
+        // For now, just show all churches
+        setFilteredChurches(allChurches);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 300000 // 5 minutes
+      }
+    );
+  }, [allChurches]);
+
+  // Helper function to determine state from coordinates (rough approximation)
+  const getStateFromCoordinates = (lat: number, lng: number): string | null => {
+    // Rough bounding boxes for Australian states
+    if (lat >= -28.5 && lat <= -25.5 && lng >= 150.5 && lng <= 153.5) return 'QLD';
+    if (lat >= -38.5 && lat <= -33.5 && lng >= 140.5 && lng <= 149.5) return 'NSW';
+    if (lat >= -38.5 && lat <= -35.5 && lng >= 144.5 && lng <= 145.5) return 'VIC';
+    if (lat >= -35.5 && lat <= -31.5 && lng >= 115.5 && lng <= 129.5) return 'WA';
+    if (lat >= -35.5 && lat <= -25.5 && lng >= 138.5 && lng <= 141.5) return 'SA';
+    if (lat >= -23.5 && lat <= -19.5 && lng >= 130.5 && lng <= 138.5) return 'NT';
+    if (lat >= -43.5 && lat <= -39.5 && lng >= 143.5 && lng <= 148.5) return 'TAS';
+    return null;
   };
 
-  const handleFilterChange = (filter: string) => {
-    setSelectedFilter(filter);
-    applyFilters(filter, selectedDay, selectedTime, locationFilter);
-  };
+  // Contact form submit handler
+  const handleContactSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitMessage('');
 
-  const handleDayChange = (day: string) => {
-    setSelectedDay(day);
-    applyFilters(selectedFilter, day, selectedTime, locationFilter);
-  };
+    try {
+      const templateParams = {
+        from_name: `${contactForm.firstName} ${contactForm.lastName}`,
+        from_email: contactForm.email,
+        phone: contactForm.phone,
+        organisation: contactForm.organisation,
+        country: contactForm.country,
+        message: contactForm.message
+      };
 
-  const handleTimeChange = (time: string) => {
-    setSelectedTime(time);
-    applyFilters(selectedFilter, selectedDay, time, locationFilter);
-  };
+      await emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        templateParams,
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+      );
 
-  const handleLocationChange = (location: string) => {
-    setLocationFilter(location);
-    applyFilters(selectedFilter, selectedDay, selectedTime, location);
-  };
-
-  const applyFilters = (filter: string, day: string, time: string, location: string) => {
-    // Filters are handled by the optimizedFilteredChurches useMemo
-    // No need for separate state management
-  };
-
-  const breadcrumbs = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
-      { "@type": "ListItem", position: 2, name: "Find a Church", item: `${siteUrl}/find-church` }
-    ]
+      setSubmitMessage('Thank you! Your message has been sent. We\'ll respond within 48 hours.');
+      
+      // Reset form
+      setContactForm({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        organisation: '',
+        country: 'Australia',
+        message: ''
+      });
+    } catch (error) {
+      console.error('EmailJS error:', error);
+      setSubmitMessage('Sorry, there was an error sending your message. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-12 sm:py-16">
+    <div className="min-h-screen text-white">
       <SEO
-        title="Find a Supernatural Church Near You - Partner Churches Directory"
-        description="Discover supernatural ministry churches in your area. Find partner churches that practice divine healing, deliverance, and signs & wonders across Australia."
-        canonicalUrl={`${siteUrl}/find-church`}
-        breadcrumbsJsonLd={breadcrumbs}
+        title="Find a Church | Apostolic Supernatural Churches"
+        description="Find supernatural churches near you. Connect with verified apostolic churches that teach accurate doctrine and demonstrate supernatural signs."
       />
 
       {/* Header */}
-      <div className="text-center mb-10 sm:mb-12">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 heading-font">
-          Find a Supernatural Church
-        </h1>
-        <p className="text-base sm:text-lg text-gray-400 max-w-4xl mx-auto leading-relaxed">
-          Connect with partner churches in your area that practice authentic supernatural ministry, divine healing, 
-          and biblical signs & wonders. Find a spiritual home where faith meets fire.
-        </p>
-      </div>
+      <section className="bg-black py-12 lg:py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4 heading-font">
+              Find a Church
+            </h1>
+            <p className="text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto mb-8">
+              Connect with supernatural churches in your area that teach accurate apostolic doctrine and demonstrate the power of God.
+            </p>
 
-      {/* Search & Location */}
-      <div className="bg-gray-800/50 border border-gray-700 p-6 mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <div className="relative">
-            <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search by church name, city, pastor, or ministry focus..."
-              value={searchQuery}
-              onChange={(e) => handleSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:border-orange-500 focus:outline-none"
-            />
+            {/* Location Button */}
+            <div className="mb-6">
+              <button
+                onClick={getUserLocation}
+                disabled={isGettingLocation}
+                className="bg-orange-500 hover:bg-orange-600 disabled:bg-orange-400 text-white px-6 py-3 font-semibold uppercase tracking-wide flex items-center gap-2 mx-auto transition-colors"
+              >
+                <Navigation className="w-5 h-5" />
+                {isGettingLocation ? 'Getting Location...' : 'Find Churches Near Me'}
+              </button>
+              {locationError && (
+                <p className="text-red-400 text-sm mt-2">{locationError}</p>
+              )}
+            </div>
+
+            {/* Radius Selector */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Search Radius: {selectedRadius}km
+              </label>
+              <select
+                value={selectedRadius}
+                onChange={(e) => setSelectedRadius(Number(e.target.value))}
+                className="bg-gray-800 border border-gray-700 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
+              >
+                <option value={25}>25km</option>
+                <option value={50}>50km</option>
+                <option value={100}>100km</option>
+                <option value={250}>250km</option>
+              </select>
+            </div>
           </div>
-          
-          <button
-            onClick={requestLocation}
-            className="bg-blue-600 text-white hover:bg-blue-700 px-6 py-3 font-semibold uppercase tracking-wide inline-flex items-center justify-center gap-2"
-          >
-            <Navigation className="w-5 h-5" />
-            Find Churches Near Me
-          </button>
         </div>
+      </section>
 
-        {locationError && (
-          <div className="mb-4 p-3 bg-red-500/20 border border-red-500/30 text-red-300 text-sm">
-            {locationError}
-          </div>
-        )}
-
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+        {/* Status Messages */}
         {userLocation && (
           <div className="mb-4 p-3 bg-green-500/20 border border-green-500/30 text-green-300 text-sm">
-            ✓ Location found! Churches are now sorted by distance from you.
+            ✓ Location found! Showing churches within {selectedRadius}km of your location, sorted by distance.
+            {filteredChurches.length > 0 && filteredChurches[0].distance && filteredChurches[0].distance > 50 && (
+              <div className="mt-2 text-xs">
+                📍 Note: Some churches shown may be outside 50km due to approximate location data.
+              </div>
+            )}
+            {searchQuery.trim() && searchQuery.trim().length <= 2 && (
+              <div className="mt-2 text-xs">
+                💡 Tip: Type 3+ characters to search by name, or clear search to see all nearby churches within {selectedRadius}km.
+              </div>
+            )}
           </div>
         )}
 
-        {/* Enhanced Filters */}
-        <div className="space-y-4 mb-6">
-          {/* Service Type Filter */}
-          <div>
-            <label className="block text-white font-semibold mb-2">Service Type:</label>
-            <div className="flex flex-wrap gap-2">
-              {[
-                { key: 'all', label: 'All Churches' },
-                { key: 'Sunday Church', label: 'Sunday Church' },
-                { key: 'Youth Group', label: 'Youth Group' },
-                { key: 'Mens Group', label: 'Mens Group' },
-                { key: 'Womens Group', label: 'Womens Group' }
-              ].map((filter) => (
-                <button
-                  key={filter.key}
-                  onClick={() => handleFilterChange(filter.key)}
-                  className={`px-4 py-2 text-sm font-semibold uppercase tracking-wide border ${
-                    selectedFilter === filter.key
-                      ? 'bg-white text-black border-white'
-                      : 'bg-transparent text-gray-300 border-gray-600 hover:border-gray-500'
-                  }`}
-                >
-                  {filter.label}
-                </button>
-              ))}
+        {/* Search and Filters */}
+        <div className="mb-8">
+          <div className="flex flex-col lg:flex-row gap-4 mb-4">
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  placeholder="Search churches by name..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-gray-800 border border-gray-700 text-white px-10 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                />
+              </div>
             </div>
-          </div>
-
-          {/* Additional Filters */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Location Filter */}
-            <div>
-              <label className="block text-white font-semibold mb-2">Location:</label>
-              <input
-                type="text"
-                placeholder="City, State, or Postcode..."
-                value={locationFilter}
-                onChange={(e) => handleLocationChange(e.target.value)}
-                className="w-full bg-gray-700 border border-gray-600 text-white px-3 py-2 text-sm"
-              />
-            </div>
-
-            {/* Day Filter */}
-            <div>
-              <label className="block text-white font-semibold mb-2">Day:</label>
-              <select
-                value={selectedDay}
-                onChange={(e) => handleDayChange(e.target.value)}
-                className="w-full bg-gray-700 border border-gray-600 text-white px-3 py-2 text-sm"
-              >
-                <option value="all">Any Day</option>
-                <option value="Sunday">Sunday</option>
-                <option value="Monday">Monday</option>
-                <option value="Tuesday">Tuesday</option>
-                <option value="Wednesday">Wednesday</option>
-                <option value="Thursday">Thursday</option>
-                <option value="Friday">Friday</option>
-                <option value="Saturday">Saturday</option>
-              </select>
-            </div>
-
-            {/* Time Filter */}
-            <div>
-              <label className="block text-white font-semibold mb-2">Time:</label>
-              <select
-                value={selectedTime}
-                onChange={(e) => handleTimeChange(e.target.value)}
-                className="w-full bg-gray-700 border border-gray-600 text-white px-3 py-2 text-sm"
-              >
-                <option value="all">AM or PM</option>
-                <option value="AM">Morning (AM)</option>
-                <option value="PM">Evening (PM)</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Clear Filters Button */}
-          <div className="flex justify-end">
-            <button
-              onClick={() => {
-                setSelectedFilter('all');
-                setSelectedDay('all');
-                setSelectedTime('all');
-                setLocationFilter('');
-              }}
-              className="px-4 py-2 text-sm bg-gray-600 text-white hover:bg-gray-500 border border-gray-500"
-            >
-              Clear All Filters
-            </button>
           </div>
         </div>
 
-        {/* View Toggle */}
-        <div className="flex gap-2">
-          <button
-            onClick={() => setViewMode('list')}
-            className={`px-4 py-2 text-sm font-semibold uppercase tracking-wide border inline-flex items-center gap-2 ${
-              viewMode === 'list'
-                ? 'bg-blue-600 text-white border-blue-600'
-                : 'bg-transparent text-gray-300 border-gray-600 hover:border-gray-500'
-            }`}
-          >
-            <Users className="w-4 h-4" />
-            List View
-          </button>
-          <button
-            onClick={() => setViewMode('map')}
-            className={`px-4 py-2 text-sm font-semibold uppercase tracking-wide border inline-flex items-center gap-2 ${
-              viewMode === 'map'
-                ? 'bg-blue-600 text-white border-blue-600'
-                : 'bg-transparent text-gray-300 border-gray-600 hover:border-gray-500'
-            }`}
-          >
-            <Map className="w-4 h-4" />
-            Map View
-          </button>
+        {/* Results */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-white heading-font">
+              {filteredChurches.length > 0 ? `${filteredChurches.length} Churches Found` : 'No Churches Found'}
+            </h2>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setShowHelpPopup(true)}
+                className="text-sm text-blue-400 hover:text-blue-300 underline"
+              >
+                What do verified/unverified mean?
+              </button>
+              <div className="text-sm text-gray-400">
+                {churchStats.verified} verified • {churchStats.unverified} unverified
+              </div>
+            </div>
+          </div>
+
+          {filteredChurches.length === 0 ? (
+            <div className="text-center py-12">
+              <HelpCircle className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-white mb-2">No churches found</h3>
+              <p className="text-gray-400 mb-4">
+                {userLocation
+                  ? `No churches found within ${selectedRadius}km. Try increasing the search radius or check your location permissions.`
+                  : 'Click "Find Churches Near Me" to search for churches in your area.'
+                }
+              </p>
+              {!userLocation && (
+                <button
+                  onClick={getUserLocation}
+                  className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 font-semibold uppercase tracking-wide"
+                >
+                  Enable Location
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-6">
+              {filteredChurches.map((church, index) => (
+                <ChurchItem key={church.id} church={church} index={index} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Churches Display */}
-      {viewMode === 'list' ? (
-        <div className="space-y-6">
-          {optimizedFilteredChurches.length === 0 ? (
-            <div className="bg-gray-800/50 border border-gray-700 p-8 text-center">
-              <MapPin className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-white mb-2">No Churches Found</h3>
-              <p className="text-gray-400">
-                Try adjusting your search criteria or contact us to add your local supernatural church.
-              </p>
-            </div>
-          ) : (
-            optimizedFilteredChurches.map((church) => (
-            <div key={church.id} className="bg-gray-800/50 border border-gray-700 p-6 hover:bg-gray-800/70 transition-colors">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Church Info */}
-                <div className="lg:col-span-2">
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <h2 className="text-xl font-bold text-white mb-2 heading-font">{church.name}</h2>
-                      <div className="flex items-center gap-2 text-gray-400 mb-2">
-                        <MapPin className="w-4 h-4" />
-                        <span className="text-sm">
-                          {church.address}, {church.city}, {church.state} {church.postcode}
-                        </span>
-                        {church.distance && (
-                          <span className="bg-blue-500/20 text-blue-400 px-2 py-1 text-xs font-semibold rounded">
-                            {church.distance}km away
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-blue-400 text-sm mb-3">Led by {church.pastor}</p>
-                    </div>
-                  </div>
-
-                  {/* Specialties */}
-                  <div className="mb-4">
-                    <h4 className="text-white font-semibold mb-2 text-sm">Ministry Focus:</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {church.specialties.map((specialty, idx) => (
-                        <span
-                          key={idx}
-                          className="bg-blue-500/20 text-blue-400 border border-blue-500/30 px-2 py-1 text-xs"
-                        >
-                          {specialty}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Services */}
-                  <div className="mb-4">
-                    <h4 className="text-white font-semibold mb-2 text-sm flex items-center gap-2">
-                      <Clock className="w-4 h-4" />
-                      Service Times:
-                    </h4>
-                    <div className="flex flex-wrap gap-2">
-                      {church.services.map((service, idx) => (
-                        <span key={idx} className="text-gray-300 text-sm bg-gray-700/50 px-2 py-1">
-                          {service}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
+      {/* Verification Info Popup */}
+      {showHelpPopup && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-gray-900 border border-gray-700 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              {/* Verified Churches Section */}
+              <div className="mb-8">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-bold text-green-400 flex items-center gap-2">
+                    <CheckCircle className="w-6 h-6" />
+                    Verified Partner Churches
+                  </h3>
+                  <button
+                    onClick={() => setShowHelpPopup(false)}
+                    className="text-gray-400 hover:text-white"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
                 </div>
-
-                {/* Contact & Actions */}
-                <div className="space-y-4">
-                  <div className="bg-gray-700/50 border border-gray-600 p-4">
-                    <h4 className="text-white font-semibold mb-3 text-sm">Contact Information</h4>
-                    <div className="space-y-2">
-                      {church.phone && (
-                        <div className="flex items-center gap-2 text-gray-300 text-sm">
-                          <Phone className="w-4 h-4" />
-                          <a href={`tel:${church.phone}`} className="hover:text-white">
-                            {church.phone}
-                          </a>
-                        </div>
-                      )}
-                      {church.email && (
-                        <div className="flex items-center gap-2 text-gray-300 text-sm">
-                          <Mail className="w-4 h-4" />
-                          <a href={`mailto:${church.email}`} className="hover:text-white">
-                            {church.email}
-                          </a>
-                        </div>
-                      )}
-                      {church.website && (
-                        <div className="flex items-center gap-2 text-gray-300 text-sm">
-                          <ExternalLink className="w-4 h-4" />
-                          <a 
-                            href={church.website} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="hover:text-white"
-                          >
-                            Visit Website
-                          </a>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <button className="w-full bg-blue-600 text-white hover:bg-blue-700 px-4 py-3 font-semibold uppercase tracking-wide">
-                      Get Directions
-                    </button>
-                    <button className="w-full bg-blue-600 text-white hover:bg-blue-700 px-4 py-3 font-semibold uppercase tracking-wide">
-                      Contact Church
-                    </button>
-                  </div>
-
-                  <div className="text-center">
-                    <span className="bg-green-500/20 text-green-400 border border-green-500/30 px-3 py-1 text-xs font-semibold">
-                      ✓ VERIFIED PARTNER
-                    </span>
-                  </div>
-                </div>
+                <p className="text-gray-300 mb-4">
+                  Our Verified Churches are ministries that meet our Supernatural Ministry Standards. These churches have completed leadership training, received recognised ordination, and are accountable to apostolic oversight.
+                </p>
+                <p className="text-gray-300 mb-4 font-semibold">They:</p>
+                <ul className="text-gray-300 space-y-2 mb-4">
+                  <li>• Teach sound biblical doctrine with accuracy and integrity</li>
+                  <li>• Demonstrate authentic supernatural power through miracles, healing, deliverance, and prophecy</li>
+                  <li>• Actively disciple believers to walk in Christ's authority and advance the Kingdom of God</li>
+                  <li>• Fully align with our Statement of Faith</li>
+                </ul>
+                <p className="text-gray-300">
+                  We don't verify by name or reputation but by fruit. Jesus said, "These signs will follow those who believe…" (Mark 16:17-18). A Verified Partner Church reflects both the Word and the power of God's Kingdom.
+                </p>
+                <p className="text-gray-300 mt-4">
+                  Choosing a Verified Partner Church means you are part of a community where the Gospel is taught with accuracy, and where believers are equipped to live in victory and health.
+                </p>
               </div>
-            </div>
-            ))
-          )}
-        </div>
-      ) : (
-        /* Map View */
-        <div className="bg-gray-800/50 border border-gray-700 p-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Interactive Map */}
-            <div className="lg:col-span-2">
-              <div className="bg-gray-700 border border-gray-600 h-96 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-purple-900/20"></div>
-                
-                {/* Simple SVG Map of Australia with Church Pins */}
-                <svg viewBox="0 0 800 600" className="w-full h-full">
-                  {/* Australia Outline (simplified) */}
-                  <path
-                    d="M150,200 L200,180 L300,190 L400,200 L500,220 L600,250 L650,300 L680,350 L650,400 L600,450 L500,480 L400,490 L300,480 L200,460 L150,400 L120,350 L100,300 L120,250 Z"
-                    fill="rgba(55, 65, 81, 0.8)"
-                    stroke="rgba(156, 163, 175, 0.5)"
-                    strokeWidth="2"
-                  />
-                  
-                  {/* Church Pins */}
-                  {optimizedFilteredChurches.map((church: Church, idx: number) => {
-                    // Map coordinates to SVG positions (simplified mapping)
-                    const positions = [
-                      { x: 580, y: 280 }, // Sydney
-                      { x: 520, y: 350 }, // Melbourne
-                      { x: 550, y: 250 }, // Brisbane
-                      { x: 450, y: 380 }, // Adelaide
-                      { x: 350, y: 320 }  // Perth
-                    ];
-                    const pos = positions[idx] || { x: 400, y: 300 };
-                    
-                    return (
-                      <g key={church.id}>
-                        <circle
-                          cx={pos.x}
-                          cy={pos.y}
-                          r="8"
-                          fill={selectedChurch?.id === church.id ? "#f97316" : "#3b82f6"}
-                          stroke="white"
-                          strokeWidth="2"
-                          className="cursor-pointer hover:r-10 transition-all"
-                          onClick={() => setSelectedChurch(church)}
-                        />
-                        <text
-                          x={pos.x}
-                          y={pos.y - 15}
-                          textAnchor="middle"
-                          fill="white"
-                          fontSize="10"
-                          className="pointer-events-none"
-                        >
-                          {church.city}
-                        </text>
-                      </g>
-                    );
-                  })}
-                  
-                  {/* User Location (if available) */}
-                  {userLocation && (
-                    <circle
-                      cx="580"
-                      cy="280"
-                      r="6"
-                      fill="#ef4444"
-                      stroke="white"
-                      strokeWidth="2"
-                    />
-                  )}
-                </svg>
-                
-                <div className="absolute bottom-4 left-4 bg-black/80 text-white px-3 py-2 text-xs rounded">
-                  Click pins to view church details
-                </div>
+
+              {/* Unverified Churches Section */}
+              <div className="mb-8">
+                <h3 className="text-xl font-bold text-amber-400 flex items-center gap-2 mb-4">
+                  <AlertTriangle className="w-6 h-6" />
+                  Unverified Churches
+                </h3>
+                <p className="text-gray-300 mb-4">
+                  Unverified Churches are those that have not partnered with us or been reviewed under our standards. Some are simply listed from public directories without any confirmation of doctrine or practice.
+                </p>
+                <p className="text-gray-300 mb-4">
+                  We are 99.99% confident that most unverified churches in Australia are not teaching the foundational truths of God's Word correctly—especially concerning what Jesus accomplished through His broken body. Scripture warns: "For this reason many among you are weak and sick…" (1 Corinthians 11:30). This is seen today in many churches where sickness and disease are openly accepted rather than healed.
+                </p>
+                <p className="text-gray-300">
+                  Unverified Churches may still use the Bible, but without correct doctrine and demonstration of power, they risk leaving people in bondage instead of equipping them for victory.
+                </p>
+                <p className="text-gray-300 mt-4">
+                  For this reason, we recommend exercising caution when attending an unverified church. Always seek fellowship where God's Word is rightly taught, applied, and confirmed by supernatural signs following.
+                </p>
               </div>
-            </div>
-            
-            {/* Selected Church Details */}
-            <div className="bg-gray-700/50 border border-gray-600 p-4">
-              {selectedChurch ? (
-                <div>
-                  <h3 className="text-lg font-bold text-white mb-3 heading-font">{selectedChurch.name}</h3>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2 text-gray-300 text-sm">
-                      <MapPin className="w-4 h-4" />
-                      <span>{selectedChurch.address}, {selectedChurch.city}, {selectedChurch.state}</span>
-                    </div>
-                    
-                    <div className="text-blue-400 text-sm">Led by {selectedChurch.pastor}</div>
-                    
-                    {selectedChurch.distance && (
-                      <div className="bg-blue-500/20 text-blue-400 px-2 py-1 text-xs font-semibold rounded inline-block">
-                        {selectedChurch.distance}km away
-                      </div>
-                    )}
-                    
-                    <div>
-                      <h4 className="text-white font-semibold mb-2 text-sm">Ministry Focus:</h4>
-                      <div className="flex flex-wrap gap-1">
-                        {selectedChurch.specialties.map((specialty, idx) => (
-                          <span
-                            key={idx}
-                            className="bg-blue-500/20 text-blue-400 border border-blue-500/30 px-2 py-1 text-xs"
-                          >
-                            {specialty}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <h4 className="text-white font-semibold mb-2 text-sm flex items-center gap-2">
-                        <Clock className="w-4 h-4" />
-                        Service Times:
-                      </h4>
-                      <div className="space-y-1">
-                        {selectedChurch.services.map((service, idx) => (
-                          <div key={idx} className="text-gray-300 text-sm bg-gray-700/50 px-2 py-1">
-                            {service}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-2 pt-4">
-                      {selectedChurch.phone && (
-                        <div className="flex items-center gap-2 text-gray-300 text-sm">
-                          <Phone className="w-4 h-4" />
-                          <a href={`tel:${selectedChurch.phone}`} className="hover:text-white">
-                            {selectedChurch.phone}
-                          </a>
-                        </div>
-                      )}
-                      {selectedChurch.email && (
-                        <div className="flex items-center gap-2 text-gray-300 text-sm">
-                          <Mail className="w-4 h-4" />
-                          <a href={`mailto:${selectedChurch.email}`} className="hover:text-white">
-                            {selectedChurch.email}
-                          </a>
-                        </div>
-                      )}
-                    </div>
-                    
-                    <div className="space-y-2 pt-4">
-                      <button className="w-full bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 font-semibold uppercase tracking-wide text-sm">
-                        Get Directions
-                      </button>
-                      <button className="w-full bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 font-semibold uppercase tracking-wide text-sm">
-                        Contact Church
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <Map className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-white mb-2">Select a Church</h3>
-                  <p className="text-gray-400 text-sm">
-                    Click on any pin on the map to view church details and contact information.
-                  </p>
-                </div>
-              )}
+
+              {/* Bible Verses */}
+              <div className="text-center mb-8 p-6 bg-gray-800/50 rounded-lg border border-gray-700">
+                <blockquote className="text-lg text-white font-semibold mb-4 italic">
+                  "For the kingdom of God is not in word but in power."
+                </blockquote>
+                <cite className="text-gray-400 text-sm">— 1 Corinthians 4:20</cite>
+                
+                <blockquote className="text-lg text-white font-semibold mb-4 mt-6 italic">
+                  "The kingdom of God is within you."
+                </blockquote>
+                <cite className="text-gray-400 text-sm">— Luke 17:21</cite>
+              </div>
+
+              {/* Understood Button */}
+              <div className="text-center">
+                <button
+                  onClick={() => setShowHelpPopup(false)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 font-semibold uppercase tracking-wide transition-colors"
+                >
+                  Understood
+                </button>
+              </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Partner Your Church Section */}
-      <div className="mt-16 bg-gray-800/50 border border-gray-700 p-8 sm:p-12">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl sm:text-4xl font-black text-white mb-4 heading-font">
-            PARTNER YOUR CHURCH
-          </h2>
-          <p className="text-base sm:text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed">
-            Join our Supernatural Churches Apostolic Partnership and demonstrate Kingdom power through miraculous ministry.
-            We equip churches to be the light of this world through authentic supernatural power and biblical authority.
-          </p>
+      {/* Contact Form Section */}
+      <div className="mt-16 bg-gray-800/50 border border-gray-700 p-8 rounded-lg">
+        <div className="text-center mb-8">
+          <h2 className="text-2xl font-bold text-white heading-font mb-4">Contact Us</h2>
+          <p className="text-gray-400">Have questions about finding a church? Get in touch with us.</p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 items-center mb-12">
-          <div>
-            <h3 className="text-2xl sm:text-3xl font-black text-white mb-6 heading-font">
-              Bring Dunamis Power to Your Church
-            </h3>
-            <p className="text-gray-300 leading-relaxed mb-6">
-              <strong className="text-blue-400">"Dunamis power"</strong> (Greek: δύναμις - miraculous power, mighty works, strength - Strong's G1411)
-              - not just words, but demonstration. This is Australia's time to rise up with correct doctrine.
-              For too long the devil has flooded Australia with twisted lies. We are here to restore order to the body of Christ
-              and we prove it with power, as the Kingdom of God is demonstrated in power.
-            </p>
-            <p className="text-gray-300 leading-relaxed mb-8">
-              We provide clear, practical teaching on:
-            </p>
-            <div className="mb-8">
-              <ul className="space-y-2 text-gray-300">
-                <li className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
-                  <span>How to heal your congregation with proven protocols</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
-                  <span>How to identify and combat doctrines of demons</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
-                  <span>Establishing supernatural ministry foundations</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
-                  <span>Demonstrating Kingdom power that transforms lives</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="grid sm:grid-cols-2 gap-6">
-              <div className="bg-blue-500/20 border border-blue-500/30 p-4 rounded">
-                <h4 className="text-blue-200 font-bold mb-3 flex items-center gap-2">
-                  <Crown className="w-5 h-5" />
-                  Senior Leadership Access
-                </h4>
-                <p className="text-blue-100 text-sm leading-relaxed">
-                  24/7 Q&A access to our senior leadership team. Complete our comprehensive Leadership Course
-                  and receive official ordination certificates upon completion.
-                </p>
-              </div>
-
-              <div className="bg-blue-500/20 border border-blue-500/30 p-4 rounded">
-                <h4 className="text-blue-200 font-bold mb-3 flex items-center gap-2">
-                  <Zap className="w-5 h-5" />
-                  Supernatural Training
-                </h4>
-                <p className="text-blue-100 text-sm leading-relaxed">
-                  Complete ministry training in: Healing-the-Sick, Deliverance Ministry, Evangelism,
-                  and Five-fold office development (Apostle, Prophet, Evangelist, Pastor, Teacher).
-                </p>
-              </div>
-
-              <div className="bg-blue-500/20 border border-blue-500/30 p-4 rounded">
-                <h4 className="text-blue-200 font-bold mb-3 flex items-center gap-2">
-                  <Users className="w-5 h-5" />
-                  Congregation Integration
-                </h4>
-                <p className="text-blue-100 text-sm leading-relaxed">
-                  Seamlessly onboard your entire congregation into our proven discipleship programs
-                  with unified spiritual growth protocols and systematic training pathways.
-                </p>
-              </div>
-
-              <div className="bg-blue-500/20 border border-blue-500/30 p-4 rounded">
-                <h4 className="text-blue-200 font-bold mb-3 flex items-center gap-2">
-                  <DollarSign className="w-5 h-5" />
-                  Affiliate Network & Support
-                </h4>
-                <p className="text-blue-100 text-sm leading-relaxed">
-                  Access our 3-tier commission structure (20%/10%/5%) for sustainable ministry income,
-                  plus Help Me Fund access for churches facing financial challenges.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-6">
-            <div className="bg-white/10 border border-white/20 p-6 text-center">
-              <div className="text-4xl font-black text-white heading-font mb-2">
-                $200 AUD
-              </div>
-              <div className="text-gray-300 mb-4">/month</div>
-              <p className="text-gray-300 text-sm mb-6 leading-relaxed">
-                Complete church transformation package with senior leadership oversight,
-                comprehensive training, and ongoing support.
-              </p>
-              <p className="text-xs text-gray-200 mb-4">
-                Free to apply • Leadership Course required • Cancel anytime
-              </p>
-              <ChurchPartnershipCTA
-                variant="compact"
-                showLearnMore={false}
-                className="bg-transparent border-0 p-0"
+        <form onSubmit={handleContactSubmit} className="max-w-2xl mx-auto space-y-6">
+          {/* Name Fields */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                First Name *
+              </label>
+              <input
+                type="text"
+                value={contactForm.firstName}
+                onChange={(e) => setContactForm({...contactForm, firstName: e.target.value})}
+                className="w-full bg-gray-700 border border-gray-600 text-white px-3 py-2 focus:outline-none focus:border-orange-500"
+                required
               />
             </div>
-
-            <div className="bg-red-500/20 border border-red-500/30 p-6 rounded">
-              <h4 className="text-red-200 font-bold text-lg mb-3 text-center">
-                🔥 WE BRING SPIRITUALLY DEAD CHURCHES BACK TO LIFE
-              </h4>
-              <p className="text-red-100 text-sm text-center leading-relaxed">
-                Transform your ministry through supernatural power demonstration, accurate biblical teaching,
-                and proven Kingdom principles that produce lasting fruit.
-              </p>
-            </div>
-
-            <div className="space-y-3">
-              <h4 className="text-white font-semibold mb-3">Complete Partnership Benefits:</h4>
-              {[
-                'Complete church leadership team access',
-                'Five-fold ministry office training modules',
-                'Ordination Certificates for Pastors',
-                'Monthly leadership strategy sessions',
-                'Church-wide miracle healing protocols',
-                'Prophetic ministry development curriculum',
-                'Apostolic church planting resources',
-                'Evangelistic outreach training programs',
-                'Pastoral care excellence frameworks',
-                'Teaching ministry anointing development',
-                'Priority support & consultation',
-                'Custom curriculum development',
-                'Quarterly on-site ministry visits (Australia)'
-              ].map((benefit, idx) => (
-                <div key={idx} className="flex items-start gap-2 text-sm text-gray-300">
-                  <CheckCircle className="w-3 h-3 text-green-400 mt-1 flex-shrink-0" />
-                  <span>{benefit}</span>
-                </div>
-              ))}
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Last Name *
+              </label>
+              <input
+                type="text"
+                value={contactForm.lastName}
+                onChange={(e) => setContactForm({...contactForm, lastName: e.target.value})}
+                className="w-full bg-gray-700 border border-gray-600 text-white px-3 py-2 focus:outline-none focus:border-orange-500"
+                required
+              />
             </div>
           </div>
-        </div>
 
-        <div className="text-center">
-          <div className="bg-gradient-to-r from-purple-900/30 to-blue-900/30 border border-purple-500/30 p-8 rounded">
-            <h3 className="text-2xl font-bold text-white mb-4">How Partnership Works</h3>
-            <div className="grid md:grid-cols-3 gap-6 text-center">
-              <div>
-                <div className="w-12 h-12 bg-purple-500/20 border border-purple-500/40 flex items-center justify-center mx-auto mb-3 rounded">
-                  <span className="text-purple-400 font-bold">1</span>
-                </div>
-                <h4 className="font-bold text-white mb-2">Apply</h4>
-                <p className="text-gray-300 text-sm">Submit your church partnership application for review and approval</p>
-              </div>
-              <div>
-                <div className="w-12 h-12 bg-blue-500/20 border border-blue-500/40 flex items-center justify-center mx-auto mb-3 rounded">
-                  <span className="text-blue-400 font-bold">2</span>
-                </div>
-                <h4 className="font-bold text-white mb-2">Payment Required</h4>
-                <p className="text-gray-300 text-sm">Upon approval, $200 AUD/month payment begins your partnership journey</p>
-              </div>
-              <div>
-                <div className="w-12 h-12 bg-green-500/20 border border-green-500/40 flex items-center justify-center mx-auto mb-3 rounded">
-                  <span className="text-green-400 font-bold">3</span>
-                </div>
-                <h4 className="font-bold text-white mb-2">Complete Access</h4>
-                <p className="text-gray-300 text-sm">Leadership training, ordination certificates, and full ministry resources</p>
-              </div>
-            </div>
+          {/* Email */}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Email *
+            </label>
+            <input
+              type="email"
+              value={contactForm.email}
+              onChange={(e) => setContactForm({...contactForm, email: e.target.value})}
+              className="w-full bg-gray-700 border border-gray-600 text-white px-3 py-2 focus:outline-none focus:border-orange-500"
+              required
+            />
           </div>
-        </div>
+
+          {/* Phone */}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Phone *
+            </label>
+            <input
+              type="tel"
+              value={contactForm.phone}
+              onChange={(e) => setContactForm({...contactForm, phone: e.target.value})}
+              className="w-full bg-gray-700 border border-gray-600 text-white px-3 py-2 focus:outline-none focus:border-orange-500"
+              required
+            />
+          </div>
+
+          {/* Organisation */}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Organisation *
+            </label>
+            <input
+              type="text"
+              value={contactForm.organisation}
+              onChange={(e) => setContactForm({...contactForm, organisation: e.target.value})}
+              className="w-full bg-gray-700 border border-gray-600 text-white px-3 py-2 focus:outline-none focus:border-orange-500"
+              required
+            />
+          </div>
+
+          {/* Country */}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Country
+            </label>
+            <select
+              value={contactForm.country}
+              onChange={(e) => setContactForm({...contactForm, country: e.target.value})}
+              className="w-full bg-gray-700 border border-gray-600 text-white px-3 py-2 focus:outline-none focus:border-orange-500"
+            >
+              <option value="Australia">Australia</option>
+              <option value="New Zealand">New Zealand</option>
+              <option value="United States">United States</option>
+              <option value="United Kingdom">United Kingdom</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          {/* Message */}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Message *
+            </label>
+            <textarea
+              value={contactForm.message}
+              onChange={(e) => setContactForm({...contactForm, message: e.target.value})}
+              rows={4}
+              className="w-full bg-gray-700 border border-gray-600 text-white px-3 py-2 focus:outline-none focus:border-orange-500"
+              required
+            />
+          </div>
+
+          {/* Submit Button */}
+          <div className="text-center">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="bg-orange-500 hover:bg-orange-600 disabled:bg-orange-400 text-white px-8 py-3 font-semibold uppercase tracking-wide transition-colors"
+            >
+              {isSubmitting ? 'Sending...' : 'Send Message'}
+            </button>
+          </div>
+
+          {submitMessage && (
+            <div className="text-center text-green-400">
+              {submitMessage}
+            </div>
+          )}
+        </form>
       </div>
 
-      {/* Church Partnership CTA */}
-      <div className="mt-12">
-        <ChurchPartnershipCTA variant="compact" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+        <ChurchPartnershipCTA />
       </div>
     </div>
   );
-}
+});
+
+ChurchItem.displayName = 'ChurchItem';
+
+FindChurch.displayName = 'FindChurch';
+
+export default FindChurch;
+

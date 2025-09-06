@@ -38,13 +38,6 @@ export default function SoulOutreach() {
   const [courseCompletion, setCourseCompletion] = useState({
     'evangelism-essentials': true
   });
-  const [newRecruit, setNewRecruit] = useState({
-    name: '',
-    email: '',
-    mobile: ''
-  });
-  const [selectedScript, setSelectedScript] = useState('email');
-  const [showAddRecruit, setShowAddRecruit] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [activeCrmSubTab, setActiveCrmSubTab] = useState('all');
   const [membershipFilter, setMembershipFilter] = useState('all');
@@ -183,85 +176,6 @@ export default function SoulOutreach() {
     }, 2000);
   };
 
-  const addNewRecruit = () => {
-    if (!newRecruit.name || (!newRecruit.email && !newRecruit.mobile)) {
-      alert('Please provide at least a name and either email or mobile number.');
-      return;
-    }
-
-    // Generate new recruit ID
-    const newRecruitId = (recruits.length + 1).toString();
-    
-    // Determine which invitations will be sent
-    const hasEmail = !!newRecruit.email;
-    const hasSMS = !!newRecruit.mobile;
-    
-    // Use the salvation template as the default first-time invitation
-    const invitationTemplate = scriptTemplates.salvation;
-    
-    // Process the scripts with the new recruit's name
-    let invitationSummary = `📧 INVITATION DETAILS FOR ${newRecruit.name.toUpperCase()}:\n\n`;
-    
-    if (hasEmail) {
-      const emailScript = processScript(invitationTemplate.email.body, newRecruit.name);
-      invitationSummary += `✉️ EMAIL INVITATION:\n`;
-      invitationSummary += `Subject: ${invitationTemplate.email.subject}\n`;
-      invitationSummary += `To: ${newRecruit.email}\n`;
-      invitationSummary += `Preview: ${emailScript.substring(0, 150)}...\n\n`;
-    }
-    
-    if (hasSMS) {
-      const smsScript = processScript(invitationTemplate.sms, newRecruit.name);
-      invitationSummary += `📱 SMS INVITATION:\n`;
-      invitationSummary += `To: ${newRecruit.mobile}\n`;
-      invitationSummary += `Message: ${smsScript}\n\n`;
-    }
-    
-    invitationSummary += `📋 TEMPLATE USED: "${invitationTemplate.name}" (${invitationTemplate.category})\n`;
-    invitationSummary += `🔄 3/7/28 Day Follow-up Sequence: ACTIVATED\n\n`;
-    
-    const methodsText = hasEmail && hasSMS ? 'both Email AND SMS' : 
-                       hasEmail ? 'Email only' : 'SMS only';
-    
-    invitationSummary += `This invitation will be sent via ${methodsText}.\n\nProceed with sending?`;
-    
-    // Show confirmation with full script details
-    if (confirm(invitationSummary)) {
-      // Add to recruits list
-      const recruitData = {
-        id: newRecruitId,
-        name: newRecruit.name,
-        email: newRecruit.email,
-        mobile: newRecruit.mobile,
-        membershipTier: 'FREE' as const,
-        status: 'new_recruit' as const,
-        lastContact: new Date().toISOString().split('T')[0],
-        joinDate: new Date().toISOString().split('T')[0],
-        followUpStatus: 'pending' as const,
-        earnings: 0,
-        level: 1,
-        optedOut: false,
-        doNotContact: false
-      };
-      
-      setRecruits(prev => [...prev, recruitData]);
-      
-      // Initialize follow-up sequence
-      initializeFollowUpSequence(newRecruitId);
-      
-      // Success message with detailed confirmation
-      let successMsg = `✅ SUCCESS! Invitation sent to ${newRecruit.name}:\n\n`;
-      if (hasEmail) successMsg += `📧 Email sent to: ${newRecruit.email}\n`;
-      if (hasSMS) successMsg += `📱 SMS sent to: ${newRecruit.mobile}\n`;
-      successMsg += `\n🎯 Template: "${invitationTemplate.name}"\n`;
-      successMsg += `🔄 Automated follow-up sequence initialized\n`;
-      successMsg += `📅 Next follow-up: 3 days`;
-      
-      alert(successMsg);
-      setNewRecruit({ name: '', email: '', mobile: '' });
-      setShowAddRecruit(false);
-    }
-  };
 
   // Enhanced script templates with auto-fill
   const scriptTemplates = {
@@ -774,17 +688,6 @@ P.S. If you'd prefer not to receive any more messages about this, just reply "ST
               </div>
             </div>
 
-            {/* Quick Add Recruit */}
-            <div className="bg-gray-800/50 border border-gray-700 p-6">
-              <h2 className="text-lg font-bold text-white mb-4 heading-font">Quick Add Recruit</h2>
-              <button
-                onClick={() => setActiveTab('crm')}
-                className="w-full bg-orange-500 text-white hover:bg-orange-600 px-4 py-3 font-semibold uppercase tracking-wide inline-flex items-center justify-center gap-2"
-              >
-                <Plus className="w-4 h-4" />
-                Go to CRM
-              </button>
-            </div>
           </div>
         </div>
       )}
@@ -841,103 +744,8 @@ P.S. If you'd prefer not to receive any more messages about this, just reply "ST
                 <option value="DIAMOND">DIAMOND ({membershipStats.DIAMOND})</option>
               </select>
             </div>
-            <div className="flex justify-center sm:justify-start">
-              <button
-                onClick={() => setShowAddRecruit(true)}
-                className="bg-orange-500 text-white hover:bg-orange-600 px-4 py-2 font-semibold uppercase tracking-wide inline-flex items-center gap-2 w-full sm:w-auto justify-center"
-              >
-                <Plus className="w-4 h-4" />
-                Add Recruit
-              </button>
-            </div>
           </div>
 
-          {/* Add Recruit Modal */}
-          {showAddRecruit && (
-            <div className="bg-gray-800/50 border border-gray-700 p-6">
-              <h3 className="text-white font-semibold mb-4">Add New Recruit</h3>
-              
-              {/* Template Information */}
-              <div className="bg-blue-500/10 border border-blue-500/30 p-4 mb-4">
-                <div className="flex items-start gap-3">
-                  <MessageSquare className="w-5 h-5 text-blue-400 mt-0.5" />
-                  <div className="flex-1">
-                    <h4 className="text-blue-400 font-semibold text-sm mb-1">Invitation Template</h4>
-                    <p className="text-white text-sm font-medium">"{scriptTemplates.salvation.name}"</p>
-                    <p className="text-blue-300 text-xs">{scriptTemplates.salvation.category}</p>
-                    <div className="mt-2 text-xs text-gray-300">
-                      <div className="flex items-center gap-4">
-                        <span>📧 Email: {scriptTemplates.salvation.email.subject}</span>
-                      </div>
-                      <div className="mt-1">
-                        <span>📱 SMS: First-time ministry training invitation</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-3 text-xs text-gray-400">
-                  💡 This template will be automatically sent to all provided contact methods (Email + SMS if both available)
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
-                <input
-                  type="text"
-                  placeholder="Full Name *"
-                  value={newRecruit.name}
-                  onChange={(e) => setNewRecruit(prev => ({ ...prev, name: e.target.value }))}
-                  className="bg-gray-600 border border-gray-500 text-white px-3 py-2 text-sm"
-                />
-                <input
-                  type="email"
-                  placeholder="Email Address"
-                  value={newRecruit.email}
-                  onChange={(e) => setNewRecruit(prev => ({ ...prev, email: e.target.value }))}
-                  className="bg-gray-600 border border-gray-500 text-white px-3 py-2 text-sm"
-                />
-                <input
-                  type="tel"
-                  placeholder="Mobile Number"
-                  value={newRecruit.mobile}
-                  onChange={(e) => setNewRecruit(prev => ({ ...prev, mobile: e.target.value }))}
-                  className="bg-gray-600 border border-gray-500 text-white px-3 py-2 text-sm"
-                />
-              </div>
-              
-              {/* Dynamic Preview */}
-              {(newRecruit.email || newRecruit.mobile) && (
-                <div className="mb-4 p-3 bg-gray-700/30 border border-gray-600">
-                  <h5 className="text-white text-sm font-semibold mb-2">Invitation Preview:</h5>
-                  {newRecruit.email && (
-                    <div className="text-xs text-gray-300 mb-2">
-                      📧 <span className="text-green-400">Email will be sent to:</span> {newRecruit.email}
-                    </div>
-                  )}
-                  {newRecruit.mobile && (
-                    <div className="text-xs text-gray-300">
-                      📱 <span className="text-green-400">SMS will be sent to:</span> {newRecruit.mobile}
-                    </div>
-                  )}
-                </div>
-              )}
-              
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setShowAddRecruit(false)}
-                  className="px-4 py-2 text-gray-400 hover:text-white border border-gray-600 hover:border-gray-500"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={addNewRecruit}
-                  className="bg-green-500 text-white hover:bg-green-600 px-4 py-2 font-semibold inline-flex items-center gap-2"
-                >
-                  <Send className="w-4 h-4" />
-                  Send Salvation Invitation
-                </button>
-              </div>
-            </div>
-          )}
 
           {/* Recruits List */}
           <div className="space-y-4">

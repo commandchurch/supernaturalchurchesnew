@@ -1,48 +1,171 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- Primary Meta Tags -->
-    <title>Supernatural Institute - TRAIN. EQUIP. TRANSFORM.</title>
-    <meta name="title" content="Supernatural Institute - TRAIN. EQUIP. TRANSFORM." />
-    <meta name="description" content="Experience supernatural ministry training that equips believers to walk in divine power, heal the sick, and transform lives through the Holy Spirit." />
-    <meta name="keywords" content="supernatural ministry, christian training, holy spirit, divine healing, miracle training, prophetic ministry, apostolic training" />
-    <meta name="author" content="Supernatural Institute" />
+    <title>Supernatural Churches Limited - Safe Supernatural Churches & Ordination</title>
+    <meta name="title" content="Supernatural Churches Limited - Safe Supernatural Churches & Ordination" />
+    <meta name="description" content="Supernatural Churches Limited provides ordination and ensures safe supernatural churches. We guarantee healing teaching that works for everyone, with comprehensive training and vetting processes." />
+    <meta name="keywords" content="supernatural churches, christian ordination, safe churches, divine healing, miracle training, prophetic ministry, apostolic training" />
+    <meta name="author" content="Supernatural Churches Limited" />
     <meta name="robots" content="index, follow" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://supernatural.institute/" />
-    <meta property="og:title" content="Supernatural Institute - TRAIN. EQUIP. TRANSFORM." />
-    <meta property="og:description" content="Experience supernatural ministry training that equips believers to walk in divine power, heal the sick, and transform lives through the Holy Spirit." />
-    <meta property="og:image" content="https://supernatural.institute/og-image.jpg" />
+    <meta property="og:url" content="https://supernaturalchurches.org/" />
+    <meta property="og:title" content="Supernatural Churches Limited - Safe Supernatural Churches & Ordination" />
+    <meta property="og:description" content="Supernatural Churches Limited provides ordination and ensures safe supernatural churches. We guarantee healing teaching that works for everyone, with comprehensive training and vetting processes." />
+    <meta property="og:image" content="https://supernaturalchurches.org/favicon-32x32.png" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://supernatural.institute/" />
-    <meta property="twitter:title" content="Supernatural Institute - TRAIN. EQUIP. TRANSFORM." />
-    <meta property="twitter:description" content="Experience supernatural ministry training that equips believers to walk in divine power, heal the sick, and transform lives through the Holy Spirit." />
-    <meta property="twitter:image" content="https://supernatural.institute/og-image.jpg" />
+    <meta property="twitter:url" content="https://supernaturalchurches.org/" />
+    <meta property="twitter:title" content="Supernatural Churches Limited - Safe Supernatural Churches & Ordination" />
+    <meta property="twitter:description" content="Supernatural Churches Limited provides ordination and ensures safe supernatural churches. We guarantee healing teaching that works for everyone, with comprehensive training and vetting processes." />
+    <meta property="twitter:image" content="https://supernaturalchurches.org/favicon-32x32.png" />
 
-    <!-- Favicon will be added when available -->
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" href="/icon-192x192.png" />
 
-    <!-- Optimized preconnect hints -->
+    <!-- Optimized preconnect hints for critical origins -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://immune-opossum-44.clerk.accounts.dev" />
-    <link rel="preconnect" href="https://js.stripe.com" />
-    <link rel="preconnect" href="https://api.stripe.com" />
-    <link rel="preconnect" href="https://checkout.stripe.com" />
+    <link rel="preconnect" href="https://immune-opossum-44.clerk.accounts.dev" crossorigin />
+    <link rel="preconnect" href="https://js.stripe.com" crossorigin />
+    <link rel="preconnect" href="https://api.stripe.com" crossorigin />
+    <link rel="preconnect" href="https://checkout.stripe.com" crossorigin />
 
-    <!-- Preload critical fonts -->
-    <link rel="preload" href="https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="https://fonts.gstatic.com/s/archivo/v18/k3kPo8UDI-1M0wlSV9XAw6lQkqWYfLQt93LsTv4.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- DNS prefetch for additional performance -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+    <link rel="dns-prefetch" href="https://immune-opossum-44.clerk.accounts.dev" />
 
-    <!-- Optimized Font Loading -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap&family=Archivo:wght@700;900&display=swap" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap&family=Archivo:wght@700;900&display=swap"></noscript>
+    <!-- Preload critical resources -->
+    <link rel="preload" href="/favicon.ico" as="image" />
+
+    <!-- Optimize Clerk loading by deferring non-critical parts -->
+    <script>
+      // Defer Clerk components that aren't immediately needed
+      window.CLERK_CONFIG = {
+        defer: true,
+        // Only load essential Clerk features initially
+        appearance: {
+          baseTheme: undefined
+        },
+        // Lazy load Clerk components
+        signInUrl: "/sign-in",
+        signUpUrl: "/sign-up",
+        afterSignInUrl: "/dashboard",
+        afterSignUpUrl: "/dashboard"
+      };
+
+      // Performance optimization: Defer non-critical styles
+      (function() {
+        // Function to load non-critical CSS
+        function loadDeferredStyles() {
+          const deferredStylesheets = [
+            // Add any non-critical CSS files here if needed
+          ];
+
+          deferredStylesheets.forEach(function(href) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = href;
+            link.media = 'print';
+            link.onload = function() {
+              this.media = 'all';
+            };
+            document.head.appendChild(link);
+          });
+        }
+
+        // Load deferred styles after page load
+        if (window.addEventListener) {
+          window.addEventListener('load', loadDeferredStyles, false);
+        } else if (window.attachEvent) {
+          window.attachEvent('onload', loadDeferredStyles);
+        }
+
+        // Remove preloaded resources that aren't used immediately
+        window.addEventListener('load', function() {
+          // Remove preload links after page load to prevent warnings
+          const preloads = document.querySelectorAll('link[rel="preload"]');
+          preloads.forEach(function(link) {
+            if (link.getAttribute('href') === '/favicon.ico') {
+              // Keep favicon preload as it's commonly used
+              return;
+            }
+            link.remove();
+          });
+        });
+
+        // Performance monitoring for long tasks
+        if ('PerformanceObserver' in window) {
+          try {
+            const observer = new PerformanceObserver((list) => {
+              for (const entry of list.getEntries()) {
+                if (entry.duration > 50) { // Log tasks longer than 50ms
+                  console.warn('Long task detected:', entry);
+                }
+              }
+            });
+            observer.observe({ entryTypes: ['longtask'] });
+          } catch (e) {
+            // PerformanceObserver not supported
+          }
+        }
+
+        // Optimize scrolling performance
+        let ticking = false;
+        window.addEventListener('scroll', function() {
+          if (!ticking) {
+            requestAnimationFrame(function() {
+              // Handle scroll events here if needed
+              ticking = false;
+            });
+            ticking = true;
+          }
+        });
+      })();
+    </script>
+
+    <!-- Optimized Font Loading with font-display: optional for performance -->
+
+    <!-- Load critical fonts first -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
+
+    <!-- Load secondary fonts with display: optional -->
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;900&display=optional" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;900&display=swap"></noscript>
+
+    <!-- Load hero centerpiece fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:wght@400;500;600;700&display=swap" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:wght@400;500;600;700&display=swap"></noscript>
+
+    <!-- Font loading optimization -->
+    <script>
+      // Optimize font loading for better performance
+      (function() {
+        // Check if fonts are cached
+        if (sessionStorage.fontsLoaded) {
+          document.documentElement.classList.add('fonts-loaded');
+        }
+
+        // Font loading observer for performance
+        if ('fonts' in document) {
+          document.fonts.ready.then(function() {
+            sessionStorage.fontsLoaded = true;
+            document.documentElement.classList.add('fonts-loaded');
+          });
+        }
+      })();
+    </script>
 
     <!-- Critical CSS for font loading -->
     <style>
@@ -50,6 +173,16 @@
       body, .heading-font, h1, h2, h3, h4, h5, h6 {
         font-display: swap;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Inter', sans-serif;
+      }
+
+      /* Hide text until fonts load to prevent FOUT */
+      .fonts-loading body {
+        visibility: hidden;
+      }
+
+      /* Show content when fonts are loaded */
+      .fonts-loaded body {
+        visibility: visible;
       }
     </style>
 
@@ -95,23 +228,33 @@
 
     <!-- Canonical URL will be set dynamically by React Helmet -->
 
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Supernatural Churches Limited" />
+    <link rel="apple-touch-icon" href="/icon-192x192.svg" />
+
     <!-- Structured Data -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "EducationalOrganization",
-      "name": "Supernatural Institute",
-      "description": "Supernatural ministry training that equips believers to walk in divine power",
-      "url": "https://supernatural.institute",
-      "logo": "https://supernatural.institute/logo.png",
+      "@type": "Organization",
+      "name": "Supernatural Churches Limited",
+      "description": "Supernatural Churches Limited provides ordination and ensures safe supernatural churches. We guarantee healing teaching that works for everyone, with comprehensive training and vetting processes.",
+      "url": "https://supernaturalchurches.org",
+      "logo": "https://supernaturalchurches.org/logo.png",
       "sameAs": [
-        "https://www.facebook.com/supernaturalinstitute",
-        "https://www.instagram.com/supernaturalinstitute"
+        "https://www.facebook.com/supernaturalchurches/",
+        "https://x.com/SupernaturalChurches",
+        "https://www.youtube.com/@supernaturalchurches",
+        "https://au.linkedin.com/company/supernatural-churches-limited"
       ],
       "offers": {
-        "@type": "Course",
-        "name": "Supernatural Ministry Training",
-        "description": "Comprehensive training in supernatural ministry including healing, prophecy, and apostolic ministry"
+        "@type": "Service",
+        "name": "Church Partnership Program",
+        "description": "Complete church partnership with supernatural training, ordination, and guaranteed healing protocols"
       }
     }
     </script>

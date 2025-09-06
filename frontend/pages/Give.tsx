@@ -1,15 +1,13 @@
 // @ts-nocheck
 import React, { useMemo, useState } from 'react';
 import { Check, Heart, Gift, Calendar } from 'lucide-react';
-import { useUser } from '@clerk/clerk-react';
 
 import SEO from '../components/SEO';
-import { siteUrl } from '../config';
+import { siteUrl } from '../config/index';
 import { Link, useNavigate } from 'react-router-dom';
 import client from '../client';
 
 export default function Give() {
-  const { isSignedIn } = useUser();
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -97,129 +95,104 @@ export default function Give() {
             One-Time Gift
           </button>
           <button
-            onClick={() => navigate('/membership')}
+            onClick={() => navigate('/partner')}
             className="px-6 py-3 font-semibold uppercase tracking-wide text-sm text-gray-400 hover:text-white"
           >
-            Monthly Partner
+            Church partner
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12">
-          <div className="bg-white/5 border border-white/10 backdrop-blur-sm p-6 sm:p-8">
-            <div className="flex items-center mb-6">
-              <Gift className="h-6 w-6 text-white mr-3" />
-              <h2 className="text-2xl font-bold text-white heading-font">Make a Donation</h2>
-            </div>
-            
-            <div className="space-y-6">
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {[25, 50, 100, 250].map((amount) => (
-                  <button
-                    key={amount}
-                    onClick={() => setDonationAmount(amount)}
-                    className={`p-3 border text-center font-semibold transition-colors ${
-                      donationAmount === amount
-                        ? 'bg-white text-black border-white'
-                        : 'border-gray-600 text-gray-400 hover:border-white hover:text-white'
-                    }`}
-                  >
-                    ${amount}
-                  </button>
-                ))}
-              </div>
-              
-              <div>
-                <label className="block text-white font-semibold mb-2">Custom Amount (AUD)</label>
+      {/* One-Time Donation Form */}
+      <div className="max-w-2xl mx-auto mb-16">
+        <div className="bg-gray-800/50 border border-gray-700 p-6 sm:p-8 rounded-xl">
+          <div className="text-center mb-6">
+            <Gift className="h-12 w-12 text-orange-400 mx-auto mb-4" />
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2 heading-font">Make a One-Time Gift</h2>
+            <p className="text-gray-400">Your generous donation helps us advance God's Kingdom through supernatural ministry worldwide.</p>
+          </div>
+
+          <div className="space-y-4">
+            {/* Amount Input */}
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Donation Amount (AUD) *
+              </label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
                 <input
                   type="number"
                   value={donationAmount}
-                  onChange={(e: any) => setDonationAmount(e.target.value ? parseInt(e.target.value) : '')}
-                  className="w-full bg-black border border-gray-600 text-white px-4 py-3 focus:border-white focus:outline-none"
+                  onChange={(e) => setDonationAmount(e.target.value === '' ? '' : Number(e.target.value))}
+                  className="w-full bg-gray-700 border border-gray-600 text-white placeholder-gray-400 pl-8 pr-3 py-3 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
                   placeholder="Enter amount"
+                  min="1"
+                  required
                 />
               </div>
+            </div>
 
-              <div>
-                <label className="block text-white font-semibold mb-2">Your Name</label>
-                <input
-                  type="text"
-                  value={donorName}
-                  onChange={(e) => setDonorName(e.target.value)}
-                  className="w-full bg-black border border-gray-600 text-white px-4 py-3 focus:border-white focus:outline-none"
-                  placeholder="Enter your name"
-                />
-              </div>
+            {/* Name Input */}
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Your Name
+              </label>
+              <input
+                type="text"
+                value={donorName}
+                onChange={(e) => setDonorName(e.target.value)}
+                className="w-full bg-gray-700 border border-gray-600 text-white placeholder-gray-400 px-3 py-3 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
+                placeholder="Enter your name"
+              />
+            </div>
 
-              <div>
-                <label className="block text-white font-semibold mb-2">Email Address</label>
-                <input
-                  type="email"
-                  value={donorEmail}
-                  onChange={(e) => setDonorEmail(e.target.value)}
-                  className="w-full bg-black border border-gray-600 text-white px-4 py-3 focus:border-white focus:outline-none"
-                  placeholder="Enter your email"
-                />
-              </div>
+            {/* Email Input */}
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Email Address
+              </label>
+              <input
+                type="email"
+                value={donorEmail}
+                onChange={(e) => setDonorEmail(e.target.value)}
+                className="w-full bg-gray-700 border border-gray-600 text-white placeholder-gray-400 px-3 py-3 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
+                placeholder="your.email@example.com"
+              />
+            </div>
 
-              <div>
-                <label className="block text-white font-semibold mb-2">Message (Optional)</label>
-                <textarea
-                  value={donorMessage}
-                  onChange={(e) => setDonorMessage(e.target.value)}
-                  rows={3}
-                  className="w-full bg-black border border-gray-600 text-white px-4 py-3 focus:border-white focus:outline-none resize-none"
-                  placeholder="Share your heart with us..."
-                />
-              </div>
+            {/* Message Input */}
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Message (Optional)
+              </label>
+              <textarea
+                value={donorMessage}
+                onChange={(e) => setDonorMessage(e.target.value)}
+                className="w-full bg-gray-700 border border-gray-600 text-white placeholder-gray-400 px-3 py-3 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 h-24 resize-none"
+                placeholder="Share why you're giving or any prayer requests..."
+              />
+            </div>
 
+            {/* Submit Button */}
+            <div className="pt-4">
               <button
                 onClick={handleDonation}
-                disabled={!donationAmount || isProcessing}
-                className="w-full bg-white text-black hover:bg-gray-100 disabled:bg-gray-800 disabled:text-gray-400 font-semibold uppercase tracking-wide px-6 py-4 transition-colors"
+                disabled={isProcessing || !donationAmount}
+                className="w-full bg-orange-600 hover:bg-orange-700 active:bg-orange-800 disabled:bg-gray-600 disabled:hover:bg-gray-700 text-white py-4 px-6 font-bold uppercase tracking-wide text-sm shadow-lg hover:shadow-orange-500/25 transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {isProcessing ? 'Processing...' : `Give $${donationAmount || 0} AUD`}
+                {isProcessing ? 'Processing...' : `Give $${donationAmount || '0'} AUD`}
               </button>
             </div>
-          </div>
 
-          <div className="space-y-6">
-            <div className="bg-white/5 border border-white/10 backdrop-blur-sm p-6">
-              <h3 className="text-xl font-bold text-white mb-4 heading-font">Impact of Your Gift</h3>
-              <div className="space-y-4 text-gray-400">
-                <div className="flex items-start">
-                  <Check className="h-5 w-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <p className="font-semibold text-white">$25 - Discipleship Materials</p>
-                    <p className="text-sm">Provides training materials for one new believer</p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <Check className="h-5 w-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <p className="font-semibold text-white">$50 - Ministry Training</p>
-                    <p className="text-sm">Sponsors one person through healing ministry training</p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <Check className="h-5 w-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <p className="font-semibold text-white">$100 - Outreach Event</p>
-                    <p className="text-sm">Funds one supernatural evangelism outreach</p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <Check className="h-5 w-5 text-green-400 mr-3 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <p className="font-semibold text-white">$250 - Church Plant Support</p>
-                    <p className="text-sm">Helps establish one new supernatural church</p>
-                  </div>
-                </div>
-              </div>
+            {/* Tax Deduction Notice */}
+            <div className="text-center pt-4 border-t border-gray-700">
+              <p className="text-xs text-gray-400 leading-relaxed">
+                Tax-deductible status is not yet available. We believe that if you give only to claim a tax deduction, the return is usually one for one or even less from the Australian Tax Office. When you give cheerfully from your heart, you can expect a 30, 60 or 100-fold return from God. We are currently working on arranging tax-deductible status.
+              </p>
             </div>
-
           </div>
         </div>
+      </div>
 
       <div className="mt-16 sm:mt-20">
         <div className="bg-white/5 border border-white/10 backdrop-blur-sm p-6 sm:p-8 text-center">
@@ -230,7 +203,7 @@ export default function Give() {
           </p>
           <div className="mt-6">
             <p className="text-white font-semibold">Questions about giving?</p>
-            <p className="text-gray-400">Contact us at <a href="mailto:giving@supernatural.institute" className="text-white hover:underline">giving@supernatural.institute</a></p>
+            <p className="text-gray-400">Contact us at <a href="mailto:giving@supernaturalchurches.org" className="text-white hover:underline">giving@supernaturalchurches.org</a></p>
           </div>
         </div>
       </div>

@@ -42,7 +42,7 @@ export const churchMembershipTiers: MembershipTier[] = [
   {
     name: 'SUPERNATURAL CHURCHES PARTNERSHIP',
     churchName: 'Apostolic Partnership',
-    price: 200,
+    price: 99,
     color: 'supernatural',
     icon: Crown,
     description: 'Equip your church with apostolic oversight, supernatural training, and biblical ministry protocols that demonstrate Kingdom power through miraculous signs, wonders, and transformed lives.',
@@ -67,7 +67,7 @@ export const churchMembershipTiers: MembershipTier[] = [
       'Identifying and combating doctrines of demons',
       'Establishing supernatural ministry foundations',
       'Kingdom power demonstration training',
-      'Affiliate Network & Support (20%/10%/5% commission structure)',
+      'Affiliate Network & Support (30%/10%/5%/3%/2%/1%/1% commission structure)',
       'Help Me Fund access for churches facing financial challenges'
     ],
     courses: [
@@ -100,10 +100,10 @@ export const individualMembershipTiers: MembershipTier[] = [
       'Access to limited free courses',
       'Basic community updates',
       'Referral program access',
-      'Earn Level 1 affiliate earnings by signing up 2 Bronze members',
-      'Maintain Bronze access by signing up 2 more Bronze members every 28 days',
-      'Qualify for bonus payouts on Bronze signups',
-      'Earn free Silver month with 20 recruits in 90 days',
+      'Earn Level 1 affiliate earnings by signing up 2 Silver members',
+      'Maintain Silver access by signing up 2 more Silver members every 28 days',
+      'Qualify for bonus payouts on Silver signups',
+      'Earn free Gold month with 20 recruits in 90 days',
       'Build your referrer\'s network (they earn from your recruits!)'
     ],
     limitations: [
@@ -112,42 +112,22 @@ export const individualMembershipTiers: MembershipTier[] = [
       'No private community access',
       'No affiliate commission earnings (until you sign up 2 Bronze members)'
     ],
-    upgradeOffer: 'FREE to BRONZE: Sign up 2 Bronze members to get Level 1 affiliate earnings. Maintain BRONZE: Sign up 2 more Bronze members every 28 days while staying on FREE membership. Recruit 20 people within 90 days = Silver status for 28 days (then earn full affiliate commissions).',
+    upgradeOffer: 'FREE to SILVER: Sign up 2 Silver members to get Level 1 affiliate earnings. Maintain SILVER: Sign up 2 more Silver members every 28 days while staying on FREE membership. Recruit 20 people within 90 days = Gold status for 28 days (then earn full affiliate commissions).',
     courses: ['Limited free courses only'],
     level: 'Free Access',
     churchSpecific: false
   },
   {
-    name: 'BRONZE',
-    price: 10,
-    annualPrice: 108, // 10 * 12 * 0.9 = 108 (10% annual discount)
-    color: 'blue',
-    icon: Users,
-    description: 'Entry level with commission earnings',
-    benefits: [
-      'Private Community Access',
-      'Premium course access',
-      'Help Me Fund access',
-      'Affiliate commission earnings (1 level)',
-      'Sign up bonus qualification'
-    ],
-    courses: ['Access to all institute (premium) courses'],
-    level: 'Entry Level',
-    churchSpecific: false,
-    commission: 3, // 30% of $10 = $3 commission rate
-    points: 1,
-    popular: false,
-    planCode: 'BRONZE'
-  },
-  {
     name: 'SILVER',
-    price: 20,
-    annualPrice: 216, // 20 * 12 * 0.9 = 216 (10% annual discount)
+    price: 33,
+    annualPrice: 356, // 33 * 12 * 0.9 = 356 (10% annual discount)
     color: 'purple',
     icon: BookOpen,
     description: 'Enhanced community with monthly teaching',
     benefits: [
-      'Everything in Bronze',
+      'Private Community Access',
+      'Premium course access',
+      'Help Me Fund access',
       '+ Affiliate commission earnings (2 levels)',
       '+ Monthly Private Group Teaching',
       '+ Sign up bonus qualification'
@@ -155,15 +135,15 @@ export const individualMembershipTiers: MembershipTier[] = [
     courses: ['Access to all institute (premium) courses'],
     level: 'Intermediate',
     churchSpecific: false,
-    commission: 6, // 30% of $20 = $6 commission rate
+    commission: 10, // 30% of $33 = $10 commission rate
     points: 2,
     popular: false,
     planCode: 'SILVER'
   },
   {
     name: 'GOLD',
-    price: 50,
-    annualPrice: 540, // 50 * 12 * 0.9 = 540 (10% annual discount)
+    price: 149,
+    annualPrice: 1609, // 149 * 12 * 0.9 = 1609 (10% annual discount)
     color: 'pink',
     icon: Target,
     description: 'Advanced training with coaching',
@@ -178,15 +158,15 @@ export const individualMembershipTiers: MembershipTier[] = [
     courses: ['All institute courses + Advanced Ministry Training'],
     level: 'Advanced',
     churchSpecific: false,
-    commission: 15, // 30% of $50 = $15 commission rate
+    commission: 45, // 30% of $149 = $45 commission rate
     points: 5,
     popular: true,
     planCode: 'GOLD'
   },
   {
     name: 'DIAMOND',
-    price: 100,
-    annualPrice: 1080, // 100 * 12 * 0.9 = 1080 (10% annual discount)
+    price: 499,
+    annualPrice: 5391, // 499 * 12 * 0.9 = 5391 (10% annual discount)
     color: 'cyan',
     icon: Sparkles,
     description: 'Elite level with maximum benefits',
@@ -202,7 +182,7 @@ export const individualMembershipTiers: MembershipTier[] = [
     level: 'Elite',
     churchSpecific: false,
     featured: true,
-    commission: 30, // 30% of $100 = $30 commission rate
+    commission: 150, // 30% of $499 = $150 commission rate
     points: 10,
     popular: false,
     planCode: 'DIAMOND'

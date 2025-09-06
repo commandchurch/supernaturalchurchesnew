@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 
 import { Send, AlertTriangle, Ambulance } from 'lucide-react';
-import client from '../../client';
+import { sendFundingRequest } from '../../src/utils/emailService';
 
 export default function HelpMeFund() {
   const [formData, setFormData] = useState({
@@ -28,25 +28,35 @@ export default function HelpMeFund() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      await client.fund.submitFundingRequest({
-        title: formData.title,
-        description: formData.description,
-        amountNeeded: parseFloat(formData.amountNeeded),
-        category: formData.category,
-        urgency: formData.urgency,
-        deadline: formData.deadline || undefined,
-        contactName: formData.contactName,
-        contactEmail: formData.contactEmail,
-        contactPhone: formData.contactPhone || undefined,
-        organizationName: formData.organizationName || undefined,
-        justification: formData.justification,
-      });
+      const fundingDetails = `
+Title: ${formData.title}
+Description: ${formData.description}
+Amount Needed: $${formData.amountNeeded}
+Category: ${formData.category}
+Urgency: ${formData.urgency}
+Deadline: ${formData.deadline || 'Not specified'}
+Contact Name: ${formData.contactName}
+Contact Email: ${formData.contactEmail}
+Contact Phone: ${formData.contactPhone || 'Not provided'}
+Organization: ${formData.organizationName || 'Not specified'}
+Justification: ${formData.justification}
+      `;
 
-      alert('Your request has been submitted and is pending leadership review.');
-      setFormData({
-        title: '', description: '', amountNeeded: '', category: 'emergency', urgency: 'high',
-        deadline: '', contactName: '', contactEmail: '', contactPhone: '', organizationName: '', justification: ''
-      });
+      const success = await sendFundingRequest(
+        formData.contactName,
+        formData.contactEmail,
+        fundingDetails
+      );
+
+      if (success) {
+        alert('Your funding request has been submitted and will be sent to our team for review.');
+        setFormData({
+          title: '', description: '', amountNeeded: '', category: 'emergency', urgency: 'high',
+          deadline: '', contactName: '', contactEmail: '', contactPhone: '', organizationName: '', justification: ''
+        });
+      } else {
+        alert('Failed to submit funding request. Please try again.');
+      }
     } catch (error: any) {
       alert(`Submission failed: ${error?.message || 'Unknown error'}`);
     } finally {

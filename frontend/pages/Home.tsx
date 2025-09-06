@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+/*  */import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { ArrowRight, Play, Users, GraduationCap, Info, Heart, Calendar, MapPin, Shield } from 'lucide-react';
@@ -7,31 +7,19 @@ import { siteUrl } from '../config/index';
 import ChurchPartnershipCTA from '../components/ChurchPartnershipCTA';
 
 const ministryTiles = [
-  {
-    title: 'Supernatural Institute of Ministry',
-    description: 'Heaven\'s truth revealed through accurate biblical teaching. Equipped with supernatural power for Kingdom advancement.',
-    icon: GraduationCap,
-    href: '/academy'
-  },
-  {
-    title: 'Church Partnership Network',
-    description: 'Join our global network of supernatural churches advancing the Kingdom through apostolic partnership and signs & wonders.',
-    icon: Users,
-    href: '/find-church'
-  },
-  {
-    title: 'Kingdom Funding & Support',
-    description: 'Supporting believers and ministries with supernatural provision for Kingdom advancement and miraculous impact.',
-    icon: Heart,
-    href: '/give'
-  },
-  {
-    title: 'Global Soul Outreach',
-    description: 'Reaching the lost with supernatural power demonstrations and heaven\'s truth for eternal transformation.',
-    icon: Play,
-    href: '/soul-outreach'
-  }
-];
+   {
+     title: 'Church Partnership Network',
+     description: 'Join a vetted network of safe supernatural churches with healing protocols and apostolic oversight.',
+     icon: Users,
+     href: '/find-church'
+   },
+   {
+     title: 'Kingdom Funding & Support',
+     description: 'Access supernatural provision and financial support for ministry impact and growth.',
+     icon: Heart,
+     href: '/give'
+   }
+ ];
 
 export default function Home() {
   // Mock upcoming events data
@@ -56,23 +44,85 @@ export default function Home() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+
+    // Ensure video plays on page load
+    const video = document.querySelector('video') as HTMLVideoElement;
+    if (video) {
+      const playVideo = async () => {
+        try {
+          await video.play();
+        } catch (error) {
+          console.log('Video autoplay failed, user interaction required');
+          // Add click listener to play video on first user interaction
+          const playOnInteraction = () => {
+            video.play();
+            document.removeEventListener('click', playOnInteraction);
+            document.removeEventListener('touchstart', playOnInteraction);
+          };
+          document.addEventListener('click', playOnInteraction);
+          document.addEventListener('touchstart', playOnInteraction);
+        }
+      };
+
+      // Try to play immediately
+      playVideo();
+
+      // Fallback: try again after a short delay
+      setTimeout(() => {
+        if (video.paused) {
+          playVideo();
+        }
+      }, 1000);
+    }
   }, []);
 
   return (
     <div>
       <SEO
-        title="Global Discipleship, Training and Funding"
-        description="Supernatural Institute is a global Christian discipleship, training, and funding platform. Join us to spread the Gospel and build disciples worldwide."
+        title="Supernatural Churches Limited - Safe Supernatural Churches & Ordination"
+        description="Supernatural Churches Limited provides ordination and ensures safe supernatural churches. We guarantee healing teaching that works for everyone, with comprehensive training and vetting processes."
         canonicalUrl={siteUrl}
         type="website"
       />
 
       {/* Hero Section */}
-      <section className="relative min-h-[85vh] sm:min-h-screen flex items-center justify-center overflow-hidden pt-20 sm:pt-0">
+      <section className="relative min-h-[80vh] sm:min-h-[85vh] lg:min-h-screen flex items-center justify-center overflow-hidden pt-16 sm:pt-20 lg:pt-0">
         {/* Enhanced gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900/80 to-black" />
         <div className="absolute inset-0 bg-gradient-to-t from-orange-500/10 via-purple-500/5 to-blue-500/10" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/60" />
+
+        {/* CRITICAL: BRISBANE VIDEO - DO NOT REMOVE - This video MUST always play on homepage load */}
+        <video
+          className="absolute inset-0 w-full h-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          onError={(e) => {
+            console.error('Video failed to load:', e);
+            // Fallback to image if video fails
+            const video = e.target as HTMLVideoElement;
+            video.style.display = 'none';
+          }}
+        >
+          <source src="/Brisbane.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+
+        {/* Video Fallback Image */}
+        <div
+          className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: 'linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("/fallback-hero.jpg")',
+            display: 'none' // Hidden by default, shown if video fails
+          }}
+          id="video-fallback"
+        />
+
+        {/* Video Overlay */}
+        <div className="absolute inset-0 bg-black/40" />
 
         {/* Subtle animated background elements */}
         <div className="absolute inset-0 opacity-30">
@@ -80,31 +130,86 @@ export default function Home() {
           <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-500/5 rounded-full blur-3xl animate-pulse delay-1000" />
         </div>
 
-        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-6 sm:py-8 lg:py-12">
 
-          <h1 className="text-3xl sm:text-5xl lg:text-7xl font-black text-white mb-4 sm:mb-6 heading-font tracking-tight leading-tight drop-shadow-2xl">
-            TRAIN. EQUIP. TRANSFORM.
-          </h1>
-          <p className="text-base sm:text-xl md:text-2xl text-gray-300 mb-8 sm:mb-10 max-w-4xl mx-auto leading-relaxed font-light">
-            The World's Premier Supernatural Ministry Training Institute. Heaven's truth revealed through accurate biblical teaching. We believe these signs shall follow those who believe in the name of Jesus - equipping believers to walk in Christ's authority, demonstrate supernatural power, and transform nations through authentic ministry.
+           {/* Scripture Section */}
+           <div className="mb-8 sm:mb-12 lg:mb-16 mt-2" style={{ marginTop: '0.125rem' }}>
+             <div className="text-center">
+               {/* Scripture Section */}
+               <div className="space-y-8">
+                 {/* Verse 1 */}
+                 <div>
+                   <blockquote className="scripture-text text-2xl md:text-3xl lg:text-4xl mb-2">
+                     "For the kingdom of God is not in word but in power."
+                   </blockquote>
+                   <cite className="body-text text-gray-300 text-sm md:text-base">
+                     — 1 Corinthians 4:20
+                   </cite>
+                 </div>
+
+                 {/* Verse 2 */}
+                 <div>
+                   <blockquote className="scripture-text text-2xl md:text-3xl lg:text-4xl mb-2">
+                     "The kingdom of God is within you."
+                   </blockquote>
+                   <cite className="body-text text-gray-300 text-sm md:text-base">
+                     — Luke 17:21
+                   </cite>
+                 </div>
+               </div>
+
+               {/* Supporting Statement */}
+               <div className="mt-12 mb-8">
+                 <p className="body-text text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+                   Equipping churches and leaders with the supernatural power of God through training, ordination, and apostolic oversight.
+                 </p>
+               </div>
+
+               {/* CTA Button */}
+               <div className="mb-4">
+                 <Link
+                   to="/partner"
+                   className="cta-button inline-flex items-center text-lg hover:scale-105 shadow-lg hover:shadow-xl transition-all duration-300"
+                 >
+                   PARTNER NOW →
+                 </Link>
+               </div>
+
+               {/* Support Text */}
+               <div>
+                 <p className="text-gray-400 text-sm font-medium">
+                   Join the movement and become a partner today
+                 </p>
+               </div>
+             </div>
+           </div>
+
+
+        </div>
+      </section>
+
+      {/* Mission Statement Section */}
+      <section className="py-16 sm:py-24 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-900/50 to-black" />
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-8 sm:mb-10 lg:mb-12 heading-font">
+            Our Mission
+          </h2>
+          <p className="body-text text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 mb-8 sm:mb-10 lg:mb-12 max-w-4xl mx-auto leading-relaxed px-2 sm:px-0">
+            We help churches become safe, strong, and truly supernatural. Our teaching is grounded fully in the Holy Bible and equips pastors to walk in God's power.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link
-              to="/academy"
-              className="w-full sm:w-auto bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-8 sm:px-10 py-4 sm:py-5 text-base sm:text-lg shadow-2xl hover:shadow-orange-500/25 transition-all duration-300 hover:scale-105 font-bold uppercase tracking-wider inline-flex items-center justify-center border border-orange-400/20"
-            >
-              START TRAINING
-              <ArrowRight className="ml-3 h-5 w-5 sm:h-6 sm:w-6" />
-            </Link>
-            <Link
-              to="/membership"
-              className="w-full sm:w-auto bg-white/10 hover:bg-white/20 border border-white/30 text-white px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base font-semibold uppercase tracking-wide inline-flex items-center justify-center backdrop-blur-sm transition-all duration-300 hover:shadow-lg hover:shadow-white/10"
-            >
-              VIEW MEMBERSHIP PLANS
-            </Link>
-          </div>
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 mb-8 sm:mb-10 lg:mb-12 max-w-4xl mx-auto leading-relaxed font-light px-2 sm:px-0">
+            We provide recognised ordination certificates, but we go further—offering practical, Spirit-led training to heal the sick, cast out demons, and even raise the dead if needed.
+          </p>
 
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 mb-8 sm:mb-10 lg:mb-12 max-w-4xl mx-auto leading-relaxed font-light px-2 sm:px-0">
+            God sees many churches filled with people still suffering from sickness and defeat. His desire is for His body, the Church, to be restored to health and power. This call is not about denominations—it is for anyone who preaches the Word of God.
+          </p>
+
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 mb-8 sm:mb-10 lg:mb-12 max-w-4xl mx-auto leading-relaxed font-light px-2 sm:px-0">
+            The kingdom of God is not just words. It is power. Without it, churches will not last. Our mission is to bring life back to God's people through strong training, careful vetting, and demonstrations of His power.
+          </p>
         </div>
       </section>
 
@@ -195,12 +300,31 @@ export default function Home() {
           <div className="text-center mt-16">
             <Link
               to="/church"
-              className="inline-flex items-center justify-center bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold uppercase tracking-wide px-8 py-4 text-base shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+              className="inline-flex items-center justify-center bg-orange-600 hover:bg-orange-700 active:bg-orange-800 text-white font-semibold uppercase tracking-wide px-8 py-4 text-base shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
             >
               View All Events
               <ArrowRight className="ml-3 h-5 w-5" />
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* Ready to Begin Section */}
+      <section className="py-16 sm:py-24 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-900/80 to-black" />
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-6 heading-font">
+            Ready to Begin Your Journey?
+          </h2>
+          <p className="text-lg sm:text-xl text-gray-300 mb-8 leading-relaxed">
+            Join believers worldwide who walk in bold faith and see the signs that follow those who believe in the name of Jesus.
+          </p>
+          <Link
+            to="/partner"
+            className="inline-flex items-center bg-orange-600 hover:bg-orange-700 text-white px-8 py-4 font-semibold text-lg uppercase tracking-wide transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+          >
+            Become a Partner
+          </Link>
         </div>
       </section>
 
@@ -279,19 +403,13 @@ export default function Home() {
               <p className="text-gray-300 text-lg mb-6 max-w-2xl mx-auto">
                 Join believers worldwide who believe these signs shall follow those who believe in the name of Jesus.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex justify-center">
                 <Link
-                  to="/academy"
-                  className="bg-orange-700 hover:bg-orange-800 text-white px-8 py-4 font-semibold uppercase tracking-wide transition-all duration-300 hover:scale-105 inline-flex items-center justify-center shadow-lg"
+                  to="/partner"
+                  className="bg-orange-600 hover:bg-orange-700 active:bg-orange-800 text-white px-8 py-4 font-semibold uppercase tracking-wide transition-all duration-300 hover:scale-105 inline-flex items-center justify-center shadow-lg"
                 >
-                  Start Training Now
+                  Become a Partner
                   <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-                <Link
-                  to="/membership"
-                  className="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-8 py-4 font-semibold uppercase tracking-wide transition-all duration-300 inline-flex items-center justify-center backdrop-blur-sm"
-                >
-                  View All Plans
                 </Link>
               </div>
             </div>

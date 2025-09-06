@@ -11,18 +11,16 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 const Home = lazy(() => import('./pages/Home'));
 const Academy = lazy(() => import('./pages/Academy'));
+const Partnership = lazy(() => import('./pages/Partnership'));
 const Church = lazy(() => import('./pages/Church'));
 const Events = lazy(() => import('./pages/Events'));
 const About = lazy(() => import('./pages/About'));
 const Give = lazy(() => import('./pages/Give'));
-const Dashboard = lazy(() => import('./pages/Dashboard'));
-const Admin = lazy(() => import('./pages/Admin'));
 const Privacy = lazy(() => import('./pages/Privacy'));
 const StatementOfFaith = lazy(() => import('./pages/StatementOfFaith'));
 const Terms = lazy(() => import('./pages/Terms'));
 const HelpMeFundPublic = lazy(() => import('./pages/HelpMeFundPublic'));
 const Membership = lazy(() => import('./pages/Membership'));
-const SoulOutreach = lazy(() => import('./pages/SoulOutreach'));
 const Legal = lazy(() => import('./pages/Legal'));
 const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
@@ -35,6 +33,11 @@ const DonationTerms = lazy(() => import('./pages/DonationTerms'));
 const MedicalDisclaimer = lazy(() => import('./pages/MedicalDisclaimer'));
 const FindChurch = lazy(() => import('./pages/FindChurch'));
 const CompensationPlan = lazy(() => import('./pages/CompensationPlan'));
+const ChurchPartnership = lazy(() => import('./pages/ChurchPartnership'));
+const Faqs = lazy(() => import('./pages/Faqs'));
+const Ambassador = lazy(() => import('./pages/Ambassador'));
+const Contact = lazy(() => import('./pages/Contact'));
+const PartnershipThankYou = lazy(() => import('./pages/PartnershipThankYou'));
 
 // Enhanced Pages with Supernatural Design
 const Merch = lazy(() => import('./pages/Merch'));
@@ -61,12 +64,17 @@ export default function App() {
                 <Routes>
                   <Route path="/" element={<Layout><ErrorBoundary><Home /></ErrorBoundary></Layout>} />
                   <Route path="/academy" element={<Layout><ErrorBoundary><Academy /></ErrorBoundary></Layout>} />
-                  <Route path="/about" element={<Layout><ErrorBoundary><About /></ErrorBoundary></Layout>} />
+                  <Route path="/partner" element={<Layout><ErrorBoundary><Partnership /></ErrorBoundary></Layout>} />
+                  <Route path="/training" element={<Layout><ErrorBoundary><Partnership /></ErrorBoundary></Layout>} />
                   <Route path="/give" element={<Layout><ErrorBoundary><Give /></ErrorBoundary></Layout>} />
                   <Route path="/help-me-fund" element={<Layout><ErrorBoundary><HelpMeFundPublic /></ErrorBoundary></Layout>} />
-                  <Route path="/membership" element={<Layout><ErrorBoundary><Membership /></ErrorBoundary></Layout>} />
-                  <Route path="/outreach" element={<Layout><ErrorBoundary><SoulOutreach /></ErrorBoundary></Layout>} />
                   <Route path="/find-church" element={<Layout><ErrorBoundary><FindChurch /></ErrorBoundary></Layout>} />
+                  <Route path="/contact" element={<Layout><ErrorBoundary><Contact /></ErrorBoundary></Layout>} />
+                  <Route path="/partnership/thank-you" element={<Layout><ErrorBoundary><PartnershipThankYou /></ErrorBoundary></Layout>} />
+                  <Route path="/compensation-plan" element={<Layout><ErrorBoundary><CompensationPlan /></ErrorBoundary></Layout>} />
+                  <Route path="/churchpartnership" element={<Layout><ErrorBoundary><ChurchPartnership /></ErrorBoundary></Layout>} />
+                  <Route path="/ambassador/:username" element={<ErrorBoundary><meta httpEquiv="refresh" content={`0;url=/ambassador.html`} /></ErrorBoundary>} />
+                  <Route path="/faqs" element={<Layout><ErrorBoundary><Faqs /></ErrorBoundary></Layout>} />
                   <Route path="/church" element={<Layout><ErrorBoundary><Church /></ErrorBoundary></Layout>} />
                   <Route path="/events" element={<Layout><ErrorBoundary><Events /></ErrorBoundary></Layout>} />
 
@@ -89,8 +97,6 @@ export default function App() {
                   <Route path="/legal/donation-terms" element={<Layout><ErrorBoundary><DonationTerms /></ErrorBoundary></Layout>} />
                   <Route path="/legal/medical-disclaimer" element={<Layout><ErrorBoundary><MedicalDisclaimer /></ErrorBoundary></Layout>} />
                   <Route path="/legal/compensation-plan" element={<Layout><ErrorBoundary><CompensationPlan /></ErrorBoundary></Layout>} />
-                  <Route path="/dashboard" element={<ProtectedRoute><Layout><ErrorBoundary><Dashboard /></ErrorBoundary></Layout></ProtectedRoute>} />
-                  <Route path="/admin" element={<ProtectedRoute requireAdmin><Layout><ErrorBoundary><Admin /></ErrorBoundary></Layout></ProtectedRoute>} />
                 </Routes>
               </Suspense>
             </Router>

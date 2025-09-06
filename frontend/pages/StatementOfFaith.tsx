@@ -41,34 +41,34 @@ export default function StatementOfFaith() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 py-12 sm:py-16">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
       <SEO
         title="Statement of Faith"
-        description="Read the Command Church statement of faith. Our foundational beliefs are rooted in Scripture and demonstrated through supernatural power."
+        description="Read the Supernatural Churches statement of faith. Our foundational beliefs are rooted in Scripture and demonstrated through supernatural power."
         breadcrumbsJsonLd={breadcrumbs}
       />
 
-      <div className="text-center mb-10 sm:mb-12">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 heading-font">
+      <div className="text-center mb-8 sm:mb-10 lg:mb-12">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-black text-white mb-3 lg:mb-4 heading-font">
           Statement of Faith
         </h1>
-        <p className="text-base sm:text-lg text-gray-400 max-w-3xl mx-auto">
-          Our foundational beliefs rooted in Scripture and demonstrated through supernatural power.
+        <p className="text-sm sm:text-base lg:text-lg text-gray-400 max-w-3xl mx-auto px-2">
+          Our foundational beliefs rooted in Scripture and demonstrated through supernatural&nbsp;power.
         </p>
       </div>
 
       {/* Key Principles */}
-      <section className="mb-10 sm:mb-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <section className="mb-8 sm:mb-10 lg:mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 xl:gap-6">
           {sections.map((section, index) => {
             const Icon = section.icon;
             return (
-              <div key={index} className="bg-white/5 border border-white/10 backdrop-blur-sm p-5 sm:p-6 text-center">
-                <div className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500/20 to-purple-500/20 mb-3 sm:mb-4">
-                  <Icon className="h-5 w-5 sm:h-6 sm:w-6 text-blue-400" />
+              <div key={index} className="bg-white/5 border border-white/10 backdrop-blur-sm p-4 lg:p-5 xl:p-6 text-center">
+                <div className="inline-flex items-center justify-center w-8 h-8 lg:w-10 lg:h-10 xl:w-12 xl:h-12 bg-gradient-to-br from-blue-500/20 to-purple-500/20 mb-3 lg:mb-4">
+                  <Icon className="h-4 w-4 lg:h-5 lg:w-5 xl:h-6 xl:w-6 text-blue-400" />
                 </div>
-                <h3 className="text-base sm:text-lg font-bold text-white mb-2 heading-font">{section.title}</h3>
-                <p className="text-gray-400 text-sm">{section.content}</p>
+                <h3 className="text-sm lg:text-base xl:text-lg font-bold text-white mb-2 heading-font">{section.title}</h3>
+                <p className="text-gray-400 text-xs lg:text-sm leading-relaxed">{section.content}</p>
               </div>
             );
           })}
@@ -76,40 +76,40 @@ export default function StatementOfFaith() {
       </section>
 
       {/* Statement of Faith Content */}
-      <div className="bg-white/5 border border-white/10 backdrop-blur-sm p-6 sm:p-8 space-y-8 text-sm sm:text-base">
-        
+      <div className="bg-white/5 border border-white/10 backdrop-blur-sm p-4 lg:p-6 xl:p-8 space-y-6 lg:space-y-8 text-xs lg:text-sm xl:text-base">
+
         <section>
-          <h2 className="text-xl sm:text-2xl font-black text-white mb-3 sm:mb-4 heading-font">The difference between our faith vs any other made up faith in the world.</h2>
-          <div className="text-gray-300 leading-relaxed space-y-4">
-            <p>
-              <strong>1 Corinthians 4:20</strong> - For the kingdom of God is not in word but in power. The word power here is dunamis which means (miraculous) power, might, strength. Every other religion or faith talks words but they don’t have the power to heal the sick, cast out demons or raise the dead. They can’t even talk to the rain and tell the rain to stop raining. We have the ability to do the impossible because it says whatsoever things you desire when you pray believe that you receive them and you shall have them in Mark 11:23-24 and whoever believes on the Lord Jesus Christ shall not be put to shame in Romans 10:11.
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-black text-white mb-3 lg:mb-4 heading-font">The difference between our faith vs any other made up faith in the world.</h2>
+          <div className="text-gray-300 leading-relaxed space-y-3 lg:space-y-4">
+            <p className="px-2">
+              <strong>1 Corinthians 4:20</strong> - For the kingdom of God is not in word but in power. The word power here is dunamis which means (miraculous) power, might, strength. Every other religion or faith talks words but they don't have the power to heal the sick, cast out demons or raise the dead. They can't even talk to the rain and tell the rain to stop raining. We have the ability to do the impossible because it says whatsoever things you desire when you pray believe that you receive them and you shall have them in Mark 11:23-24 and whoever believes on the Lord Jesus Christ shall not be put to shame in Romans 10:11.
             </p>
           </div>
         </section>
 
         <section>
-          <h2 className="text-xl sm:text-2xl font-black text-white mb-3 sm:mb-4 heading-font">Scriptural Authority</h2>
-          <div className="text-gray-300 leading-relaxed space-y-4">
-            <p>
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-black text-white mb-3 lg:mb-4 heading-font">Scriptural Authority</h2>
+          <div className="text-gray-300 leading-relaxed space-y-3 lg:space-y-4">
+            <p className="px-2">
               We affirm that the Scriptures, as the breath of God, serve as the definitive guide for Christian life and practice. These Scriptures stand unbroken and are fulfilled through Jesus Christ. The Old Testament foreshadows the fullness revealed in the New Testament. Through the teachings of the Apostles, we understand Christ's work in and through us.
             </p>
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-gray-400 px-2">
               (2 Timothy 3:16-17; Hebrews 1:1-3; John 10:35; Matthew 5:19, 19:17; 1 John 2:3-4; Psalm 8:4-6; Matthew 9:8; Ephesians 4:15)
             </p>
           </div>
         </section>
 
         <section>
-          <h2 className="text-xl sm:text-2xl font-black text-white mb-3 sm:mb-4 heading-font">Humanity's Divine Image</h2>
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-black text-white mb-3 lg:mb-4 heading-font">Humanity's Divine Image</h2>
           <div className="text-gray-300 leading-relaxed space-y-4">
             <p>
-              At Command Church, we hold a fundamental belief that humanity is composed of spiritual beings temporarily dwelling in earthly bodies, each with a soul. The soul serves as the seat of our carnal mind, where emotions, feelings, and thoughts find their abode. The physical body, often referred to as the flesh, serves as the vessel that cloaks the invisible spirit, bestowing life upon our earthly existence.
+              At Supernatural Churches, we hold a fundamental belief that humanity is composed of spiritual beings temporarily dwelling in earthly bodies, each with a soul. The soul serves as the seat of our carnal mind, where emotions, feelings, and thoughts find their abode. The physical body, often referred to as the flesh, serves as the vessel that cloaks the invisible spirit, bestowing life upon our earthly existence.
             </p>
             <p>
               In our conviction, every man and woman is meticulously crafted in the image of God, reflecting His divine attributes. This intrinsic likeness to our Creator is woven into the very fabric of our being.The human body, or flesh, operates primarily through the five senses—taste, smell, vision, hearing, and touch. These senses enable us to interact with the physical world around us.However, it is the spirit within us that embodies our true essence. When our earthly journey comes to an end, our spirit lives on, destined for either the eternal bliss of Heaven or the somber depths of Hell.
             </p>
             <p>
-              We believe that as Christians, we become new spiritual creations, and our spirit possesses a spiritual mind. Our mission at Command Church is to assist fellow believers in bridging the gap between their perfect spirit and their carnal mind, renewing their thoughts and attitudes to become more Christ-like on Earth. It is through the alignment of our renewed minds and bodies with the Spirit of God that divine works manifest in our lives, allowing God to operate effectively through us to impact the world for His glory.
+              We believe that as Christians, we become new spiritual creations, and our spirit possesses a spiritual mind. Our mission at Supernatural Churches is to assist fellow believers and church ministries in bridging the gap between their perfect spirit and their carnal mind, renewing their thoughts and attitudes to become more Christ-like on Earth. It is through the alignment of our renewed minds and bodies with the Spirit of God that divine works manifest in our lives, allowing God to operate effectively through us to impact the world for His glory.
             </p>
             <p className="text-xs text-gray-400">
               (Romans 5:12; John 3:16; Romans 5:8; John 14:12)
@@ -217,7 +217,7 @@ export default function StatementOfFaith() {
           <h2 className="text-xl sm:text-2xl font-black text-white mb-3 sm:mb-4 heading-font">The Process of Sanctification</h2>
           <div className="text-gray-300 leading-relaxed space-y-4">
             <p>
-              In receiving Christ, we also receive sanctification, for He embodies it. Our spiritual journey in Christ is one of continuous growth in grace and a deeper commitment to holiness. Lifes choices may take us steps forward and steps back but the Holy Spirit will lead us into all truth and it’s up to us to hold fast onto that truth which is God’s word.
+              In receiving Christ, we also receive sanctification, for He embodies it. Our spiritual journey in Christ is one of continuous growth in grace and a deeper commitment to holiness. Lifes choices may take us steps forward and steps back but the Holy Spirit will lead us into all truth and it's up to us to hold fast onto that truth which is God's word.
             </p>
             <p className="text-xs text-gray-400">
               (1 Corinthians 1:30; 1 Thessalonians 4:3; 2 Thessalonians 2:13; 1 Peter 1:2; 2 Peter 3:18)
@@ -241,7 +241,7 @@ export default function StatementOfFaith() {
           <h2 className="text-xl sm:text-2xl font-black text-white mb-3 sm:mb-4 heading-font">We go deeper into the meaning of Health</h2>
           <div className="text-gray-300 leading-relaxed space-y-4">
             <p>
-              We believe, as Scripture attests, that by Jesus' wounds we have been healed. Grounded in the Holy passages of Isaiah 53:5, Matthew 8:17, and 1 Peter 2:24, our faith maintains that believers can reside in a continuous state of divine health, protected from illness and affliction. Quick to recover from pain or anything that may try opress the flesh. Yet, even as our earthly journey may occasionally bring minor mishaps or unforeseen events, we fervently counteract any profound misfortune and assert God's shield over all disciples in the powerful name of Jesus. Embracing and cherishing this truth, we confide in His pledge of restoration and safeguard. Additionally, we affirm that just as faith in the sanctity of Jesus' blood is essential for the gracious gift of salvation, similarly, faith in His broken body bestows upon believers the free gift of divine health. Nonetheless, to truly receive these divine blessings, one must approach with unwavering faith, avoiding a double-minded stance towards God and His Word (James 1:8). We do not force or advise anyone to stop taking medication or to stop following advice from medical professionals however we give people the word of God then let them decide what they think is best suited to them then they have an opportunity to choose which knowledge they want to serve. The knowledge of a doctors report or the knowledge of standing by faith in God’s word for example. We provide factual information about the Bible and general advice and then personal advice to those who desire personal advice on the Holy Bible's opinions about one's choices and those people who want personal advice on their current situation then we provide it if they come to us for knowledge about God's word assuming consent is received if we’re approached for opinions and/or advice on God’s opinion or approach on a matter.
+              We believe, as Scripture attests, that by Jesus' wounds we have been healed. Grounded in the Holy passages of Isaiah 53:5, Matthew 8:17, and 1 Peter 2:24, our faith maintains that believers can reside in a continuous state of divine health, protected from illness and affliction. Quick to recover from pain or anything that may try opress the flesh. Yet, even as our earthly journey may occasionally bring minor mishaps or unforeseen events, we fervently counteract any profound misfortune and assert God's shield over all disciples in the powerful name of Jesus. Embracing and cherishing this truth, we confide in His pledge of restoration and safeguard. Additionally, we affirm that just as faith in the sanctity of Jesus' blood is essential for the gracious gift of salvation, similarly, faith in His broken body bestows upon believers the free gift of divine health. Nonetheless, to truly receive these divine blessings, one must approach with unwavering faith, avoiding a double-minded stance towards God and His Word (James 1:8). We do not force or advise anyone to stop taking medication or to stop following advice from medical professionals however we give people the word of God then let them decide what they think is best suited to them then they have an opportunity to choose which knowledge they want to serve. The knowledge of a doctors report or the knowledge of standing by faith in God's word for example. We provide factual information about the Bible and general advice and then personal advice to those who desire personal advice on the Holy Bible's opinions about one's choices and those people who want personal advice on their current situation then we provide it if they come to us for knowledge about God's word assuming consent is received if we're approached for opinions and/or advice on God's opinion or approach on a matter.
             </p>
           </div>
         </section>

@@ -138,28 +138,17 @@ export default function Support() {
           Need help with your account, billing, or have a technical issue? Our team is here to assist you.
         </p>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="flex justify-center">
           <button
             onClick={() => setShowTicketForm(true)}
             className="bg-orange-500 text-white hover:bg-orange-600 p-4 flex items-center gap-3 transition-colors font-semibold uppercase tracking-wide rounded-lg"
           >
             <Ticket className="h-6 w-6" />
             <div className="text-left">
-              <p>Create Support Ticket</p>
+              <p>Raise a Ticket</p>
               <p className="text-sm font-normal opacity-90">Get priority support with ticket tracking</p>
             </div>
           </button>
-          
-          <a 
-            href="mailto:support@supernatural.institute" 
-            className="bg-gray-700/50 border border-gray-600 p-4 flex items-center gap-3 hover:bg-gray-700 transition-colors"
-          >
-            <Mail className="h-6 w-6 text-blue-400" />
-            <div>
-              <p className="font-semibold text-white">Email Support</p>
-              <p className="text-sm text-gray-400">support@supernatural.institute</p>
-            </div>
-          </a>
         </div>
       </div>
 

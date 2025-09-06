@@ -77,8 +77,8 @@ export const apiClient = {
       return response;
     }),
 
-    getCourse: withErrorHandling(async (id: string) => {
-      const response = await client.academy.getCourse({ id });
+    getCourse: withErrorHandling(async (id: number) => {
+      const response = await client.academy.getCourse(id);
       return response;
     }),
 
@@ -87,12 +87,12 @@ export const apiClient = {
       return response;
     }),
 
-    updateCourse: withErrorHandling(async (id: string, params: any) => {
+    updateCourse: withErrorHandling(async (id: number, params: any) => {
       const response = await client.academy.updateCourse(id, params);
       return response;
     }),
 
-    deleteCourse: withErrorHandling(async (id: string) => {
+    deleteCourse: withErrorHandling(async (id: number) => {
       const response = await client.academy.deleteCourse(id);
       return response;
     })
@@ -169,4 +169,5 @@ export const {
   membership: membershipAPI,
   user: userAPI
 } = apiClient;
+
 

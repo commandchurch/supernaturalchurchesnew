@@ -49,7 +49,8 @@ const Legal: React.FC = () => {
       documents: [
         { name: 'Refund Policy', link: '/legal/refund-policy', icon: <BookOpen className="w-5 h-5" /> },
         { name: 'Donation Terms', link: '/legal/donation-terms', icon: <CreditCard className="w-5 h-5" /> },
-        { name: 'Compensation Plan', link: '/legal/compensation-plan', icon: <Users className="w-5 h-5" /> }
+        { name: 'Compensation Plan', link: '/legal/compensation-plan', icon: <Users className="w-5 h-5" /> },
+        { name: 'Church Partnership', link: '/churchpartnership', icon: <Users className="w-5 h-5" /> }
       ]
     },
     {
@@ -86,7 +87,7 @@ const Legal: React.FC = () => {
           </h1>
 
           <p className="text-base sm:text-lg text-gray-400 max-w-4xl mx-auto leading-relaxed">
-            Comprehensive legal information for the Supernatural Institute of Ministry platform. Access all our policies, terms, and legal documents in one centralized location.
+            Comprehensive legal information for Supernatural Churches Limited Ministry platform and any associated business names under our ABN. Access all our policies, terms, and legal documents in one centralised location.
           </p>
         </div>
 
@@ -147,7 +148,7 @@ const Legal: React.FC = () => {
             
             <div className="space-y-6">
               <p className="text-gray-300 text-base sm:text-lg leading-relaxed">
-                At Supernatural Institute of Ministry, we believe in complete transparency and accountability in all our supernatural ministry operations. These legal documents reflect our commitment to ethical practices, user protection, and compliance with all applicable laws and regulations.
+                At Supernatural Churches Limited we are committed to full transparency and accountability in everything we do. These legal documents show our dedication to ethical practices, protecting our members, and following all relevant Australian laws and regulations.
               </p>
 
               <div className="grid md:grid-cols-2 gap-8">
@@ -156,15 +157,15 @@ const Legal: React.FC = () => {
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
                       <CheckCircle className="w-5 h-5 text-green-400" />
-                      <span className="text-gray-300">GDPR Compliant Data Protection</span>
+                      <span className="text-gray-300">Privacy Act 1988 (Cth) compliant data protection</span>
                     </div>
                     <div className="flex items-center gap-3">
                       <CheckCircle className="w-5 h-5 text-green-400" />
-                      <span className="text-gray-300">DMCA Copyright Compliance</span>
+                      <span className="text-gray-300">Copyright Act 1968 (Cth) compliance</span>
                     </div>
                     <div className="flex items-center gap-3">
                       <CheckCircle className="w-5 h-5 text-green-400" />
-                      <span className="text-gray-300">Secure Payment Processing</span>
+                      <span className="text-gray-300">Secure and trusted payment processing</span>
                     </div>
                   </div>
                 </div>
@@ -172,8 +173,8 @@ const Legal: React.FC = () => {
                 <div className="space-y-4">
                   <h3 className="font-semibold text-white text-lg heading-font">Contact Information</h3>
                   <div className="space-y-2 text-gray-400">
-                    <p><strong>Email:</strong> legal@supernatural.institute</p>
-                    <p><strong>Response Time:</strong> Within 24 hours</p>
+                    <p>📧 <strong>Email:</strong> legal@supernaturalchurches.org</p>
+                    <p>⏱ <strong>Response time:</strong> Within 24 hours</p>
                   </div>
                 </div>
               </div>

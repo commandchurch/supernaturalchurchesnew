@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supernatural Ambassador - TRAIN. GO. SAVE. REPEAT.</title>
+    <meta name="description" content="Join our supernatural ministry training platform. Start FREE and build your commission network.">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;900&display=swap">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #0f0f0f 50%, #000000 100%);
+            color: #fff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        .heading-font { font-family: 'Archivo', sans-serif; font-weight: 700; }
+
+        /* Professional Button Styles */
+        .btn {
+            display: inline-block;
+            padding: 14px 28px;
+            background: #d4af37;
+            color: #000;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            border: 2px solid #d4af37;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn:hover {
+            background: #b8941f;
+            border-color: #b8941f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+        .btn:active { transform: translateY(0); }
+
+        /* Responsive Section Spacing */
+        .section {
+            padding: clamp(40px, 8vw, 80px) clamp(16px, 5vw, 40px);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Enhanced Hero Section */
+        .hero {
+            text-align: center;
+            padding: clamp(60px, 15vw, 120px) clamp(16px, 5vw, 40px);
+            background: linear-gradient(135deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 100%), url('https://images.unsplash.com/photo-1507692049790-de58290a4354?w=1200&h=800&fit=crop&crop=center') center/cover no-repeat;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 20%, rgba(249, 115, 22, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .hero > * { position: relative; z-index: 1; }
+
+        /* Responsive Typography */
+        .hero h1 {
+            font-size: clamp(2rem, 8vw, 4rem);
+            margin-bottom: 20px;
+            color: #ffffff;
+            font-weight: 700;
+        }
+        .hero .subtitle { font-size: clamp(1rem, 3vw, 1.4rem); color: #d4af37; margin-bottom: 10px; }
+        .hero .verse { font-size: clamp(0.9rem, 2.5vw, 1.1rem); color: #9ca3af; margin-bottom: 20px; }
+        .hero .description { font-size: clamp(1rem, 2.8vw, 1.2rem); max-width: 900px; margin: 0 auto 30px; }
+
+        /* Enhanced Grid System */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(clamp(280px, 30vw, 350px), 1fr));
+            gap: clamp(20px, 4vw, 40px);
+        }
+
+        /* Enhanced Card Design */
+        .card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.05) 100%);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 16px;
+            padding: clamp(20px, 4vw, 40px);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #f97316, #ea580c, #dc2626);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .card:hover::before { opacity: 1; }
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        /* Membership Cards */
+        .membership-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(clamp(260px, 28vw, 320px), 1fr));
+            gap: clamp(15px, 3vw, 25px);
+        }
+        .membership-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.05) 100%);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 16px;
+            padding: clamp(20px, 4vw, 40px);
+            text-align: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .membership-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        /* Popular Badge Enhancement */
+        .popular {
+            border: 2px solid #f97316;
+            position: relative;
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.1) 0%, rgba(255,255,255,0.08) 100%);
+        }
+        .popular::before {
+            content: 'MOST POPULAR';
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #d4af37;
+            color: #000;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: clamp(10px, 2vw, 12px);
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .grid { grid-template-columns: 1fr; gap: 20px; }
+            .membership-grid { grid-template-columns: 1fr; gap: 20px; }
+            .section { padding: 40px 16px; }
+            .card { padding: 20px; }
+            .membership-card { padding: 20px; }
+            .btn { padding: 12px 20px; font-size: 14px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero { padding: 40px 16px; }
+            .hero h1 { font-size: 2rem; }
+            .section { padding: 30px 12px; }
+            .card { padding: 16px; border-radius: 12px; }
+            .membership-card { padding: 16px; border-radius: 12px; }
+        }
+
+        /* Smooth Scrolling */
+        html { scroll-behavior: smooth; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #b8941f; }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div style="text-align: center; margin-bottom: 30px;">
+            <span style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; padding: 10px 20px; border-radius: 25px; font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 6px 20px rgba(249, 115, 22, 0.4); border: 1px solid rgba(249, 115, 22, 0.3);">
+                🙏 Join 500+ Churches Already Building Ministry Networks
+            </span>
+        </div>
+
+        <h1 class="heading-font" style="margin-bottom: 20px; line-height: 1.1; background: linear-gradient(135deg, #fff 0%, #f97316 50%, #fff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-shadow: 0 0 40px rgba(249, 115, 22, 0.3);">
+            Build Your Supernatural Ministry. Earn Monthly Commission. No Credit Card Needed.
+        </h1>
+
+        <p class="subtitle" style="margin-bottom: 15px; font-size: clamp(1.1rem, 2.6vw, 1.3rem); color: #22c55e; font-weight: 600;">
+            Join 500+ churches earning while transforming lives through biblical training & outreach.
+        </p>
+
+        <p class="verse" style="margin-bottom: 25px; opacity: 0.9; color: #f97316; font-size: clamp(0.9rem, 2vw, 1rem); font-weight: 500;">
+            "For the kingdom of God is not in word but in power." — 1 Corinthians 4:20
+        </p>
+
+        <p class="description" style="margin-bottom: 30px; font-size: clamp(1.1rem, 2.6vw, 1.3rem); line-height: 1.5; color: #e5e7eb; max-width: 800px; margin-left: auto; margin-right: auto;">
+            <strong>Equip your ministry. Multiply your impact. Earn commission to fund Kingdom growth.</strong>
+        </p>
+
+        <div style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(34, 197, 94, 0.08) 100%); border: 2px solid rgba(34, 197, 94, 0.4); border-radius: 16px; padding: 25px; margin: 35px 0; max-width: 650px; margin-left: auto; margin-right: auto; backdrop-filter: blur(10px); box-shadow: 0 8px 32px rgba(34, 197, 94, 0.2);">
+            <p style="color: #22c55e; font-weight: bold; margin-bottom: 12px; font-size: clamp(18px, 2.2vw, 20px); text-align: center;">🎯 CHURCH LEADERS: Start FREE Today</p>
+            <p style="color: #16a34a; margin-bottom: 18px; font-size: clamp(15px, 2vw, 17px); text-align: center; line-height: 1.4;">
+                Join 500+ churches already building supernatural networks. No credit card required to start earning commissions.
+            </p>
+            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                <span style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; padding: 6px 14px; border-radius: 15px; font-size: 12px; font-weight: bold; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);">✅ FREE TO START</span>
+                <span style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; padding: 6px 14px; border-radius: 15px; font-size: 12px; font-weight: bold; box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);">💰 EARN COMMISSIONS</span>
+                <span style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; padding: 6px 14px; border-radius: 15px; font-size: 12px; font-weight: bold; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);">⏰ 7-LEVEL NETWORK</span>
+            </div>
+        </div>
+
+        <p style="font-size: clamp(1rem, 2.4vw, 1.1rem); color: #9ca3af; margin-top: 25px; opacity: 0.9; font-weight: 500;">
+            The World's Premier Supernatural Ministry Training Institute
+        </p>
+
+        <div style="margin-top: 45px; display: flex; gap: 25px; justify-content: center; flex-wrap: wrap;">
+            <a href="#plans" class="btn" style="font-size: clamp(18px, 2.2vw, 20px); padding: clamp(18px, 3.5vw, 20px) clamp(32px, 4.5vw, 40px); background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); box-shadow: 0 8px 25px rgba(34, 197, 94, 0.5); border: 1px solid rgba(34, 197, 94, 0.3); transform: translateY(0); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+                🚀 Start FREE – No Card Needed
+            </a>
+            <a href="#calculator" class="btn" style="font-size: clamp(18px, 2.2vw, 20px); padding: clamp(18px, 3.5vw, 20px) clamp(32px, 4.5vw, 40px); background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); box-shadow: 0 8px 25px rgba(249, 115, 22, 0.5); border: 1px solid rgba(249, 115, 22, 0.3);">
+                💰 Calculate My Income Potential
+            </a>
+        </div>
+
+        <div style="margin-top: 35px; text-align: center;">
+            <p style="color: #9ca3af; font-size: 15px; margin-bottom: 12px; font-weight: 500;">
+                ✅ No Setup Fees • ✅ No Monthly Fees to Start • ✅ 30-Day Money Back Guarantee
+            </p>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 25px; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 8px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 25px; padding: 12px 20px; backdrop-filter: blur(10px); box-shadow: 0 4px 15px rgba(34, 197, 94, 0.2);">
+                    <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px;">✝️</div>
+                    <div style="text-align: left;">
+                        <div style="color: #22c55e; font-weight: bold; font-size: 16px;">4.9/5 Rating</div>
+                        <div style="color: #9ca3af; font-size: 12px;">From 200+ churches</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; background: rgba(249, 115, 22, 0.1); border: 1px solid rgba(249, 115, 22, 0.3); border-radius: 25px; padding: 12px 20px; backdrop-filter: blur(10px); box-shadow: 0 4px 15px rgba(249, 115, 22, 0.2);">
+                    <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px;">🌱</div>
+                    <div style="text-align: left;">
+                        <div style="color: #f97316; font-weight: bold; font-size: 16px;">500+ Walking in Power</div>
+                        <div style="color: #9ca3af; font-size: 12px;">Supernatural ministers trained</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 25px; padding: 12px 20px; backdrop-filter: blur(10px); box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);">
+                    <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px;">🛡️</div>
+                    <div style="text-align: left;">
+                        <div style="color: #6366f1; font-weight: bold; font-size: 16px;">30-Day Guarantee</div>
+                        <div style="color: #9ca3af; font-size: 12px;">Money back promise</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 style="text-align: center; font-size: 2rem; margin-bottom: 20px;">Your Divine Assignment: Be the Hands & Feet of Jesus</h2>
+        <p style="text-align: center; color: #9ca3af; margin-bottom: 50px; max-width: 600px; margin-left: auto; margin-right: auto;">
+            You are called to preach the gospel, heal the sick, cast out demons. It's your assignment from God. It's the will of God. If you don't fulfill the will of God you won't abide forever.
+        </p>
+
+        <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 30px; margin-bottom: 50px;">
+            <h3 style="font-size: 1.5rem; margin-bottom: 15px; text-align: center;">The Power of Miracles</h3>
+            <p style="color: #9ca3af; text-align: center; font-size: 14px; line-height: 1.6;">
+                <strong>Who wouldn't want to learn about Jesus after receiving a miracle?</strong> The chances are very slim—little to none. This is where we believe the word of God that "Let the elders who rule well be counted worthy of double honor, especially those who labor in the word and doctrine." (1 Timothy 5:17)
+            </p>
+        </div>
+
+        <h2 style="text-align: center; font-size: 2rem; margin-bottom: 15px; color: #f97316; font-weight: bold;">Our Mission: Souls Saved & Discipled</h2>
+        <p style="text-align: center; color: #9ca3af; margin-bottom: 50px; max-width: 600px; margin-left: auto; margin-right: auto; font-style: italic; position: relative;">
+            "For the kingdom of God is not in word but in power." — 1 Corinthians 4:20
+            <div style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 60px; height: 2px; background: linear-gradient(90deg, transparent, #f97316, transparent);"></div>
+        </p>
+
+        <div class="grid">
+            <div class="card" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%); border: 2px solid rgba(59, 130, 246, 0.3);">
+                <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 28px; box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);">⚡</div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 15px; color: #3b82f6; font-weight: bold;">WALK IN POWER</h3>
+                <p style="color: #9ca3af; line-height: 1.6;">
+                    You don't do this in hopes to get saved. You do it out of love knowing you're saved—which makes this a good work opposed to a dead work.
+                </p>
+            </div>
+
+            <div class="card" style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%); border: 2px solid rgba(34, 197, 94, 0.3);">
+                <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 28px; box-shadow: 0 8px 25px rgba(34, 197, 94, 0.3);">🎓</div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 15px; color: #22c55e; font-weight: bold;">BECOME AN ELDER</h3>
+                <p style="color: #9ca3af; line-height: 1.6;">
+                    Yes, you will essentially become an elder as you grow to full maturity in the faith upon completion of our school training and you'll walk in power immediately.
+                </p>
+            </div>
+
+            <div class="card" style="background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(168, 85, 247, 0.05) 100%); border: 2px solid rgba(168, 85, 247, 0.3);">
+                <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 28px; box-shadow: 0 8px 25px rgba(168, 85, 247, 0.3);">🌟</div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 15px; color: #a855f7; font-weight: bold;">DIVINE REVELATION</h3>
+                <p style="color: #9ca3af; line-height: 1.6;">
+                    We teach you how. It works. This is teaching you can't find easily. It's revelation revealed to people only by the Spirit of God.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" style="background: rgba(255,255,255,0.02);">
+        <div class="grid">
+            <div class="card" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%); border: 2px solid rgba(239, 68, 68, 0.3);">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px;">💝</div>
+                    <div>
+                        <h3 style="font-size: 1.5rem; margin-bottom: 5px; color: #ef4444;">HELP ME FUND</h3>
+                        <p style="color: #9ca3af; font-size: 14px;">Emergency support for ministry families in crisis</p>
+                    </div>
+                </div>
+                <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+                    <h4 style="color: #ef4444; font-weight: bold; margin-bottom: 15px; font-size: 16px;">Real Story: Pastor John's Emergency</h4>
+                    <p style="color: #9ca3af; font-size: 14px; line-height: 1.6; margin-bottom: 15px;">
+                        "When my wife needed urgent surgery, Help Me Fund covered our $3,200 medical bill within 48 hours. We were able to focus on healing instead of financial stress."
+                    </p>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 8px; height: 8px; background: #ef4444; border-radius: 50%;"></div>
+                        <span style="color: #9ca3af; font-size: 12px; font-weight: 500;">Pastor John - Melbourne, Australia</span>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 8px; padding: 12px; text-align: center;">
+                        <div style="color: #22c55e; font-weight: bold; font-size: 14px; margin-bottom: 5px;">✅ Emergency Rent</div>
+                        <div style="color: #9ca3af; font-size: 12px;">Up to $2,000</div>
+                    </div>
+                    <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 8px; padding: 12px; text-align: center;">
+                        <div style="color: #22c55e; font-weight: bold; font-size: 14px; margin-bottom: 5px;">✅ Medical Bills</div>
+                        <div style="color: #9ca3af; font-size: 12px;">Urgent care</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%); border: 2px solid rgba(99, 102, 241, 0.3);">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px;">🙏</div>
+                    <div>
+                        <h3 style="font-size: 1.5rem; margin-bottom: 5px; color: #6366f1;">PRAYER REQUESTS</h3>
+                        <p style="color: #9ca3af; font-size: 14px;">24/7 pastoral prayer support</p>
+                    </div>
+                </div>
+                <div style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                        <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px;">⏰</div>
+                        <div>
+                            <div style="color: #6366f1; font-weight: bold; font-size: 16px;">238 Prayers This Week</div>
+                            <div style="color: #9ca3af; font-size: 12px;">Active prayer warriors standing with you</div>
+                        </div>
+                    </div>
+                    <p style="color: #9ca3af; font-size: 14px; line-height: 1.6;">
+                        "When I was diagnosed with cancer, the prayer team fasted and prayed for 40 days. Today I'm completely healed and cancer-free!"
+                    </p>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                    <div style="background: rgba(255,255,255,0.05); border-radius: 8px; padding: 12px; text-align: center;">
+                        <div style="color: #6366f1; font-size: 20px; margin-bottom: 5px;">📝</div>
+                        <div style="color: #9ca3af; font-size: 12px; font-weight: 500;">Submit Anytime</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.05); border-radius: 8px; padding: 12px; text-align: center;">
+                        <div style="color: #6366f1; font-size: 20px; margin-bottom: 5px;">👨‍⚕️</div>
+                        <div style="color: #9ca3af; font-size: 12px; font-weight: 500;">Pastoral Care</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.05); border-radius: 8px; padding: 12px; text-align: center;">
+                        <div style="color: #6366f1; font-size: 20px; margin-bottom: 5px;">🤝</div>
+                        <div style="color: #9ca3af; font-size: 12px; font-weight: 500;">Prayer Groups</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="card" style="text-align: center;">
+            <h3 style="font-size: 1.5rem; margin-bottom: 15px;">Outreach Affiliate Program</h3>
+            <p style="color: #9ca3af;">
+                Share the Gospel and earn commissions while equipping believers for supernatural ministry. Transform lives through authentic outreach and Kingdom partnerships.
+            </p>
+        </div>
+    </div>
+
+    <div class="section" style="background: rgba(255,255,255,0.02);">
+        <h2 style="text-align: center; font-size: 2rem; margin-bottom: 30px;">Install Our Mobile App</h2>
+        <p style="text-align: center; color: #9ca3af; margin-bottom: 50px; max-width: 600px; margin-left: auto; margin-right: auto;">
+            Get the full Supernatural Institute experience on your mobile device. No app store required - install directly from your browser!
+        </p>
+
+        <div class="grid" style="max-width: 800px; margin: 0 auto;">
+            <div class="card">
+                <h4 style="font-size: 1.2rem; margin-bottom: 15px; color: #60a5fa;">📱 Install on iPhone (Takes 30 sec!)</h4>
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                    <div style="width: 40px; height: 40px; background: #007aff; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 20px;">📱</span>
+                    </div>
+                    <div>
+                        <div style="font-weight: bold; color: white;">Step 1: Open Safari</div>
+                        <div style="color: #9ca3af; font-size: 12px;">Tap Safari icon on your home screen</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                    <div style="width: 40px; height: 40px; background: #f97316; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 20px;">🌐</span>
+                    </div>
+                    <div>
+                        <div style="font-weight: bold; color: white;">Step 2: Visit Site</div>
+                        <div style="color: #9ca3af; font-size: 12px;">Go to supernatural.institute</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="width: 40px; height: 40px; background: #22c55e; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 20px;">📤</span>
+                    </div>
+                    <div>
+                        <div style="font-weight: bold; color: white;">Step 3: Add to Home</div>
+                        <div style="color: #9ca3af; font-size: 12px;">Share button → Add to Home Screen</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h4 style="font-size: 1.2rem; margin-bottom: 15px; color: #34d399;">🤖 Install on Android (Super Quick!)</h4>
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                    <div style="width: 40px; height: 40px; background: #22c55e; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 20px;">🌐</span>
+                    </div>
+                    <div>
+                        <div style="font-weight: bold; color: white;">Step 1: Open Chrome</div>
+                        <div style="color: #9ca3af; font-size: 12px;">Launch Chrome browser</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                    <div style="width: 40px; height: 40px; background: #f97316; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 20px;">📱</span>
+                    </div>
+                    <div>
+                        <div style="font-weight: bold; color: white;">Step 2: Visit Site</div>
+                        <div style="color: #9ca3af; font-size: 12px;">Navigate to supernatural.institute</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="width: 40px; height: 40px; background: #007aff; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 20px;">⬇️</span>
+                    </div>
+                    <div>
+                        <div style="font-weight: bold; color: white;">Step 3: Install App</div>
+                        <div style="color: #9ca3af; font-size: 12px;">Tap "Install" or "Add to Home Screen"</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <p style="color: #9ca3af; font-size: 14px; margin-bottom: 20px;">
+                💡 Pro Tip: After installation, long-press the app icon to access quick actions like "Add Prayer Request" directly from your home screen!
+            </p>
+            <a href="/" class="btn">Download Mobile App</a>
+        </div>
+    </div>
+
+    <div class="section" style="background: rgba(255,255,255,0.02);">
+        <div style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 12px; padding: 30px; max-width: 600px; margin: 0 auto; text-align: center;">
+            <p style="color: #9ca3af; margin-bottom: 20px;">Try Dashboard • Sign in with Clerk authentication • Works offline • Push notifications included</p>
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <a href="/dashboard" class="btn" style="background: #6366f1;">Try Dashboard</a>
+                <a href="/membership" class="btn" style="background: #8b5cf6;">Sign in</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" style="background: rgba(255,255,255,0.02);">
+        <h2 style="text-align: center; font-size: 2rem; margin-bottom: 15px; color: #f97316; font-weight: bold;">Real Miracles. Real Testimonies.</h2>
+        <p style="text-align: center; color: #9ca3af; margin-bottom: 50px; max-width: 600px; margin-left: auto; margin-right: auto;">
+            Witness the power of God demonstrated through real-time miracles and supernatural encounters.
+        </p>
+
+        <!-- Video Testimonial Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1000px; margin: 0 auto;">
+            <div style="background: linear-gradient(135deg, rgba(249, 115, 22, 0.1) 0%, rgba(249, 115, 22, 0.05) 100%); border: 1px solid rgba(249, 115, 22, 0.3); border-radius: 16px; padding: 25px; text-align: center; position: relative; overflow: hidden;">
+                <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 30px; box-shadow: 0 8px 25px rgba(249, 115, 22, 0.3);">🎙️</div>
+                <h4 style="font-size: 1.3rem; color: #f97316; margin-bottom: 15px; font-weight: bold;">Live Radio Miracle</h4>
+                <p style="color: #9ca3af; font-size: 14px; line-height: 1.6; margin-bottom: 20px;">
+                    Kiss FM 106.5 Sydney - Instant healing live on air for millions of listeners
+                </p>
+                <button class="btn" style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); font-size: 14px; padding: 10px 20px;">🎧 Listen to Miracle</button>
+                <div style="position: absolute; top: 15px; right: 15px; background: rgba(239, 68, 68, 0.9); color: white; padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: bold;">LIVE</div>
+            </div>
+
+            <div style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 16px; padding: 25px; text-align: center; position: relative; overflow: hidden;">
+                <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 30px; box-shadow: 0 8px 25px rgba(34, 197, 94, 0.3);">🙏</div>
+                <h4 style="font-size: 1.3rem; color: #22c55e; margin-bottom: 15px; font-weight: bold;">Healing Testimony</h4>
+                <p style="color: #9ca3af; font-size: 14px; line-height: 1.6; margin-bottom: 20px;">
+                    "Pain erased, movement restored as the world listened in real time"
+                </p>
+                <button class="btn" style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); font-size: 14px; padding: 10px 20px;">🎥 Watch Testimony</button>
+                <div style="position: absolute; top: 15px; right: 15px; background: rgba(239, 68, 68, 0.9); color: white; padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: bold;">VIDEO</div>
+            </div>
+
+            <div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 16px; padding: 25px; text-align: center; position: relative; overflow: hidden;">
+                <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 30px; box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);">⚡</div>
+                <h4 style="font-size: 1.3rem; color: #6366f1; margin-bottom: 15px; font-weight: bold;">Deliverance Miracle</h4>
+                <p style="color: #9ca3af; font-size: 14px; line-height: 1.6; margin-bottom: 20px;">
+                    "Jesus healed Kyle's crippling back injury with undeniable evidence"
+                </p>
+                <button class="btn" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); font-size: 14px; padding: 10px 20px;">📖 Read Full Story</button>
+                <div style="position: absolute; top: 15px; right: 15px; background: rgba(249, 115, 22, 0.9); color: white; padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: bold;">AUDIO</div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px;">
+            <p style="color: #9ca3af; font-size: 16px; margin-bottom: 20px; font-style: italic;">
+                "Who wouldn't want to learn about Jesus after receiving a miracle?"
+            </p>
+            <p style="color: #f97316; font-size: 14px; font-weight: 500;">
+                — 1 Timothy 5:17 (Double honor for those who labor in word and doctrine)
+            </p>
+        </div>
+    </div>
+
+    <div class="section" style="background: rgba(255,255,255,0.02);">
+        <h2 style="text-align: center; font-size: 2rem; margin-bottom: 30px;">Start Your Supernatural Journey</h2>
+        <p style="text-align: center; color: #9ca3af; margin-bottom: 50px;">
+            No credit card required. Begin building your ministry network and income potential.
+        </p>
+
+        <!-- Membership Comparison Table -->
+        <div style="background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.05) 100%); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: clamp(20px, 4vw, 40px); backdrop-filter: blur(10px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); max-width: 1000px; margin: 0 auto;">
+            <h3 style="text-align: center; font-size: clamp(1.8rem, 4vw, 2.2rem); margin-bottom: 30px; color: #f97316; font-weight: bold;">Choose Your Ministry Level</h3>
+
+            <!-- Table Header -->
+            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.2);">
+                <div style="font-weight: bold; color: #f97316;">Features</div>
+                <div style="text-align: center; font-weight: bold; color: #22c55e;">FREE</div>
+                <div style="text-align: center; font-weight: bold; color: #9ca3af;">SILVER</div>
+                <div style="text-align: center; font-weight: bold; color: #f97316;">GOLD</div>
+                <div style="text-align: center; font-weight: bold; color: #a855f7;">DIAMOND</div>
+            </div>
+
+            <!-- Pricing Row -->
+            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <div style="font-weight: bold;">Monthly Investment</div>
+                <div style="text-align: center; font-size: 1.5rem; font-weight: bold; color: #22c55e;">$0</div>
+                <div style="text-align: center; font-size: 1.5rem; font-weight: bold; color: #9ca3af;">$33</div>
+                <div style="text-align: center; font-size: 1.5rem; font-weight: bold; color: #f97316;">$149</div>
+                <div style="text-align: center; font-size: 1.5rem; font-weight: bold; color: #a855f7;">$499</div>
+            </div>
+
+            <!-- Commission Levels -->
+            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px; padding: 10px 0;">
+                <div>Commission Levels</div>
+                <div style="text-align: center;">1 Level</div>
+                <div style="text-align: center;">2 Levels</div>
+                <div style="text-align: center;">5 Levels</div>
+                <div style="text-align: center;">7 Levels</div>
+            </div>
+
+            <!-- Ministry Training -->
+            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px; padding: 10px 0;">
+                <div>Ministry Training Access</div>
+                <div style="text-align: center;">✅ Basic</div>
+                <div style="text-align: center;">✅ Enhanced</div>
+                <div style="text-align: center;">✅ Advanced</div>
+                <div style="text-align: center;">✅ Elite</div>
+            </div>
+
+            <!-- Community Support -->
+            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px; padding: 10px 0;">
+                <div>Pastoral Support</div>
+                <div style="text-align: center;">✅</div>
+                <div style="text-align: center;">✅</div>
+                <div style="text-align: center;">✅ Priority</div>
+                <div style="text-align: center;">✅ VIP</div>
+            </div>
+
+            <!-- Average Earnings -->
+            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 15px; margin-bottom: 25px; padding: 15px 0; background: rgba(249, 115, 22, 0.1); border-radius: 8px;">
+                <div style="font-weight: bold; color: #f97316;">Average Monthly Earnings</div>
+                <div style="text-align: center; font-weight: bold; color: #22c55e;">$150</div>
+                <div style="text-align: center; font-weight: bold; color: #9ca3af;">$487</div>
+                <div style="text-align: center; font-weight: bold; color: #f97316;">$1,200</div>
+                <div style="text-align: center; font-weight: bold; color: #a855f7;">$2,500+</div>
+            </div>
+
+            <!-- CTA Buttons -->
+            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 15px;">
+                <div></div>
+                <a href="/membership" class="btn" style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); font-size: 14px; padding: 12px; text-align: center;">🚀 START FREE</a>
+                <a href="/membership" class="btn" style="background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%); font-size: 14px; padding: 12px; text-align: center;">JOIN SILVER</a>
+                <a href="/membership" class="btn" style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); font-size: 14px; padding: 12px; text-align: center;">JOIN GOLD</a>
+                <a href="/membership" class="btn" style="background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%); font-size: 14px; padding: 12px; text-align: center;">JOIN DIAMOND</a>
+            </div>
+        </div>
+
+            <div class="membership-card" style="background: linear-gradient(135deg, rgba(156, 163, 175, 0.15) 0%, rgba(156, 163, 175, 0.08) 50%, rgba(255,255,255,0.05) 100%); border: 1px solid rgba(156, 163, 175, 0.4); backdrop-filter: blur(15px); box-shadow: 0 15px 35px rgba(156, 163, 175, 0.2);">
+                <div style="font-size: clamp(3rem, 7vw, 4rem); margin-bottom: 18px; font-weight: bold; color: #9ca3af; text-shadow: 0 0 20px rgba(156, 163, 175, 0.3);">$33</div>
+                <h3 style="font-size: clamp(1.4rem, 3.2vw, 1.7rem); margin-bottom: 12px; color: #9ca3af; font-weight: bold;">SILVER</h3>
+                <p style="color: #9ca3af; margin-bottom: 22px; font-size: clamp(1rem, 2.2vw, 1.1rem); font-weight: 500;">Everything in Bronze +</p>
+
+                <div style="background: linear-gradient(135deg, rgba(156, 163, 175, 0.2) 0%, rgba(156, 163, 175, 0.1) 100%); border: 1px solid rgba(156, 163, 175, 0.4); border-radius: 12px; padding: 16px; margin-bottom: 22px;">
+                    <p style="color: #9ca3af; font-weight: bold; font-size: 15px; margin-bottom: 10px;">💼 Perfect for Growing Churches:</p>
+                    <ul style="color: #9ca3af; text-align: left; font-size: clamp(0.9rem, 2vw, 1rem); line-height: 1.7;">
+                        <li style="margin-bottom: 8px;">• Affiliate commission earnings (2 levels)</li>
+                        <li style="margin-bottom: 8px;">• Monthly Private Group Teaching</li>
+                        <li>• Sign up bonus qualification</li>
+                    </ul>
+                </div>
+
+                <div style="background: linear-gradient(135deg, rgba(249, 115, 22, 0.2) 0%, rgba(249, 115, 22, 0.1) 100%); border: 1px solid rgba(249, 115, 22, 0.4); border-radius: 12px; padding: 16px; margin-bottom: 22px;">
+                    <p style="color: #f97316; font-weight: bold; font-size: 15px; margin-bottom: 10px;">🎯 Start Building Your Network</p>
+                    <p style="color: #9ca3af; font-size: 14px; line-height: 1.4;">Join 200+ churches already earning $500+/month</p>
+                </div>
+
+                <a href="/membership" class="btn" style="width: 100%; display: block; text-align: center; background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%); font-size: 16px; padding: 16px; border: 1px solid rgba(156, 163, 175, 0.3);">JOIN SILVER</a>
+
+                <p style="text-align: center; color: #9ca3af; font-size: 13px; margin-top: 12px; font-weight: 500;">
+                    📈 Average: $487/month earnings
+                </p>
+            </div>
+
+            <div class="membership-card popular" style="background: linear-gradient(135deg, rgba(249, 115, 22, 0.2) 0%, rgba(249, 115, 22, 0.1) 50%, rgba(255,255,255,0.08) 100%); border: 3px solid #f97316; backdrop-filter: blur(20px); box-shadow: 0 25px 50px rgba(249, 115, 22, 0.4), 0 0 0 3px rgba(249, 115, 22, 0.3); position: relative;">
+                <div style="position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; padding: 8px 20px; border-radius: 25px; font-size: 12px; font-weight: bold; text-transform: uppercase; box-shadow: 0 8px 25px rgba(249, 115, 22, 0.6); border: 1px solid rgba(249, 115, 22, 0.4); z-index: 10;">
+                    🔥 MOST POPULAR
+                </div>
+                <div style="font-size: clamp(3rem, 7vw, 4rem); margin-bottom: 18px; font-weight: bold; color: #f97316; margin-top: 20px; text-shadow: 0 0 25px rgba(249, 115, 22, 0.4);">$149</div>
+                <h3 style="font-size: clamp(1.4rem, 3.2vw, 1.7rem); margin-bottom: 12px; color: #f97316; font-weight: bold;">GOLD</h3>
+                <p style="color: #9ca3af; margin-bottom: 22px; font-size: clamp(1rem, 2.2vw, 1.1rem); font-weight: 500;">Everything in Silver +</p>
+
+                <div style="background: linear-gradient(135deg, rgba(249, 115, 22, 0.2) 0%, rgba(249, 115, 22, 0.1) 100%); border: 1px solid rgba(249, 115, 22, 0.4); border-radius: 12px; padding: 16px; margin-bottom: 22px;">
+                    <p style="color: #f97316; font-weight: bold; font-size: 15px; margin-bottom: 10px;">🏆 Advanced Ministry Tools:</p>
+                    <ul style="color: #9ca3af; text-align: left; font-size: clamp(0.9rem, 2vw, 1rem); line-height: 1.7;">
+                        <li style="margin-bottom: 8px;">• Affiliate commission earnings (5 levels)</li>
+                        <li style="margin-bottom: 8px;">• Fortnightly Q&A group coaching</li>
+                        <li style="margin-bottom: 8px;">• Fortnightly Private Live Teaching</li>
+                        <li>• 5% discount on any merch available</li>
+                    </ul>
+                </div>
+
+                <a href="/membership" class="btn" style="width: 100%; display: block; text-align: center; background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); font-size: 17px; padding: 18px; border: 1px solid rgba(249, 115, 22, 0.3); box-shadow: 0 10px 30px rgba(249, 115, 22, 0.6);">JOIN GOLD</a>
+
+                <p style="text-align: center; color: #9ca3af; font-size: 13px; margin-top: 12px; font-weight: 500;">
+                    ⭐ 70% of churches choose GOLD
+                </p>
+            </div>
+
+            <div class="membership-card" style="background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(168, 85, 247, 0.08) 50%, rgba(255,255,255,0.05) 100%); border: 1px solid rgba(168, 85, 247, 0.4); backdrop-filter: blur(15px); box-shadow: 0 15px 35px rgba(168, 85, 247, 0.2);">
+                <div style="font-size: clamp(3rem, 7vw, 4rem); margin-bottom: 18px; font-weight: bold; color: #a855f7; text-shadow: 0 0 20px rgba(168, 85, 247, 0.3);">$499</div>
+                <h3 style="font-size: clamp(1.4rem, 3.2vw, 1.7rem); margin-bottom: 12px; color: #a855f7; font-weight: bold;">DIAMOND</h3>
+                <p style="color: #9ca3af; margin-bottom: 22px; font-size: clamp(1rem, 2.2vw, 1.1rem); font-weight: 500;">Everything in Gold +</p>
+
+                <div style="background: linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(168, 85, 247, 0.1) 100%); border: 1px solid rgba(168, 85, 247, 0.4); border-radius: 12px; padding: 16px; margin-bottom: 22px;">
+                    <p style="color: #a855f7; font-weight: bold; font-size: 15px; margin-bottom: 10px;">💎 Elite Ministry Experience:</p>
+                    <ul style="color: #9ca3af; text-align: left; font-size: clamp(0.9rem, 2vw, 1rem); line-height: 1.7;">
+                        <li style="margin-bottom: 8px;">• Affiliate commission earnings (7 levels)</li>
+                        <li style="margin-bottom: 8px;">• Fortnightly Private Live Teaching</li>
+                        <li style="margin-bottom: 8px;">• Direct level 1 referrals increase from 20% to 33%</li>
+                        <li>• Free tickets to all in person or online events</li>
+                    </ul>
+                </div>
+
+                <a href="/membership" class="btn" style="width: 100%; display: block; text-align: center; background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%); font-size: 16px; padding: 16px; border: 1px solid rgba(168, 85, 247, 0.3);">JOIN DIAMOND</a>
+
+                <p style="text-align: center; color: #9ca3af; font-size: 13px; margin-top: 12px; font-weight: 500;">
+                    👑 For serious kingdom builders
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" style="text-align: center; background: rgba(255,255,255,0.02);">
+        <h3 style="font-size: 1.5rem; margin-bottom: 15px; color: #f97316; font-weight: bold;">Kingdom Partnership Benefits</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; max-width: 1000px; margin: 0 auto;">
+            <div style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 16px; padding: 25px;">
+                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 24px;">⛪</div>
+                <h4 style="margin-bottom: 12px; color: #22c55e; font-weight: bold;">Support Your Church Monthly</h4>
+                <p style="color: #9ca3af; line-height: 1.5;">Direct deposits to your church account every 28 days with full commission tracking.</p>
+            </div>
+            <div style="background: linear-gradient(135deg, rgba(249, 115, 22, 0.1) 0%, rgba(249, 115, 22, 0.05) 100%); border: 1px solid rgba(249, 115, 22, 0.3); border-radius: 16px; padding: 25px;">
+                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 24px;">📖</div>
+                <h4 style="margin-bottom: 12px; color: #f97316; font-weight: bold;">Access Ministry Training</h4>
+                <p style="color: #9ca3af; line-height: 1.5;">Professional supernatural ministry training and certification programs.</p>
+            </div>
+            <div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 16px; padding: 25px;">
+                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 24px;">💰</div>
+                <h4 style="margin-bottom: 12px; color: #6366f1; font-weight: bold;">Earn Reliable Payouts</h4>
+                <p style="color: #9ca3af; line-height: 1.5;">Consistent monthly commissions from your growing ministry network.</p>
+            </div>
+            <div style="background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(168, 85, 247, 0.05) 100%); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 16px; padding: 25px;">
+                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 24px;">🤝</div>
+                <h4 style="margin-bottom: 12px; color: #a855f7; font-weight: bold;">Compliant & Transparent</h4>
+                <p style="color: #9ca3af; line-height: 1.5;">Australian Consumer Law compliant with full transparency and guarantees.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" style="background: rgba(255,255,255,0.02);">
+        <h2 style="text-align: center; font-size: clamp(1.8rem, 5vw, 2.5rem); margin-bottom: 15px; color: #10b981; font-weight: bold;">See How Your Network Could Grow</h2>
+        <p style="text-align: center; color: #9ca3af; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">Pre-loaded scenarios to show your earning potential</p>
+
+        <div style="background: linear-gradient(135deg, rgba(71, 85, 105, 0.6) 0%, rgba(55, 65, 81, 0.6) 100%); border: 1px solid rgba(71, 85, 105, 0.5); border-radius: 16px; padding: clamp(20px, 4vw, 40px); max-width: 900px; margin: 0 auto; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
+            <h3 style="font-size: clamp(1.2rem, 3vw, 1.5rem); margin-bottom: 25px; text-align: center; color: #10b981; font-weight: bold;">Quick Scenarios:</h3>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(clamp(180px, 25vw, 220px), 1fr)); gap: clamp(10px, 2vw, 15px); margin-bottom: 30px;">
+                <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(255,255,255,0.08) 100%); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: clamp(12px, 3vw, 18px); text-align: center; transition: all 0.3s ease;">
+                    <div style="font-weight: bold; color: #10b981; margin-bottom: 5px; font-size: clamp(0.9rem, 2.2vw, 1rem);">Growing Church</div>
+                    <div style="font-size: clamp(12px, 2.5vw, 14px); color: #9ca3af;">3 churches, 12 members</div>
+                </div>
+                <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(255,255,255,0.08) 100%); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: clamp(12px, 3vw, 18px); text-align: center; transition: all 0.3s ease;">
+                    <div style="font-weight: bold; color: #10b981; margin-bottom: 5px; font-size: clamp(0.9rem, 2.2vw, 1rem);">Established Ministry</div>
+                    <div style="font-size: clamp(12px, 2.5vw, 14px); color: #9ca3af;">8 churches, 26 members</div>
+                </div>
+                <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(255,255,255,0.08) 100%); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: clamp(12px, 3vw, 18px); text-align: center; transition: all 0.3s ease;">
+                    <div style="font-weight: bold; color: #10b981; margin-bottom: 5px; font-size: clamp(0.9rem, 2.2vw, 1rem);">Kingdom Builder</div>
+                    <div style="font-size: clamp(12px, 2.5vw, 14px); color: #9ca3af;">15 churches, 42 members</div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <h4 style="color: #fff; margin-bottom: 15px;">Customize Your Network:</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <span style="color: #fff; font-weight: bold;">Level 1 (30% rate)</span>
+                            <span style="color: #10b981; font-weight: bold;">$308.40/month</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div>
+                                <label style="display: block; color: #9ca3af; font-size: 12px; margin-bottom: 5px;">Churches</label>
+                                <input type="number" value="1" style="width: 100%; background: #374151; border: 1px solid #4b5563; color: #fff; padding: 5px; border-radius: 4px;" />
+                            </div>
+                            <div>
+                                <label style="display: block; color: #9ca3af; font-size: 12px; margin-bottom: 5px;">Silver ($33)</label>
+                                <input type="number" value="4" style="width: 100%; background: #374151; border: 1px solid #4b5563; color: #fff; padding: 5px; border-radius: 4px;" />
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                            <div>
+                                <label style="display: block; color: #9ca3af; font-size: 12px; margin-bottom: 5px;">Gold ($149)</label>
+                                <input type="number" value="2" style="width: 100%; background: #374151; border: 1px solid #4b5563; color: #fff; padding: 5px; border-radius: 4px;" />
+                            </div>
+                            <div>
+                                <label style="display: block; color: #9ca3af; font-size: 12px; margin-bottom: 5px;">Diamond ($499)</label>
+                                <input type="number" value="1" style="width: 100%; background: #374151; border: 1px solid #4b5563; color: #fff; padding: 5px; border-radius: 4px;" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <span style="color: #fff; font-weight: bold;">Level 2 (10% rate)</span>
+                            <span style="color: #10b981; font-weight: bold;">$121.00/month</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div>
+                                <label style="display: block; color: #9ca3af; font-size: 12px; margin-bottom: 5px;">Churches</label>
+                                <input type="number" value="0" style="width: 100%; background: #374151; border: 1px solid #4b5563; color: #fff; padding: 5px; border-radius: 4px;" />
+                            </div>
+                            <div>
+                                <label style="display: block; color: #9ca3af; font-size: 12px; margin-bottom: 5px;">Silver ($33)</label>
+                                <input type="number" value="8" style="width: 100%; background: #374151; border: 1px solid #4b5563; color: #fff; padding: 5px; border-radius: 4px;" />
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                            <div>
+                                <label style="display: block; color: #9ca3af; font-size: 12px; margin-bottom: 5px;">Gold ($149)</label>
+                                <input type="number" value="3" style="width: 100%; background: #374151; border: 1px solid #4b5563; color: #fff; padding: 5px; border-radius: 4px;" />
+                            </div>
+                            <div>
+                                <label style="display: block; color: #9ca3af; font-size: 12px; margin-bottom: 5px;">Diamond ($499)</label>
+                                <input type="number" value="1" style="width: 100%; background: #374151; border: 1px solid #4b5563; color: #fff; padding: 5px; border-radius: 4px;" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <span style="color: #fff; font-weight: bold;">Level 3 (5% rate)</span>
+                            <span style="color: #10b981; font-weight: bold;">$106.95/month</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div>
+                                <label style="display: block; color: #9ca3af; font-size: 12px; margin-bottom: 5px;">Churches</label>
+                                <input type="number" value="0" style="width: 100%; background: #374151; border: 1px solid #4b5563; color: #fff; padding: 5px; border-radius: 4px;" />
+                            </div>
+                            <div>
+                                <label style="display: block; color: #9ca3af; font-size: 12px; margin-bottom: 5px;">Silver ($33)</label>
+                                <input type="number" value="12" style="width: 100%; background: #374151; border: 1px solid #4b5563; color: #fff; padding: 5px; border-radius: 4px;" />
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                            <div>
+                                <label style="display: block; color: #9ca3af; font-size: 12px; margin-bottom: 5px;">Gold ($149)</label>
+                                <input type="number" value="5" style="width: 100%; background: #374151; border: 1px solid #4b5563; color: #fff; padding: 5px; border-radius: 4px;" />
+                            </div>
+                            <div>
+                                <label style="display: block; color: #9ca3af; font-size: 12px; margin-bottom: 5px;">Diamond ($499)</label>
+                                <input type="number" value="2" style="width: 100%; background: #374151; border: 1px solid #4b5563; color: #fff; padding: 5px; border-radius: 4px;" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <span style="color: #fff; font-weight: bold;">Level 4 (4% rate)</span>
+                            <span style="color: #10b981; font-weight: bold;">$127.36/month</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div>
+                                <label style="display: block; color: #9ca3af; font-size: 12px; margin-bottom: 5px;">Churches</label>
+                                <input type="number" value="0" style="width: 100%; background: #374151; border: 1px solid #4b5563; color: #fff; padding: 5px; border-radius: 4px;" />
+                            </div>
+                            <div>
+                                <label style="display: block; color: #9ca3af; font-size: 12px; margin-bottom: 5px;">Silver ($33)</label>
+                                <input type="number" value="15" style="width: 100%; background: #374151; border: 1px solid #4b5563; color: #fff; padding: 5px; border-radius: 4px;" />
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                            <div>
+                                <label style="display: block; color: #9ca3af; font-size: 12px; margin-bottom: 5px;">Gold ($149)</label>
+                                <input type="number" value="8" style="width: 100%; background: #374151; border: 1px solid #4b5563; color: #fff; padding: 5px; border-radius: 4px;" />
+                            </div>
+                            <div>
+                                <label style="display: block; color: #9ca3af; font-size: 12px; margin-bottom: 5px;">Diamond ($499)</label>
+                                <input type="number" value="3" style="width: 100%; background: #374151; border: 1px solid #4b5563; color: #fff; padding: 5px; border-radius: 4px;" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: rgba(71, 85, 105, 0.5); border: 1px solid rgba(71, 85, 105, 0.5); border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; color: #10b981; margin-bottom: 5px;">$945.51</div>
+                    <div style="color: #9ca3af;">Total Monthly Commission</div>
+                </div>
+
+                <div style="margin-top: 15px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: #9ca3af;">Level 1:</span>
+                        <span style="color: #10b981;">$308.40</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: #9ca3af;">Level 2:</span>
+                        <span style="color: #10b981;">$121.00</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: #9ca3af;">Level 3:</span>
+                        <span style="color: #10b981;">$106.95</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: #9ca3af;">Level 4:</span>
+                        <span style="color: #10b981;">$127.36</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: #9ca3af;">Level 5:</span>
+                        <span style="color: #10b981;">$122.40</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: #9ca3af;">Level 6:</span>
+                        <span style="color: #10b981;">$98.86</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: #9ca3af;">Level 7:</span>
+                        <span style="color: #10b981;">$60.54</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 8px; padding: 15px;">
+                <h4 style="color: #10b981; font-weight: bold; margin-bottom: 10px;">How It Works:</h4>
+                <div style="color: #10b981; font-size: 14px; line-height: 1.6;">
+                    <p style="margin-bottom: 8px;"><strong>Join → Invite churches → Earn monthly</strong></p>
+                    <p style="margin-bottom: 8px;"><strong>Example:</strong> You invite 5 churches → each invites 2 → You earn $X/month</p>
+                    <p style="font-size: 12px; opacity: 0.9;">7 levels deep commission structure (30%/10%/5%/4%/3%/2%/1%)</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 15px; padding: 15px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px;">
+                <p style="color: #60a5fa; font-size: 14px;">
+                    <strong>Customize & Calculate:</strong> Adjust the numbers for each level to see your potential earnings.
+                    This demonstrates the true power of the 7-level commission structure.
+                    Full commission tracking available in your partner dashboard.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" style="text-align: center;">
+        <a href="/compensation-plan" class="btn" style="font-size: 1.1rem; padding: 15px 30px;">READ FULL COMPENSATION PLAN</a>
+    </div>
+
+    <div class="section" style="background: rgba(255,255,255,0.02);">
+        <h2 style="text-align: center; font-size: 2rem; margin-bottom: 30px;">Church Success Stories</h2>
+
+        <div class="grid" style="max-width: 1000px; margin: 0 auto;">
+            <div class="card">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                    <img src="/samuel-waterhouse.png" alt="Pastor Mark" style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid #f97316;">
+                    <div>
+                        <h4 style="font-size: 1.2rem; margin-bottom: 5px;">Pastor Mark Johnson</h4>
+                        <p style="color: #9ca3af; font-size: 14px;">Freedom Church QLD</p>
+                    </div>
+                </div>
+                <p style="color: #9ca3af; font-style: italic; margin-bottom: 10px;">
+                    "We earned $800 in our first month while discipling 6 new believers. Praise God!"
+                </p>
+                <div style="display: flex; gap: 5px;">
+                    <span style="color: #f97316;">⭐⭐⭐⭐⭐</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                    <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; color: white;">
+                        ⛪
+                    </div>
+                    <div>
+                        <h4 style="font-size: 1.2rem; margin-bottom: 5px;">Sarah Mitchell</h4>
+                        <p style="color: #9ca3af; font-size: 14px;">Kingdom Builders NSW</p>
+                    </div>
+                </div>
+                <p style="color: #9ca3af; font-style: italic; margin-bottom: 10px;">
+                    "Our church grew from 45 to 78 members in 3 months. The training is life-changing!"
+                </p>
+                <div style="display: flex; gap: 5px;">
+                    <span style="color: #f97316;">⭐⭐⭐⭐⭐</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                    <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; color: white;">
+                        🙏
+                    </div>
+                    <div>
+                        <h4 style="font-size: 1.2rem; margin-bottom: 5px;">David Chen</h4>
+                        <p style="color: #9ca3af; font-size: 14px;">Supernatural Ministries VIC</p>
+                    </div>
+                </div>
+                <p style="color: #9ca3af; font-style: italic; margin-bottom: 10px;">
+                    "Started with FREE membership, now earning $1,200/month while leading healing ministry."
+                </p>
+                <div style="display: flex; gap: 5px;">
+                    <span style="color: #f97316;">⭐⭐⭐⭐⭐</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" style="background: linear-gradient(135deg, rgba(249, 115, 22, 0.05) 0%, rgba(99, 102, 241, 0.05) 100%);">
+        <div class="card" style="max-width: 800px; margin: 0 auto;">
+            <h3 style="font-size: 1.8rem; margin-bottom: 20px; text-align: center; color: #f97316; font-weight: bold;">Getting Started</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px;">
+                <div style="text-align: center; background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 16px; padding: 25px; transition: all 0.3s ease;">
+                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 24px;">📝</div>
+                    <h4 style="margin-bottom: 12px; color: #22c55e; font-weight: bold;">Join a Membership</h4>
+                    <p style="color: #9ca3af; font-size: 14px; line-height: 1.5;">Choose Bronze, Silver, Gold, or Diamond membership</p>
+                </div>
+                <div style="text-align: center; background: linear-gradient(135deg, rgba(249, 115, 22, 0.1) 0%, rgba(249, 115, 22, 0.05) 100%); border: 1px solid rgba(249, 115, 22, 0.3); border-radius: 16px; padding: 25px; transition: all 0.3s ease;">
+                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 24px;">🔗</div>
+                    <h4 style="margin-bottom: 12px; color: #f97316; font-weight: bold;">Share Your Link</h4>
+                    <p style="color: #9ca3af; font-size: 14px; line-height: 1.5;">Get your unique referral link from the dashboard</p>
+                </div>
+                <div style="text-align: center; background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 16px; padding: 25px; transition: all 0.3s ease;">
+                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 24px;">💰</div>
+                    <h4 style="margin-bottom: 12px; color: #6366f1; font-weight: bold;">Earn Commissions</h4>
+                    <p style="color: #9ca3af; font-size: 14px; line-height: 1.5;">Watch your network grow and commissions roll in whilst growing closer to Jesus and winning souls!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final Conversion Section -->
+    <div style="background: linear-gradient(135deg, #000000 0%, #0f0f0f 50%, #000000 100%); padding: 80px 20px; text-align: center; border-top: 2px solid rgba(249, 115, 22, 0.3); position: relative; overflow: hidden;">
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 30% 20%, rgba(249, 115, 22, 0.05) 0%, transparent 50%), radial-gradient(circle at 70% 80%, rgba(99, 102, 241, 0.05) 0%, transparent 50%); pointer-events: none;"></div>
+        <div style="max-width: 900px; margin: 0 auto; position: relative; z-index: 1;">
+            <div style="margin-bottom: 30px;">
+                <span style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; padding: 12px 24px; border-radius: 30px; font-size: 16px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 8px 25px rgba(249, 115, 22, 0.4); border: 1px solid rgba(249, 115, 22, 0.3);">
+                    🙏 Join the Supernatural Movement Today
+                </span>
+            </div>
+
+            <h2 style="font-size: clamp(2.2rem, 5vw, 3rem); margin-bottom: 25px; color: #f97316; font-weight: bold; text-shadow: 0 0 30px rgba(249, 115, 22, 0.3);">
+                🚀 Ready to Fulfill Your Divine Assignment?
+            </h2>
+
+            <p style="font-size: clamp(1.1rem, 2.5vw, 1.3rem); color: #e5e7eb; margin-bottom: 40px; line-height: 1.6; max-width: 700px; margin-left: auto; margin-right: auto;">
+                Join thousands of believers already walking in supernatural power and becoming elders in the faith.
+                Start FREE today and learn to prove Jesus is real through miracles, healing, and deliverance.
+            </p>
+
+            <!-- Trust Signals -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px; margin-bottom: 50px;">
+                <div style="background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(34, 197, 94, 0.08) 100%); border: 2px solid rgba(34, 197, 94, 0.4); border-radius: 16px; padding: 25px; backdrop-filter: blur(10px); box-shadow: 0 8px 32px rgba(34, 197, 94, 0.2);">
+                    <div style="font-size: 2.5rem; margin-bottom: 12px;">⭐⭐⭐⭐⭐</div>
+                    <div style="font-weight: bold; color: #22c55e; margin-bottom: 6px; font-size: 18px;">4.9/5 Rating</div>
+                    <div style="color: #9ca3af; font-size: 15px;">From 200+ churches</div>
+                </div>
+
+                <div style="background: linear-gradient(135deg, rgba(249, 115, 22, 0.15) 0%, rgba(249, 115, 22, 0.08) 100%); border: 2px solid rgba(249, 115, 22, 0.4); border-radius: 16px; padding: 25px; backdrop-filter: blur(10px); box-shadow: 0 8px 32px rgba(249, 115, 22, 0.2);">
+                    <div style="font-size: 2.5rem; margin-bottom: 12px;">⚡</div>
+                    <div style="font-weight: bold; color: #f97316; margin-bottom: 6px; font-size: 18px;">500+ Walking in Power</div>
+                    <div style="color: #9ca3af; font-size: 15px;">Supernatural ministers trained</div>
+                </div>
+
+                <div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(99, 102, 241, 0.08) 100%); border: 2px solid rgba(99, 102, 241, 0.4); border-radius: 16px; padding: 25px; backdrop-filter: blur(10px); box-shadow: 0 8px 32px rgba(99, 102, 241, 0.2);">
+                    <div style="font-size: 2.5rem; margin-bottom: 12px;">🔒</div>
+                    <div style="font-weight: bold; color: #6366f1; margin-bottom: 6px; font-size: 18px;">30-Day Guarantee</div>
+                    <div style="color: #9ca3af; font-size: 15px;">Money back promise</div>
+                </div>
+            </div>
+
+            <!-- Final CTA -->
+            <div style="background: linear-gradient(135deg, rgba(249, 115, 22, 0.15) 0%, rgba(249, 115, 22, 0.08) 50%, rgba(255,255,255,0.03) 100%); border: 3px solid rgba(249, 115, 22, 0.4); border-radius: 20px; padding: 40px; margin-bottom: 35px; backdrop-filter: blur(15px); box-shadow: 0 15px 40px rgba(249, 115, 22, 0.3);">
+                <h3 style="font-size: clamp(1.6rem, 3.5vw, 2rem); color: #f97316; margin-bottom: 18px; font-weight: bold; text-shadow: 0 0 20px rgba(249, 115, 22, 0.3);">
+                    🎯 Don't Miss This Opportunity
+                </h3>
+                <p style="color: #e5e7eb; margin-bottom: 30px; font-size: clamp(1rem, 2.2vw, 1.1rem); line-height: 1.5;">
+                    Limited time offer: Start completely FREE and begin walking in supernatural power immediately.
+                    Join thousands of believers proving Jesus is real through miracles and healing.
+                </p>
+
+                <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 25px;">
+                    <a href="/membership" class="btn" style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); font-size: 20px; padding: 20px 36px; border: 2px solid rgba(34, 197, 94, 0.3); box-shadow: 0 10px 30px rgba(34, 197, 94, 0.5);">
+                        🚀 START FREE NOW
+                    </a>
+                    <a href="#calculator" class="btn" style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); font-size: 20px; padding: 20px 36px; border: 2px solid rgba(249, 115, 22, 0.3); box-shadow: 0 10px 30px rgba(249, 115, 22, 0.5);">
+                        💰 View Calculator
+                    </a>
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: center; gap: 35px; flex-wrap: wrap; color: #9ca3af; font-size: 15px; font-weight: 500;">
+                    <span style="display: flex; align-items: center; gap: 6px;">✅ <strong>No Credit Card Required</strong></span>
+                    <span style="display: flex; align-items: center; gap: 6px;">✅ <strong>30-Day Money Back</strong></span>
+                    <span style="display: flex; align-items: center; gap: 6px;">✅ <strong>Start Earning Today</strong></span>
+                </div>
+            </div>
+
+            <!-- Trust Row -->
+            <div style="display: flex; align-items: center; justify-content: center; gap: 35px; flex-wrap: wrap; color: #9ca3af; font-size: 15px; font-weight: 500; margin-bottom: 35px;">
+                <span style="display: flex; align-items: center; gap: 6px;">✅ <strong>SSL Secured</strong></span>
+                <span style="display: flex; align-items: center; gap: 6px;">✅ <strong>Trusted by 500+ Churches</strong></span>
+                <span style="display: flex; align-items: center; gap: 6px;">✅ <strong>Australian Owned</strong></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="padding: 60px 20px; text-align: center; background: linear-gradient(135deg, #000000 0%, #0f0f0f 50%, #000000 100%); border-top: 2px solid rgba(249, 115, 22, 0.3); position: relative; overflow: hidden;">
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 30% 20%, rgba(249, 115, 22, 0.05) 0%, transparent 50%), radial-gradient(circle at 70% 80%, rgba(99, 102, 241, 0.05) 0%, transparent 50%); pointer-events: none;"></div>
+        <div style="max-width: 1200px; margin: 0 auto; position: relative; z-index: 1;">
+
+            <!-- Trust Seals Row -->
+            <div style="display: flex; align-items: center; justify-content: center; gap: 40px; flex-wrap: wrap; margin-bottom: 40px;">
+                <div style="display: flex; align-items: center; gap: 10px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 25px; padding: 12px 20px;">
+                    <div style="width: 24px; height: 24px; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px;">🔒</div>
+                    <span style="color: #22c55e; font-weight: bold; font-size: 14px;">SSL Secured</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; background: rgba(249, 115, 22, 0.1); border: 1px solid rgba(249, 115, 22, 0.3); border-radius: 25px; padding: 12px 20px;">
+                    <div style="width: 24px; height: 24px; background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px;">🇦🇺</div>
+                    <span style="color: #f97316; font-weight: bold; font-size: 14px;">Australian Owned</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 25px; padding: 12px 20px;">
+                    <div style="width: 24px; height: 24px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px;">✅</div>
+                    <span style="color: #6366f1; font-weight: bold; font-size: 14px;">30-Day Guarantee</span>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; margin-bottom: 40px; text-align: left;">
+                <div>
+                    <h4 style="color: #f97316; font-weight: bold; margin-bottom: 15px; font-size: 18px;">SUPERNATURAL INSTITUTE</h4>
+                    <p style="color: #9ca3af; font-size: 14px; line-height: 1.6; margin-bottom: 15px;">
+                        Equipping believers worldwide with supernatural ministry training and Kingdom authority.
+                    </p>
+                    <div style="width: 60px; height: 2px; background: linear-gradient(90deg, #f97316, #ea580c, #dc2626); border-radius: 1px;"></div>
+                </div>
+
+                <div>
+                    <h4 style="color: #fff; font-weight: bold; margin-bottom: 15px; font-size: 16px;">Quick Links</h4>
+                    <ul style="color: #9ca3af; font-size: 14px; line-height: 2;">
+                        <li><a href="/membership" style="color: #9ca3af; text-decoration: none; transition: color 0.3s ease;">Membership Plans</a></li>
+                        <li><a href="/training" style="color: #9ca3af; text-decoration: none; transition: color 0.3s ease;">Training Courses</a></li>
+                        <li><a href="/about" style="color: #9ca3af; text-decoration: none; transition: color 0.3s ease;">About Us</a></li>
+                        <li><a href="/find-church" style="color: #9ca3af; text-decoration: none; transition: color 0.3s ease;">Find a Church</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 style="color: #fff; font-weight: bold; margin-bottom: 15px; font-size: 16px;">Support & Legal</h4>
+                    <ul style="color: #9ca3af; font-size: 14px; line-height: 2;">
+                        <li><a href="/help" style="color: #9ca3af; text-decoration: none; transition: color 0.3s ease;">Help Center</a></li>
+                        <li><a href="/compensation-plan" style="color: #9ca3af; text-decoration: none; transition: color 0.3s ease;">Compensation Plan</a></li>
+                        <li><a href="/legal" style="color: #9ca3af; text-decoration: none; transition: color 0.3s ease;">Legal & Compliance</a></li>
+                        <li><a href="/privacy" style="color: #9ca3af; text-decoration: none; transition: color 0.3s ease;">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px;">
+                <p style="color: #9ca3af; font-size: 14px; margin-bottom: 10px;">
+                    © 2024 SUPERNATURAL INSTITUTE. All rights reserved.
+                </p>
+                <div style="display: flex; align-items: center; justify-content: center; gap: 30px; flex-wrap: wrap;">
+                    <a href="/legal" style="color: #f97316; text-decoration: none; font-weight: 500; transition: color 0.3s ease;">Legal</a>
+                    <a href="/privacy" style="color: #f97316; text-decoration: none; font-weight: 500; transition: color 0.3s ease;">Privacy</a>
+                    <a href="/terms" style="color: #f97316; text-decoration: none; font-weight: 500; transition: color 0.3s ease;">Terms</a>
+                    <a href="/contact" style="color: #f97316; text-decoration: none; font-weight: 500; transition: color 0.3s ease;">Contact</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+

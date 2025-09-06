@@ -1,18 +1,23 @@
 {
-  "name": "backend",
+  "name": "supernatural-churches-limited",
   "version": "1.0.0",
   "type": "module",
-  "packageManager": "npm",
+  "packageManager": "npm@10.0.0",
   "scripts": {
     "build": "encore build",
-    "dev": "encore run"
+    "dev": "encore run",
+    "deploy": "node deploy-all.js",
+    "deploy:backend": "encore deploy --env=prod",
+    "deploy:frontend": "cd frontend && vercel --prod",
+    "build:frontend": "cd frontend && npm run build",
+    "dev:frontend": "cd frontend && npm run dev"
   },
   "dependencies": {
-    "encore.dev": "^1.49.1",
-    "stripe": "^17.7.0",
-    "jose": "^6.0.11"
+    "@emailjs/browser": "^4.4.1",
+    "encore.dev": "^1.49.3"
   },
   "devDependencies": {
+    "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   }
 }

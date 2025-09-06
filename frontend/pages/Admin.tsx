@@ -1,4 +1,5 @@
 import React, { Suspense, lazy, useMemo, useState } from 'react';
+import FontSizeToggle from '../src/components/FontSizeToggle';
 
 import { DollarSign, Users, TrendingUp, AlertTriangle, Heart, Send, Network, BookOpen, Calculator, Calendar, MessageSquare, UserCheck, Headphones, Church, Gift, Activity, Shield, Handshake } from 'lucide-react';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -70,13 +71,16 @@ export default function Admin() {
   return (
     <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-8 md:py-16">
       <div className="mb-6">
-        <div>
-          <h1 className="text-3xl md:text-5xl font-black text-white mb-2 heading-font">
-            Admin Dashboard
-          </h1>
-          <p className="text-lg text-gray-400">
-            System administration and management tools.
-          </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl md:text-5xl font-black text-white mb-2 heading-font">
+              Admin Dashboard
+            </h1>
+            <p className="text-lg text-gray-400">
+              System administration and management tools.
+            </p>
+          </div>
+          <FontSizeToggle />
         </div>
       </div>
 

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { BookOpen, Plus, Edit, Trash2, CheckCircle, XCircle, Upload, Video, Image, Info, FileText, X, GraduationCap, PlayCircle, Trash } from 'lucide-react';
+import { academy } from '../../client';
 
 // Enhanced course and module interfaces
 interface ModuleFormData {
@@ -35,7 +36,7 @@ interface CourseFormData {
   requiresQuiz: boolean;
   passingScore?: number;
   tags?: string;
-  level: 'beginner' | 'intermediate' | 'advanced';
+  level: 'Beginner' | 'Intermediate' | 'Advanced';
   prerequisites?: string[];
   outcomes?: string[];
   instructor?: string;
@@ -55,7 +56,7 @@ const emptyCourse: CourseFormData = {
   requiresQuiz: false,
   passingScore: 70,
   tags: '',
-  level: 'beginner',
+  level: 'Beginner',
   prerequisites: [],
   outcomes: [],
   instructor: '',
@@ -86,69 +87,72 @@ export default function CourseManagerEnhanced() {
   const [thumbnailPreview, setThumbnailPreview] = useState<string>('');
   const [activeTab, setActiveTab] = useState<'basic' | 'modules' | 'quiz' | 'publishing'>('basic');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [courses, setCourses] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Mock courses data
-  const coursesData = {
-    courses: [
-      {
-        _id: '1',
-        title: 'Advanced Ministry Training',
-        description: 'Comprehensive training for church leaders and ministers.',
-        category: 'leadership',
-        thumbnailUrl: '',
-        durationMinutes: 180,
-        modules: [],
-        isPublished: true,
-        isPremium: true,
-        requiresQuiz: true,
-        passingScore: 80,
-        tags: 'ministry,leadership',
-        level: 'advanced',
-        prerequisites: ['Basic Discipleship'],
-        outcomes: ['Church leadership skills', 'Ministry management'],
-        instructor: 'Senior Pastor',
-        language: 'english',
-        quizQuestions: []
-      },
-      {
-        _id: '2',
-        title: 'Prophetic Ministry Foundations',
-        description: 'Understanding and operating in the prophetic gifts.',
-        category: 'prophecy',
-        thumbnailUrl: '',
-        durationMinutes: 120,
-        modules: [],
-        isPublished: true,
-        isPremium: false,
-        requiresQuiz: false,
-        passingScore: 70,
-        tags: 'prophecy,gifts',
-        level: 'intermediate',
-        prerequisites: [],
-        outcomes: ['Prophetic understanding', 'Gift activation'],
-        instructor: 'Prophetic Minister',
-        language: 'english',
-        quizQuestions: []
+  // Load courses from backend
+  useEffect(() => {
+    const loadCourses = async () => {
+      try {
+        const response = await academy.listAllCourses();
+        setCourses(response.courses);
+      } catch (error) {
+        console.error('Failed to load courses:', error);
+        setCourses([]);
+      } finally {
+        setIsLoading(false);
       }
-    ]
-  };
-  const isLoading = false;
+    };
+
+    loadCourses();
+  }, []);
 
   const createMutation = async (params: any) => {
-    alert('Course created successfully!');
-    return { success: true };
+    try {
+      await academy.createCourse(params);
+      // Reload courses
+      const response = await academy.listAllCourses();
+      setCourses(response.courses);
+      alert('Course created successfully!');
+      return { success: true };
+    } catch (error) {
+      console.error('Failed to create course:', error);
+      alert('Failed to create course. Please try again.');
+      return { success: false };
+    }
   };
 
   const updateMutation = async (params: any) => {
-    alert('Course updated successfully!');
-    return { success: true };
+    try {
+      await academy.updateCourse(params.courseId, params);
+      // Reload courses
+      const response = await academy.listAllCourses();
+      setCourses(response.courses);
+      alert('Course updated successfully!');
+      return { success: true };
+    } catch (error) {
+      console.error('Failed to update course:', error);
+      alert('Failed to update course. Please try again.');
+      return { success: false };
+    }
   };
 
   const deleteMutation = async (params: any) => {
     if (confirm('Are you sure you want to delete this course?')) {
-      alert('Course deleted successfully!');
+      try {
+        await academy.deleteCourse(params.courseId);
+        // Reload courses
+        const response = await academy.listAllCourses();
+        setCourses(response.courses);
+        alert('Course deleted successfully!');
+        return { success: true };
+      } catch (error) {
+        console.error('Failed to delete course:', error);
+        alert('Failed to delete course. Please try again.');
+        return { success: false };
+      }
     }
-    return { success: true };
+    return { success: false };
   };
 
   const resetForm = () => {
@@ -270,7 +274,11 @@ export default function CourseManagerEnhanced() {
         description: editingCourse.description,
         category: editingCourse.category,
         thumbnailUrl: editingCourse.thumbnailUrl || undefined,
+        videoUrl: editingCourse.modules[0]?.videoUrl || undefined,
+        pdfUrl: undefined,
         durationMinutes: editingCourse.durationMinutes,
+        isPublished: editingCourse.isPublished,
+        isPremium: editingCourse.isPremium,
       };
 
       if (editingCourse._id) {
@@ -281,7 +289,7 @@ export default function CourseManagerEnhanced() {
       } else {
         await createMutation(courseData);
       }
-      
+
       setIsModalOpen(false);
       resetForm();
     } catch (error) {
@@ -334,7 +342,7 @@ export default function CourseManagerEnhanced() {
               </tr>
             </thead>
             <tbody>
-              {coursesData?.courses.map((course: any) => (
+              {courses.map((course: any) => (
                 <tr key={course._id} className="border-b border-gray-700/50 hover:bg-gray-700/20">
                   <td className="py-3 sm:py-4 px-2 sm:px-3">
                     <div className="flex items-center gap-2 sm:gap-3">
@@ -360,8 +368,8 @@ export default function CourseManagerEnhanced() {
                   </td>
                   <td className="py-3 sm:py-4 px-2 sm:px-3 hidden lg:table-cell">
                     <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium capitalize ${
-                      course.level === 'beginner' ? 'bg-green-500/20 text-green-400' :
-                      course.level === 'intermediate' ? 'bg-yellow-500/20 text-yellow-400' :
+                      course.level === 'Beginner' ? 'bg-green-500/20 text-green-400' :
+                      course.level === 'Intermediate' ? 'bg-yellow-500/20 text-yellow-400' :
                       'bg-red-500/20 text-red-400'
                     }`}>
                       {course.level}
@@ -531,12 +539,12 @@ export default function CourseManagerEnhanced() {
                         </label>
                         <select
                           value={editingCourse.level}
-                          onChange={(e) => setEditingCourse({ ...editingCourse, level: e.target.value as 'beginner' | 'intermediate' | 'advanced' })}
+                          onChange={(e) => setEditingCourse({ ...editingCourse, level: e.target.value as 'Beginner' | 'Intermediate' | 'Advanced' })}
                           className="w-full bg-gray-700 border border-gray-600 text-white px-3 py-2 rounded focus:outline-none focus:border-orange-500"
                         >
-                          <option value="beginner">🟢 Beginner</option>
-                          <option value="intermediate">🟡 Intermediate</option>
-                          <option value="advanced">🔴 Advanced</option>
+                          <option value="Beginner">🟢 Beginner</option>
+                          <option value="Intermediate">🟡 Intermediate</option>
+                          <option value="Advanced">🔴 Advanced</option>
                         </select>
                       </div>
                       

@@ -5,6 +5,8 @@ export interface UserProfile {
   userId: string;
   name?: string | null;
   email?: string | null;
+  username?: string | null;
+  affiliateLink?: string | null;
   usdtWalletAddress?: string | null;
   bsb?: string | null;
   accountNumber?: string | null;
@@ -21,8 +23,10 @@ export const getProfile = api<GetProfileParams, UserProfile>(
     const profile = await userDB.queryRow<{
       user_id: string;
       name?: string | null;
+      username?: string | null;
+      affiliate_link?: string | null;
     }>`
-      SELECT user_id, name FROM user_profiles WHERE user_id = ${userId}
+      SELECT user_id, name, username, affiliate_link FROM user_profiles WHERE user_id = ${userId}
     `;
 
     if (!profile) {
@@ -32,6 +36,8 @@ export const getProfile = api<GetProfileParams, UserProfile>(
     return {
       userId: profile.user_id,
       name: profile.name,
+      username: profile.username,
+      affiliateLink: profile.affiliate_link,
     };
   }
 );

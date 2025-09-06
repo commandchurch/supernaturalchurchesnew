@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Church, Mail, Phone, MapPin, Users, BookOpen, CheckCircle, X, Loader2 } from 'lucide-react';
+import { sendPartnershipApplication } from '../src/utils/emailService';
 
 interface FormData {
   churchName: string;
@@ -41,21 +42,15 @@ export default function FiveFoldApplicationForm({ isOpen, onClose }: FiveFoldApp
     setIsSubmitting(true);
 
     try {
-      // Submit Five-Fold application via direct API call
-      const response = await fetch('/api/fivefold/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(formData),
-      });
-      
-      if (!response.ok) {
+      const success = await sendPartnershipApplication(
+        formData.pastorName,
+        formData.email,
+        formData
+      );
+
+      if (!success) {
         throw new Error('Failed to submit application');
       }
-      
-      // Email confirmation handled by backend
 
       setIsSubmitted(true);
       // Reset form after successful submission
@@ -152,7 +147,7 @@ export default function FiveFoldApplicationForm({ isOpen, onClose }: FiveFoldApp
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="bg-blue-500/10 border border-blue-500/30 p-4 rounded-lg">
                 <p className="text-blue-100 text-sm">
-                  <strong>Partnership Investment:</strong> $200 AUD/month includes senior leadership oversight, 
+                  <strong>Partnership Investment:</strong> $99 AUD/month includes senior leadership oversight,
                   complete ministry training, congregation discipleship, and growth support.
                 </p>
               </div>

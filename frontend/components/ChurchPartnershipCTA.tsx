@@ -46,7 +46,7 @@ const ChurchPartnershipCTA: React.FC<ChurchPartnershipCTAProps> = ({
           </div>
         </div>
         <p className="text-gray-300 text-sm mb-4">
-          Join our Supernatural Churches Apostolic Partnership and demonstrate Kingdom power through miraculous ministry. We equip churches to be the light of this world, not to look the same as unbelievers.
+          Partner with churches worldwide experiencing supernatural breakthrough. Receive financial support and apostolic training to demonstrate God's Kingdom power through real miracles and ministry transformation.
         </p>
         <div className="flex gap-3">
           {showLearnMore && (
@@ -59,12 +59,12 @@ const ChurchPartnershipCTA: React.FC<ChurchPartnershipCTAProps> = ({
             </Link>
           )}
           {showPartnerButton && (
-            <button
-              onClick={() => setIsFormOpen(true)}
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all duration-300 transform hover:scale-105"
+            <Link
+              to="/churchpartnership"
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all duration-300 transform hover:scale-105 inline-block"
             >
-              PARTNER WITH US
-            </button>
+              BECOME A PARTNER
+            </Link>
           )}
         </div>
         <FiveFoldPartnershipApplication 
@@ -86,11 +86,10 @@ const ChurchPartnershipCTA: React.FC<ChurchPartnershipCTAProps> = ({
             SUPERNATURAL CHURCHES PARTNERSHIP
           </h2>
           <div className="text-orange-400 font-bold text-lg mb-4">
-            🔥 WE BRING SPIRITUALLY DEAD CHURCHES BACK TO LIFE
+            🔥 Transform Your Ministry Through Supernatural Power
           </div>
           <p className="text-gray-300 max-w-2xl mx-auto text-lg leading-relaxed">
-            The Kingdom of God is demonstrated in power, not in words (1 Corinthians 4:20). Through apostolic oversight and 
-            supernatural training, we equip churches with proven ministry protocols that manifest the Dunamis power of God.
+            Experience the "Dunamis power" (Greek: δύναμις - miraculous power, mighty works, strength) that brings spiritually dead churches back to life. We provide both financial support and biblical training so your congregation can demonstrate God's Kingdom power through real miracles, healing, and supernatural ministry.
           </p>
         </div>
 
@@ -98,15 +97,21 @@ const ChurchPartnershipCTA: React.FC<ChurchPartnershipCTAProps> = ({
           <div>
             <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
               <Users className="h-5 w-5 text-blue-400" />
-              Ministry Transformation
+              Complete Ministry Transformation
             </h3>
-            <p className="text-gray-400 mb-4">
-              We equip churches with biblical protocols for congregational healing, discerning false doctrines, and establishing 
-              supernatural ministry foundations. Your church will demonstrate Kingdom power through miraculous signs and wonders, 
-              distinguishing you as the light of this world.
-            </p>
+            <div className="text-gray-400 mb-4 space-y-3">
+              <p>
+                <strong className="text-white">Financial Freedom:</strong> Monthly partnership fees help sustain your ministry while you focus on God's work, not fundraising.
+              </p>
+              <p>
+                <strong className="text-white">Biblical Excellence:</strong> Receive apostolic oversight ensuring doctrinal purity and supernatural ministry training.
+              </p>
+              <p>
+                <strong className="text-white">Kingdom Impact:</strong> Your church becomes a demonstration of God's power, not just another religious institution.
+              </p>
+            </div>
             <div className="text-2xl font-black text-white">
-              $200 AUD <span className="text-gray-400 text-base font-normal">/month</span>
+              $99 AUD <span className="text-gray-400 text-base font-normal">/month</span>
             </div>
           </div>
 
@@ -133,16 +138,16 @@ const ChurchPartnershipCTA: React.FC<ChurchPartnershipCTAProps> = ({
               </Link>
             )}
             {showPartnerButton && (
-              <button 
-                onClick={() => setIsFormOpen(true)}
-                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all duration-300 transform hover:scale-105"
+              <Link
+                to="/churchpartnership"
+                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all duration-300 transform hover:scale-105 inline-block"
               >
-                PARTNER WITH US
-              </button>
+                BECOME A PARTNER
+              </Link>
             )}
           </div>
           <p className="text-gray-400 text-sm">
-            Join our apostolic network of supernatural churches demonstrating Dunamis power and advancing God's Kingdom through biblical accuracy and miraculous ministry.
+            Join churches worldwide that are experiencing supernatural breakthrough, financial provision, and the genuine demonstration of God's Kingdom power through miraculous ministry.
           </p>
         </div>
 
@@ -164,25 +169,16 @@ const ChurchPartnershipCTA: React.FC<ChurchPartnershipCTAProps> = ({
         <div className="flex-1">
           <h3 className="text-xl font-bold text-white mb-2">Want to Partner Your Church?</h3>
           <p className="text-gray-300 text-sm mb-4 leading-relaxed">
-            Join our Supernatural Churches Apostolic Partnership and demonstrate the Kingdom of God in power, not just words. 
-            We equip churches with biblical protocols to manifest Dunamis power and be the light of this world.
+            Transform your ministry with supernatural power and apostolic oversight. Receive financial support and biblical training to demonstrate God's Kingdom through real miracles, healing, and breakthrough ministry.
           </p>
           <div className="flex gap-3 flex-wrap">
             {showLearnMore && (
               <Link 
-                to="/about#church-partnership"
+                to="http://localhost:5175/partner"
                 className="px-6 py-3 bg-white hover:bg-gray-100 text-black font-semibold transition-all duration-300 transform hover:scale-105"
               >
                 Learn About Church Partnership
               </Link>
-            )}
-            {showPartnerButton && (
-              <button 
-                onClick={() => setIsFormOpen(true)}
-                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all duration-300 transform hover:scale-105"
-              >
-                PARTNER WITH US
-              </button>
             )}
           </div>
         </div>

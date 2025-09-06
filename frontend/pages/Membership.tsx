@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useUser } from '@clerk/clerk-react';
 
 import {
   EnhancedCard,
@@ -39,7 +38,8 @@ import {
   GraduationCap,
   X,
   Building,
-  Loader2
+  Loader2,
+  HelpCircle
 } from 'lucide-react';
 
 // Skeleton Loader Component
@@ -74,7 +74,9 @@ const FAQItem = ({ question, answer }: { question: string; answer: string }) => 
 };
 
 const Membership: React.FC = () => {
-  const { isSignedIn, user } = useUser();
+  // Mock user state for now
+  const isSignedIn = false;
+  const user = null;
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'annual'>('monthly');
   const [membershipType, setMembershipType] = useState<'individual' | 'church'>('individual');
@@ -91,17 +93,17 @@ const Membership: React.FC = () => {
   // Fixed pricing subscription plans
   const subscriptionPlans = [
     { code: 'FREE', name: 'Free Membership', price: 0, description: 'Basic access' },
-    { code: 'BRONZE', name: 'Bronze Membership', price: 10, annualPrice: 108, description: 'Entry level membership' },
-    { code: 'SILVER', name: 'Silver Membership', price: 20, annualPrice: 216, description: 'Enhanced membership' },
-    { code: 'GOLD', name: 'Gold Membership', price: 50, annualPrice: 540, description: 'Advanced membership' },
-    { code: 'DIAMOND', name: 'Diamond Membership', price: 100, annualPrice: 1080, description: 'Elite membership' }
+    { code: 'SILVER', name: 'Silver Membership', price: 33, annualPrice: 356, description: 'Enhanced membership' },
+    { code: 'GOLD', name: 'Gold Membership', price: 149, annualPrice: 1609, description: 'Advanced membership' },
+    { code: 'DIAMOND', name: 'Diamond Membership', price: 499, annualPrice: 5391, description: 'Elite membership' }
   ];
 
   const createCheckoutSession = async (params: any) => {
-    // Mock checkout session creation
-    alert('Redirecting to Stripe checkout...');
-    // In real implementation, this would redirect to Stripe
-    return { url: '/dashboard?subscription=success' }; // Mock return for now
+    // Placeholder for proper Stripe integration
+    alert('Payment processing is currently under development. Please contact support for manual enrollment.');
+    // In real implementation, this would integrate with Stripe
+    // return { url: stripeCheckoutUrl };
+    throw new Error('Payment system not yet implemented');
   };
   
   // Enhanced error categorization helper
@@ -155,18 +157,13 @@ const Membership: React.FC = () => {
       setError(null);
       setErrorType('unknown');
 
-      const result = await createCheckoutSession({
+      // Placeholder: Payment system not yet implemented
+      await createCheckoutSession({
         planCode,
-        successUrl: `${window.location.origin}/dashboard?subscription=success`,
+        successUrl: `${window.location.origin}/membership?subscription=success`,
         cancelUrl: `${window.location.origin}/membership?subscription=cancelled`,
-        userId: user?.id || '',
+        userId: 'guest-user',
       });
-
-      if (result.url) {
-        window.location.href = result.url;
-      } else {
-        throw new Error('No checkout URL received');
-      }
     } catch (error) {
       console.error('Failed to create checkout session:', error);
       const { message, type } = categorizeError(error);
@@ -317,11 +314,11 @@ const Membership: React.FC = () => {
         {/* Hero Section - Concise & Enticing */}
         <div className="text-center mb-16" id="plans">
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white mb-6 heading-font">
-            Start Your<br />
-            <span className="text-orange-400">Supernatural Journey</span>
+            Church<br />
+            <span className="text-orange-400">Partnership Program</span>
           </h1>
           <p className="text-xl sm:text-2xl text-gray-300 max-w-4xl mx-auto mb-8 leading-relaxed">
-            No credit card required. Begin building your ministry network and income potential.
+            $99 per month. Join our vetted network of safe supernatural churches with guaranteed healing protocols.
           </p>
 
 
@@ -329,9 +326,16 @@ const Membership: React.FC = () => {
 
 
         {/* Premium Tiers Grid */}
-        <div id="paid-section" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
+        <div id="paid-section" className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8 mb-20 max-w-6xl mx-auto">
           {currentTiers
             .filter(tier => tier.name !== 'FREE') // Exclude FREE tier from main grid
+            .sort((a, b) => {
+              // Custom sort to put GOLD in the center
+              const order = ['SILVER', 'GOLD', 'DIAMOND'];
+              const aIndex = order.indexOf(a.name);
+              const bIndex = order.indexOf(b.name);
+              return aIndex - bIndex;
+            })
             .map((tier, index) => {
             const Icon = tier.icon;
             const isPopular = tier.name === 'GOLD'; // Mark Gold as popular
@@ -398,7 +402,11 @@ const Membership: React.FC = () => {
                         <p>• <strong>30%</strong> commission on Level 1 referrals</p>
                         <p>• <strong>10%</strong> commission on Level 2 referrals</p>
                         <p>• <strong>5%</strong> commission on Level 3 referrals</p>
-                        <p>• <strong>3 levels deep</strong> commission structure</p>
+                        <p>• <strong>4%</strong> commission on Level 4 referrals</p>
+                        <p>• <strong>3%</strong> commission on Level 5 referrals</p>
+                        <p>• <strong>2%</strong> commission on Level 6 referrals</p>
+                        <p>• <strong>1%</strong> commission on Level 7 referrals</p>
+                        <p>• <strong>7 levels deep</strong> commission structure (30%/10%/5%/4%/3%/2%/1%)</p>
                       </div>
                     </div>
                   </div>
@@ -483,36 +491,62 @@ const Membership: React.FC = () => {
                       </div>
                     )}
 
-                    <p className="text-gray-300 text-sm leading-relaxed mb-4">
-                      {tier.name === 'BRONZE' && 'Entry level membership'}
-                      {tier.name === 'SILVER' && 'Enhanced membership'}
-                      {tier.name === 'GOLD' && 'Advanced membership'}
-                      {tier.name === 'DIAMOND' && 'Elite membership'}
-                    </p>
+                    {/* Tier-specific benefits */}
+                    <div className="text-left mb-4">
+                      {tier.name === 'BRONZE' && (
+                        <div className="space-y-2 text-sm text-gray-300">
+                          <div>• Private Community Access</div>
+                          <div>• Premium course access</div>
+                          <div>• Help Me Fund access</div>
+                          <div>• Affiliate commission earnings (1 level)</div>
+                          <div>• Sign up bonus qualification</div>
+                        </div>
+                      )}
+                      {tier.name === 'SILVER' && (
+                        <div className="space-y-2 text-sm text-gray-300">
+                          <div className="text-blue-400 font-semibold">Everything in Bronze +</div>
+                          <div>• Affiliate commission earnings (2 levels)</div>
+                          <div>• Monthly Private Group Teaching</div>
+                          <div>• Sign up bonus qualification</div>
+                        </div>
+                      )}
+                      {tier.name === 'GOLD' && (
+                        <div className="space-y-2 text-sm text-gray-300">
+                          <div className="text-purple-400 font-semibold">Everything in Silver +</div>
+                          <div>• Affiliate commission earnings (5 levels)</div>
+                          <div>• Fortnightly Q&A group coaching</div>
+                          <div>• Fortnightly Private Live Teaching</div>
+                          <div>• 5% discount on any merch available</div>
+                          <div>• Sign up bonus qualification</div>
+                        </div>
+                      )}
+                      {tier.name === 'DIAMOND' && (
+                        <div className="space-y-2 text-sm text-gray-300">
+                          <div className="text-orange-400 font-semibold">Everything in Gold +</div>
+                          <div>• Affiliate commission earnings (7 levels)</div>
+                          <div>• Fortnightly Private Live Teaching</div>
+                          <div>• Direct level 1 referrals increase from 20% to 33%</div>
+                          <div>• Free tickets to all in person or online events</div>
+                          <div>• 10% discount on any merch available</div>
+                          <div>• Sign up bonus qualification</div>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
-                  <p className="text-gray-300 text-base leading-relaxed mb-6">
-                    {tier.description}
-                  </p>
 
-                  {/* Key Benefits - Concise */}
-                  <div className="text-center mb-6">
-                    <div className="text-green-400 font-semibold text-sm mb-2">✓ {tier.name === 'BRONZE' ? '1' : tier.name === 'SILVER' ? '2' : tier.name === 'GOLD' ? '5' : '7'} Commission Levels</div>
-                    <div className="text-blue-400 font-semibold text-sm">✓ Premium Training Access</div>
-                  </div>
                 </div>
 
-                {/* Key Benefits */}
-                <div className="space-y-3 mb-8 flex-1">
-                  {tier.benefits.slice(0, 5).map((benefit, idx) => (
-                    <div key={idx} className="flex items-start gap-3 text-sm text-gray-300">
-                      <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
-                      <span className="flex-1 leading-relaxed">{benefit}</span>
+                {/* Additional Benefits */}
+                <div className="space-y-2 mb-6 flex-1">
+                  {tier.benefits.slice(0, 3).map((benefit, idx) => (
+                    <div key={idx} className="text-sm text-gray-400 leading-relaxed">
+                      • {benefit}
                     </div>
                   ))}
-                  {tier.benefits.length > 5 && (
-                    <div className="text-xs text-gray-400 text-center pt-2 border-t border-gray-600/50">
-                      +{tier.benefits.length - 5} more premium benefits
+                  {tier.benefits.length > 3 && (
+                    <div className="text-xs text-gray-500 text-center pt-2">
+                      +{tier.benefits.length - 3} more benefits included
                     </div>
                   )}
                 </div>
@@ -612,21 +646,6 @@ const Membership: React.FC = () => {
                 No credit card required. Begin building your ministry network and income potential.
               </p>
 
-              {/* Key Stats - More Compelling */}
-              <div className="grid grid-cols-3 gap-4 mb-8 max-w-md mx-auto">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-green-400">$0</div>
-                  <div className="text-xs text-gray-400">to start</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-400">30%</div>
-                  <div className="text-xs text-gray-400">commissions</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-400">$30K</div>
-                  <div className="text-xs text-gray-400">max monthly</div>
-                </div>
-              </div>
             </div>
 
 
@@ -638,24 +657,12 @@ const Membership: React.FC = () => {
                 <p className="text-gray-300 text-sm mb-6">Start your journey with our referral program</p>
               </div>
 
-              {/* Key Benefits - Clear & Non-Contradictory */}
-                  <div className="space-y-3 mb-6">
-                    <div className="flex items-center gap-3 text-sm text-green-200">
-                      <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
-                      <span>30% commissions on referrals</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-sm text-green-200">
-                      <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
-                      <span>Prayer request submissions</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-sm text-green-200">
-                      <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
-                      <span>Support ticket access</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-sm text-green-200">
-                      <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
-                      <span>Basic training access</span>
-                    </div>
+              {/* Key Benefits - Clean & Clear */}
+                  <div className="space-y-2 mb-6">
+                    <div className="text-sm text-gray-300">• 30% commissions on referrals</div>
+                    <div className="text-sm text-gray-300">• Prayer request submissions</div>
+                    <div className="text-sm text-gray-300">• Support ticket access</div>
+                    <div className="text-sm text-gray-300">• Basic training access</div>
                   </div>
     
                   {/* Getting Started Tips */}
@@ -724,83 +731,29 @@ const Membership: React.FC = () => {
           </div>
         )}
 
-        {/* FAQ Section - Expandable */}
-        <div className="max-w-4xl mx-auto mt-20 mb-12">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-black text-white mb-4 heading-font">
-              Frequently Asked Questions
-            </h2>
-          </div>
-
-          <div className="space-y-4">
-            <FAQItem
-              question="How do I start earning?"
-              answer="Start FREE and share your referral link. Earn 30% commission on every signup through your link."
-            />
-
-            <FAQItem
-              question="What's the difference between FREE and paid?"
-              answer="FREE gets you started with commissions. Paid memberships unlock deeper levels and premium benefits."
-            />
-
-            <FAQItem
-              question="How does the optional sharing work?"
-              answer="Sharing is completely optional and recommended for the best experience. There are no mandatory requirements or time limits for maintaining your membership benefits."
-            />
-
-            <FAQItem
-              question="Can I cancel anytime?"
-              answer="Yes! Cancel anytime. Your earned commissions continue as long as you meet the sharing requirement."
-            />
-
-            <FAQItem
-              question="What's in the FREE pack exactly?"
-              answer="FREE Membership includes: Private Community Access, Premium course access, Help Me Fund access, Affiliate commission earnings (1 level), Sign up bonus qualification."
-            />
-
-            <FAQItem
-              question="What's in the BRONZE pack exactly?"
-              answer="BRONZE Membership includes: Everything in FREE + Affiliate commission earnings (1 level), Private Community Access, Premium course access, Help Me Fund access, Sign up bonus qualification."
-            />
-
-            <FAQItem
-              question="What's in the SILVER pack exactly?"
-              answer="SILVER Membership includes: Everything in BRONZE + Affiliate commission earnings (2 levels), Monthly Private Group Teaching, Sign up bonus qualification."
-            />
-
-            <FAQItem
-              question="What's in the GOLD pack exactly?"
-              answer="GOLD Membership includes: Everything in SILVER + Affiliate commission earnings (5 levels), Fortnightly Q&A group coaching, Fortnightly Private Live Teaching, 5% discount on any merch available, Sign up bonus qualification."
-            />
-
-            <FAQItem
-              question="What's in the DIAMOND pack exactly?"
-              answer="DIAMOND Membership includes: Everything in GOLD + Affiliate commission earnings (7 levels), Fortnightly Private Live Teaching, Direct level 1 referrals increase from 20% to 33%, Free tickets to all in person or online events, 10% discount on any merch available, Sign up bonus qualification."
-            />
-
-            <FAQItem
-              question="How does the commission structure work?"
-              answer="You earn 30% commission on all levels. FREE members earn on 1 level, BRONZE on 1 level, SILVER on 2 levels, GOLD on 5 levels, and DIAMOND on 7 levels. Commissions are paid monthly."
-            />
-
-            <FAQItem
-              question="Is there a sign-up bonus?"
-              answer="Yes! All membership tiers qualify for sign-up bonuses when you refer new members. The bonus amount varies by tier and is paid after your referral completes their first month."
-            />
-
-            <FAQItem
-              question="What happens if I upgrade my membership?"
-              answer="When you upgrade, you immediately gain access to all the benefits of your new tier and start earning commissions on additional levels. Your existing referrals continue to generate commissions at the higher rates."
-            />
-
-            <FAQItem
-              question="Are there any hidden fees?"
-              answer="No hidden fees! Everything is transparent. You only pay your membership fee - no setup fees, no processing fees, no surprise charges."
-            />
-          </div>
-        </div>
       </div>
 
+      {/* FAQ Tab Section */}
+      <div className="bg-gray-800/50 border border-gray-700 p-8 mt-16">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl sm:text-4xl font-black text-white mb-4 heading-font">
+            Have Questions?
+          </h2>
+          <p className="text-gray-300 max-w-2xl mx-auto">
+            Find comprehensive answers to all your questions about membership, commissions, training, and supernatural ministry.
+          </p>
+        </div>
+
+        <div className="flex justify-center">
+          <a
+            href="/faqs"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-orange-600 hover:bg-orange-700 text-white font-bold text-lg uppercase tracking-wide transition-all duration-300 rounded-lg shadow-lg hover:shadow-xl"
+          >
+            <HelpCircle className="w-6 h-6" />
+            View All FAQs
+          </a>
+        </div>
+      </div>
 
       <FiveFoldPartnershipApplication
         isOpen={isPartnershipFormOpen}
