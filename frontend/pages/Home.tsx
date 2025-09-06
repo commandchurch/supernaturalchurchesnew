@@ -133,7 +133,7 @@ export default function Home() {
         <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-6 sm:py-8 lg:py-12">
 
            {/* Scripture Section */}
-           <div className="mb-8 sm:mb-12 lg:mb-16 mt-2" style={{ marginTop: '0.125rem' }}>
+           <div className="mb-8 sm:mb-12 lg:mb-16" style={{ marginTop: '2.5rem' }}>
              <div className="text-center">
                {/* Scripture Section */}
                <div className="space-y-8">

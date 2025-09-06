@@ -97,7 +97,9 @@ export default function Layout({ children }: LayoutProps) {
         <script type="application/ld+json">{JSON.stringify(organizationJsonLd)}</script>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@700;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@700;800&family=Inter:wght@400;500;700&display=swap&v=2025" rel="stylesheet" />
+        <link rel="preload" href="https://fonts.gstatic.com/s/dancingscript/v25/If2cXTr6YS-zF4S-kcSWSVi_sxjsohD9F50Ruu7BMSo3Rep8h-4EePjA.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="https://fonts.gstatic.com/s/montserrat/v26/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCuM70w.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
       </Helmet>
       <style>
         {`
@@ -135,7 +137,7 @@ export default function Layout({ children }: LayoutProps) {
           
           /* Supernatural cursive */
           .logo .supernatural {
-            font-family: 'Dancing Script', cursive;
+            font-family: 'Dancing Script', cursive, 'Brush Script MT', 'Lucida Handwriting', fantasy;
             font-weight: 700;
             font-size: 1.8rem;
             color: #ffffff;
@@ -143,7 +145,7 @@ export default function Layout({ children }: LayoutProps) {
           
           /* CHURCHES bold */
           .logo .churches {
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Montserrat', sans-serif, 'Arial Black', 'Helvetica Bold', sans-serif;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
